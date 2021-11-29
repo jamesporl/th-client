@@ -1,57 +1,46 @@
 import React from 'react';
+import {
+  Avatar,
+  Flex,
+  Button,
+  Menu,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  MenuButton,
+  HStack,
+} from '@chakra-ui/react';
 import { BellOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { useMutation, useApolloClient } from '@apollo/client';
-import { Layout, Button, Space, Avatar, Dropdown, Menu, Form, message } from 'antd';
+import { useApolloClient } from '@apollo/client';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import MyAppDraftsQry from 'mods/website/profile/gql/MyAppDraftsQry';
-import AddAppMtn from '../../apps/gql/AddAppMtn';
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  .header {
+    border-bottom: 1px solid #efefef;
+    background-color: #fff;
+    z-index: 1000;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
 
   .container {
-    display: flex;
     width: 100%;
     max-width: 1100px;
-    justify-content: space-between;
-
-    .logo {
-      img {
-        height: 28px;
-      }
-    }
   }
 `;
 
 const WebsiteNavbar = () => {
   const { authStore, uiStore } = useStores();
-  const [addAppForm] = Form.useForm();
-  const [addApp] = useMutation(AddAppMtn);
-  const apolloClient = useApolloClient();
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
-  const handleClickProfileMenu = (ev) => {
-    if (ev.key === 'logout') {
-      authStore.logout();
-      window.location.href = '/';
-    }
-  };
-
-  const handleSubmitAddForm = async (values) => {
-    const { name, shortDesc } = values;
-    const input = { name, shortDesc };
-    try {
-      const { data } = await addApp({ variables: { input } });
-      uiStore.closeGlobalModal();
-      router.push(`/my/apps/edit/${data.addApp._id}`);
-    } catch (error) {
-      message.error(error.message.replace('GraphQL error :', ''));
-    }
+  const handleClickLogout = () => {
+    authStore.logout();
+    window.location.href = '/';
   };
 
   const handleClickNewApp = async () => {
@@ -70,12 +59,7 @@ const WebsiteNavbar = () => {
         router.push('/my/apps');
         return;
       }
-      uiStore.openGlobalModal(
-        'newAppForm',
-        'New App',
-        { form: addAppForm, onFinish: handleSubmitAddForm },
-        { width: 520, onOk: addAppForm.submit },
-      );
+      uiStore.openGlobalModal('newAppForm', 'New App');
     } else {
       window.location.href = '/account/login';
     }
@@ -84,60 +68,60 @@ const WebsiteNavbar = () => {
   let profileAvatar = null;
 
   if (authStore.myProfile) {
-    const avatarLetter = authStore.myProfile.firstName.charAt(0).toUpperCase();
-
     const menu = (
-      <Menu onClick={handleClickProfileMenu}>
-        <Menu.Item key="1" icon={<UserOutlined />}>
+      <MenuList>
+        <MenuItem key="1" icon={<UserOutlined />}>
           My Account
-        </Menu.Item>
-        <Menu.Item key="2" icon={<BellOutlined />}>
+        </MenuItem>
+        <MenuItem key="2" icon={<BellOutlined />}>
           Notifications
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem key="logout" icon={<LogoutOutlined />} onClick={handleClickLogout}>
           Log out
-        </Menu.Item>
-      </Menu>
+        </MenuItem>
+      </MenuList>
     );
 
     profileAvatar = (
-      <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
-        <Avatar shape="round" style={{ backgroundColor: '#184d47', cursor: 'pointer' }}>
-          {avatarLetter}
-        </Avatar>
-      </Dropdown>
+      <Menu placement="bottom-end" size="lg">
+        <MenuButton>
+          <Avatar name={authStore.myProfile?.firstName} size="sm" />
+        </MenuButton>
+        {menu}
+      </Menu>
     );
   }
   return (
-    <Layout.Header
-      style={{
-        boxShadow: '0 2px 4px -2px rgba(0, 0, 0, 0.2)',
-        zIndex: 10,
-        position: 'fixed',
-        width: '100%',
-      }}
-    >
-      <Wrapper>
-        <div className="container">
-          <div className="logo">
+    <Wrapper>
+      <Flex
+        as="header"
+        position="fixed"
+        w="100%"
+        justifyContent="center"
+        alignItems="center"
+        h="80px"
+        className="header"
+      >
+        <Flex alignItems="center" justifyContent="space-between" className="container">
+          <Flex alignItems="center">
             <Link href="/" as="/" passHref>
               <a>
-                <img src="/logo.png" alt="logo" />
+                <img src="/logo.png" alt="logo" width="280px" />
               </a>
             </Link>
-          </div>
-          <div className="action-buttons">
-            <Space size={10}>
-              <Button type="primary" onClick={handleClickNewApp}>
-                Submit an app
+          </Flex>
+          <Flex alignItems="center" justifyContent="flex-end">
+            <HStack spacing="1rem">
+              <Button colorScheme="green" size="md" onClick={handleClickNewApp}>
+                Submit an App
               </Button>
               {profileAvatar}
-            </Space>
-          </div>
-        </div>
-      </Wrapper>
-    </Layout.Header>
+            </HStack>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Wrapper>
   );
 };
 

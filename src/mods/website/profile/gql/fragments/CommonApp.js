@@ -23,10 +23,13 @@ export default gql`
     appStoreUrl
     playStoreUrl
     websiteUrl
-    publishDate
     status {
       key
       label
+    }
+    tags {
+      _id
+      name
     }
   }
 `;

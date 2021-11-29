@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { Helmet } from 'react-helmet';
+import { ChakraProvider } from '@chakra-ui/react';
 import { useApollo } from 'core/apollo/createApolloClient';
 import useStores from 'core/stores/useStores';
 import MyProfileQry from 'mods/auth/gql/MyProfileQry';
+import chakraCustomTheme from 'utils/styles/chakraCustomTheme';
 
 /* eslint-disable react/jsx-props-no-spreading,react/prop-types */
 function App({ Component, pageProps }) {
@@ -26,11 +28,13 @@ function App({ Component, pageProps }) {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <Helmet
-        titleTemplate="Tech Hustlers | %s"
-        defaultTitle="Tech Hustlers | Launch your apps here"
-      />
-      <Component {...pageProps} />
+      <ChakraProvider theme={chakraCustomTheme}>
+        <Helmet
+          titleTemplate="Tech Hustlers | %s"
+          defaultTitle="Tech Hustlers | Launch your apps here"
+        />
+        <Component {...pageProps} />
+      </ChakraProvider>
     </ApolloProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag } from 'antd';
+import { Tag } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
 const AppStatusTag = ({ appStatus }) => {

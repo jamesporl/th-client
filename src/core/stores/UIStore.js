@@ -5,7 +5,7 @@ export default class UIStore {
     makeObservable(this);
   }
 
-  @observable globalModalParams = {};
+  @observable globalModalParams = { context: {}, props: {} };
 
   @observable isGlobalModalOpen = false;
 
@@ -20,6 +20,7 @@ export default class UIStore {
   };
 
   @action closeGlobalModal = () => {
+    this.globalModalParams = { context: {}, props: {} };
     this.isGlobalModalOpen = false;
   };
 

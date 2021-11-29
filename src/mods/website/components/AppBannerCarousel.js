@@ -31,6 +31,7 @@ const Wrapper = styled.div`
     }
 
     img {
+      height: 36px;
       border-radius: 0.25rem;
     }
   }

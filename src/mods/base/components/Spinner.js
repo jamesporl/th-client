@@ -1,6 +1,5 @@
 import React from 'react';
-import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Spinner, Text } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -14,18 +13,15 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-const Spinner = ({ text }) => {
-  const loadingIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-  return (
-    <Wrapper>
-      <Spin indicator={loadingIcon} />
-      <p>{text}</p>
-    </Wrapper>
-  );
-};
+const THSpinner = ({ text }) => (
+  <Wrapper>
+    <Spinner size="xl" />
+    <Text mt={8}>{text}</Text>
+  </Wrapper>
+);
 
-Spinner.propTypes = {
+THSpinner.propTypes = {
   text: PropTypes.string.isRequired,
 };
 
-export default Spinner;
+export default THSpinner;

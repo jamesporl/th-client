@@ -1,13 +1,26 @@
 import React from 'react';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  HStack,
+  MenuDivider,
+} from '@chakra-ui/react';
 import { useQuery } from '@apollo/client';
-import { Avatar, Skeleton, Typography, List, Button } from 'antd';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import MyAppDraftsQry from '../gql/MyAppDraftsQry';
 import AppDraftStatusTag from '../components/AppDraftStatusTag';
+import AppHeader from '../components/AppHeader';
 
 const Wrapper = styled.div`
   .content-container {
@@ -22,63 +35,70 @@ const Wrapper = styled.div`
 `;
 
 const MyApps = () => {
-  const { data, loading } = useQuery(MyAppDraftsQry, { fetchPolicy: 'network-only' });
+  const { data: draftsData, loading } = useQuery(MyAppDraftsQry, { fetchPolicy: 'network-only' });
 
   const router = useRouter();
 
-  const { nodes: apps } = data?.myAppDrafts || {};
+  const { nodes: drafts = [] } = draftsData?.myAppDrafts || {};
 
   const handleClickEdit = async (_id) => {
     router.push(`/my/apps/edit/${_id}`);
   };
 
-  const renderApp = (app) => {
-    let logoSrc = '/img-sq-placeholder.png';
-    if (app.logoImg?.medium) {
-      logoSrc = app.logoImg.medium;
-    }
-    return (
-      <List.Item
-        extra={<AppDraftStatusTag appDraftStatus={app.status} />}
-        actions={[
-          <Button type="link" icon={<EditOutlined />} onClick={() => handleClickEdit(app.appId)} />,
-          <Button type="link" icon={<DeleteOutlined />} danger />,
-        ]}
-      >
-        <List.Item.Meta
-          avatar={<Avatar src={logoSrc} size={80} shape="square" />}
-          title={<Typography.Title level={4}>{app.name}</Typography.Title>}
-          description={app.shortDesc}
-        />
-      </List.Item>
-    );
-  };
-
-  let content = <Skeleton />;
+  let draftsList = null;
   if (!loading) {
-    if (!apps.length) {
-      content = (
-        <Typography.Text type="secondary">
-          Looks like you do not have apps yet. Submit one!
-        </Typography.Text>
-      );
+    if (!drafts.length) {
+      draftsList = <Text type="secondary">Looks like you do not have apps yet. Submit one!</Text>;
     } else {
-      content = <List bordered itemLayout="horizontal" dataSource={apps} renderItem={renderApp} />;
+      draftsList = drafts.map((d) => (
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          key={d._id}
+          borderWidth="1px"
+          padding={4}
+          borderRadius={8}
+        >
+          <AppHeader
+            name={d.name}
+            shortDesc={d.shortDesc}
+            logoImgSrc={d.logoImg?.medium}
+            tags={d.tags}
+          />
+          <Flex justifyContent="flex-end" alignItems="center">
+            <HStack spacing={8}>
+              <AppDraftStatusTag appDraftStatus={d.status} />
+              <Menu placement="bottom-end">
+                <MenuButton as={Button} rightIcon={<DownOutlined />}>
+                  Actions
+                </MenuButton>
+                <MenuList>
+                  <MenuItem icon={<EditOutlined />} onClick={() => handleClickEdit(d.appId)}>
+                    Continue Editing
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem icon={<DeleteOutlined />}>Delete</MenuItem>
+                </MenuList>
+              </Menu>
+            </HStack>
+          </Flex>
+        </Flex>
+      ));
     }
   }
   return (
     <WebsiteLayout>
       <Helmet title="My Apps" />
       <Wrapper>
-        <Typography.Title level={2}>My Apps</Typography.Title>
-        <div className="content-container">
-          <div className="drafts-container">
-            <Typography.Title level={5} type="secondary">
-              DRAFTS
-            </Typography.Title>
-            {content}
-          </div>
-        </div>
+        <Heading as="h1" size="lg">
+          My Apps
+        </Heading>
+        <Box mt={8}>
+          <Heading as="h4" size="md">
+            DRAFTS
+          </Heading>
+          <Box mt={8}>{draftsList}</Box>
+        </Box>
       </Wrapper>
     </WebsiteLayout>
   );

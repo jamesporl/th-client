@@ -1,108 +1,63 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { Card, Col, Row, Upload, message, Input, Form } from 'antd';
-import ImgCrop from 'antd-img-crop';
+import { Box, Flex, Text, Grid, GridItem, Heading, Input, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import useStores from 'core/stores/useStores';
 import UpdateAppDraftBannerImgMtn from '../../../gql/UpdateAppDraftBannerImgMtn';
 import UpdateAppDraftLogoImgMtn from '../../../gql/UpdateAppDraftLogoImgMtn';
+import UploadImage from './UploadImage';
 
 const Wrapper = styled.div`
-  .img-upload-container {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-
-    .image {
-      width: 100%;
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      width: 100%;
-      opacity: 0;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
-  }
-
-  .img-upload-container:hover .overlay {
-    opacity: 0.4;
-  }
-
-  .banner-images-card {
-    margin-top: 2rem;
-  }
-
-  .banner-img-upload {
-    margin-top: 1rem;
+  .img-thumbnail-card {
+    height: 49px;
+    border: 4px solid #d8d8d8;
+    background-color: #f3f3f3;
+    cursor: pointer;
     display: flex;
     justify-content: center;
-
-    .img-thumbnails {
-      display: flex;
-      justify-content: center;
-
-      .img-thumbnail-card {
-        height: 47px;
-        width: 82px;
-        border: 1px solid #d8d8d8;
-        background-color: #f3f3f3;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .img-thumbnail-card:hover {
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-      }
-
-      .img-thumbnail-card:not(:last-child) {
-        margin-right: 0.5rem;
-      }
-    }
-
-    .ant-upload.ant-upload-select-picture-card {
-      width: 480px;
-      height: 270px;
-      margin: 1rem 0;
-    }
-  }
-
-  .logo-img-upload {
-    margin-top: 1rem;
-    display: flex;
     align-items: center;
-    justify-content: center;
 
-    .ant-upload.ant-upload-select-picture-card {
-      width: 180px;
-      height: 180px;
-      margin-right: 0;
-      margin-bottom: 0;
+    &.active {
+      border: 4px solid #63b3ed;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
+
+    img {
+      height: 45px;
+    }
+  }
+
+  .img-thumbnail-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 `;
 
-const Assets = ({ app, appId, refetch, onChangeVideoUrl, onSubmitToServer, videoUrl }) => {
+async function dataUrltoFile(dataUrl, filename, type) {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  return new File([blob], filename, { type });
+}
+
+const Assets = ({
+  app,
+  appId,
+  refetch,
+  onChangeVideoUrl,
+  onSubmitToServer,
+  videoUrl: initialVideoUrl,
+}) => {
+  const { uiStore } = useStores();
+  const toast = useToast();
+
+  const [videoUrl, setVideoUrl] = useState(initialVideoUrl);
+  const [videoUrlError, setVideoUrlError] = useState('');
   const [logoImgSrc, setLogoImgSrc] = useState('');
   const [selectedBannerImgIdx, setSelectedBannerImgIdx] = useState(0);
   const [bannerImgSrcs, setBannerImgSrcs] = useState(['', '', '', '', '']);
 
   const [updateAppDraftBannerImg] = useMutation(UpdateAppDraftBannerImgMtn);
   const [updateAppDraftLogoImg] = useMutation(UpdateAppDraftLogoImgMtn);
-
-  const [videoUrlForm] = Form.useForm();
 
   let selectedBannerImgSrc = null;
   if (bannerImgSrcs?.length && selectedBannerImgIdx < bannerImgSrcs.length) {
@@ -126,70 +81,117 @@ const Assets = ({ app, appId, refetch, onChangeVideoUrl, onSubmitToServer, video
     }
   }, [appId]);
 
-  const beforeUploadLogoImg = (file) => {
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
+  const validateVideoUrl = (value) => {
+    const pattern =
+      /[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/;
+    if (value) {
+      if (value.length > 150) {
+        setVideoUrlError('Too long');
+        return false;
+      }
+      if (!pattern.test(value)) {
+        setVideoUrlError('Invalid URL');
+        return false;
+      }
     }
-    return isLt2M;
+    setVideoUrlError('');
+    return true;
   };
 
-  const onChangeLogoImg = async ({ file }) => {
+  const handleChangeVideoUrl = (ev) => {
+    const { value } = ev.target;
+    validateVideoUrl(value);
+    setVideoUrl(value);
+    onChangeVideoUrl(value);
+  };
+
+  const handleValidateAndSubmitToServer = useCallback(() => {
+    const isValid = validateVideoUrl(videoUrl);
+    if (isValid) {
+      onSubmitToServer();
+    }
+  }, [videoUrl]);
+
+  const handleSubmitLogo = async (src, filename, type) => {
+    setLogoImgSrc(src);
+    const file = await dataUrltoFile(src, filename, type);
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      toast({
+        position: 'top',
+        status: 'error',
+        variant: 'subtle',
+        description: 'Image must be smaller than 2MB',
+      });
+      return;
+    }
+    const input = { appId, file };
+    try {
+      await updateAppDraftLogoImg({ variables: { input } });
+      refetch();
+    } catch (error) {
+      toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
+    }
+  };
+
+  const handleChangeLogo = async (ev) => {
+    const [file] = ev.target.files;
     const src = await new Promise((resolve) => {
       const reader = new FileReader();
-      reader.readAsDataURL(file.originFileObj);
+      reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
     });
-    if (file.status === 'done') {
-      setLogoImgSrc(src);
-      const uploadFile = new File([file.originFileObj], file.name, {
-        type: file.type,
+    uiStore.openGlobalModal('cropImage', 'Edit logo', {
+      src,
+      onSubmit: (newSrc) => handleSubmitLogo(newSrc, file.name, file.type),
+      type: file.type,
+      aspectRatio: 1,
+    });
+  };
+
+  const handleSubmitBanner = async (src, filename, type, bannerImgIdx) => {
+    setBannerImgSrcs((prevImgSrcs) =>
+      prevImgSrcs.map((imgSrc, idx) => {
+        if (idx === bannerImgIdx) {
+          return src;
+        }
+        return imgSrc;
+      }),
+    );
+    const file = await dataUrltoFile(src, filename, type);
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      toast({
+        position: 'top',
+        status: 'error',
+        variant: 'subtle',
+        description: 'Image must be smaller than 5MB',
       });
-      const input = { appId, file: uploadFile };
-      try {
-        await updateAppDraftLogoImg({ variables: { input } });
-        refetch();
-      } catch (error) {
-        message.error(error.message.replace('GraphQL error :', ''));
-      }
+      return;
+    }
+    const input = { appId, order: selectedBannerImgIdx, file };
+    try {
+      await updateAppDraftBannerImg({ variables: { input } });
+      refetch();
+    } catch (error) {
+      toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
   };
 
-  const beforeUploadBannerImg = (file) => {
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
-      message.error('Image must be smaller than 2MB');
-    }
-    return isLt2M;
-  };
-
-  const onChangeBannerImg = useCallback(
-    async ({ file }) => {
+  const handleChangeBanner = useCallback(
+    async (ev) => {
+      const [file] = ev.target.files;
       const src = await new Promise((resolve) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
+        reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
       });
-      if (file.status === 'done') {
-        setBannerImgSrcs((prevImgSrcs) =>
-          prevImgSrcs.map((imgSrc, idx) => {
-            if (idx === selectedBannerImgIdx) {
-              return src;
-            }
-            return imgSrc;
-          }),
-        );
-        const uploadFile = new File([file.originFileObj], file.name, {
-          type: file.type,
-        });
-        const input = { appId, order: selectedBannerImgIdx, file: uploadFile };
-        try {
-          await updateAppDraftBannerImg({ variables: { input } });
-          refetch();
-        } catch (error) {
-          message.error(error.message.replace('GraphQL error :', ''));
-        }
-      }
+      uiStore.openGlobalModal('cropImage', 'Edit image', {
+        src,
+        onSubmit: (newSrc) =>
+          handleSubmitBanner(newSrc, file.name, file.type, selectedBannerImgIdx),
+        type: file.type,
+      });
     },
     [selectedBannerImgIdx],
   );
@@ -198,130 +200,102 @@ const Assets = ({ app, appId, refetch, onChangeVideoUrl, onSubmitToServer, video
     setSelectedBannerImgIdx(idx);
   };
 
-  const handleValidateAndSubmitToServer = () => {
-    try {
-      videoUrlForm.submit();
-      onSubmitToServer();
-    } catch (error) {
-      // do nothing
-    }
-  };
-
-  const uploadLogoImgButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: '1rem' }}>Upload (512px x 512px)</div>
-    </div>
-  );
-
-  const uploadBannerImgButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: '1rem' }}>Upload (1980px or less x 1080px)</div>
-    </div>
-  );
-
-  const bannerImgThumbnails = [0, 1, 2, 3, 4].map((idx) => {
+  const bannerImgThumbnails = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => {
     const imgSrc = bannerImgSrcs[idx];
     let imgContent = (
-      <img src="/img-rect-thumbnail-placeholder.png" alt="app-banner" height="45px" />
+      <img src="/img-rect-thumbnail-placeholder.png" alt="app-banner" width="80px" />
     );
     if (imgSrc) {
-      imgContent = <img src={imgSrc} alt="app-banner" height="45px" />;
+      imgContent = <img src={imgSrc} alt="app-banner" />;
     }
+    const className =
+      idx === selectedBannerImgIdx ? 'img-thumbnail-card active' : 'img-thumbnail-card';
+
     return (
-      <div
-        className="img-thumbnail-card"
-        key={idx}
-        onClick={() => handleClickBannerImgThumbnailCard(idx)}
-        onKeyDown={() => handleClickBannerImgThumbnailCard(idx)}
-        tabIndex={0}
-        role="button"
-      >
-        {imgContent}
-      </div>
+      <GridItem key={idx}>
+        <div
+          className={className}
+          onClick={() => handleClickBannerImgThumbnailCard(idx)}
+          onKeyDown={() => handleClickBannerImgThumbnailCard(idx)}
+          tabIndex={0}
+          role="button"
+        >
+          {imgContent}
+        </div>
+      </GridItem>
     );
   });
 
-  const videoUrlRules = [
-    {
-      pattern:
-        /[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/,
-      message: 'Must be a valid URL',
-    },
-  ];
-
   return (
     <Wrapper>
-      <Row gutter={[28, 28]}>
-        <Col span={8}>
-          <Card title="Logo">
-            <div className="logo-img-upload">
-              <div>
-                <ImgCrop aspect={1}>
-                  <Upload
-                    name="avatar"
-                    listType="picture-card"
-                    showUploadList={false}
-                    beforeUpload={beforeUploadLogoImg}
-                    onChange={onChangeLogoImg}
-                    onRemove={() => undefined}
-                  >
-                    {logoImgSrc ? (
-                      <div className="img-upload-container">
-                        <img src={logoImgSrc} alt="avatar" className="image" />
-                        <div className="overlay">
-                          <div className="delete-btn">
-                            <DeleteOutlined style={{ fontSize: 21 }} />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      uploadLogoImgButton
-                    )}
-                  </Upload>
-                </ImgCrop>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col span={16}>
-          <Card title="Explainer Video Embed URL">
-            <Form form={videoUrlForm}>
-              <Form.Item rules={videoUrlRules} name="videoUrl">
-                <Input
-                  placeholder="https://www.youtube.com/embed/awesome"
-                  onChange={onChangeVideoUrl}
-                  defaultValue={videoUrl}
-                  onBlur={handleValidateAndSubmitToServer}
+      <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+        <GridItem colSpan={1}>
+          <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
+            <Box borderBottomWidth="1px" padding={4}>
+              <Heading as="h4" size="sm">
+                Logo
+              </Heading>
+            </Box>
+            <Flex justifyContent="center" alignContent="center" mt={8} mb={8}>
+              <UploadImage
+                uploadText="Upload (512px x 512px)"
+                onChange={handleChangeLogo}
+                imgSrc={logoImgSrc}
+                imgId="logo"
+                height="180px"
+                width="180px"
+              />
+            </Flex>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
+            <Box borderBottomWidth="1px" padding={4}>
+              <Heading as="h4" size="sm">
+                Explainer Video Embed URL
+              </Heading>
+            </Box>
+            <Box padding={4}>
+              <Input
+                placeholder="e.g. https://www.youtube.com/embed/awesome"
+                onChange={handleChangeVideoUrl}
+                value={videoUrl}
+                onBlur={handleValidateAndSubmitToServer}
+                isInvalid={videoUrlError}
+              />
+              <Text color="tomato" fontSize="sm">
+                {videoUrlError}
+              </Text>
+            </Box>
+          </Box>
+          <Box borderWidth="1px" borderRadius="lg" overflow="hidden" mt={8}>
+            <Box borderBottomWidth="1px" padding={4}>
+              <Heading as="h4" size="sm">
+                Banner Images
+              </Heading>
+            </Box>
+            <Box padding={4}>
+              <Flex justifyContent="center">
+                <Box>
+                  <Grid templateColumns="repeat(5, 1fr)" gap={2}>
+                    {bannerImgThumbnails}
+                  </Grid>
+                </Box>
+              </Flex>
+              <Flex justifyContent="center" alignContent="center" mt={8} mb={8}>
+                <UploadImage
+                  uploadText="Upload (1980px or less x 1080px)"
+                  onChange={handleChangeBanner}
+                  imgSrc={selectedBannerImgSrc}
+                  imgId={`banner_${selectedBannerImgIdx}`}
+                  height="270px"
+                  width="480px"
                 />
-              </Form.Item>
-            </Form>
-          </Card>
-          <Card title="Banner Images" className="banner-images-card">
-            <div className="banner-img-upload">
-              <div>
-                <div className="img-thumbnails">{bannerImgThumbnails}</div>
-                <div>
-                  <Upload
-                    name="avatar"
-                    listType="picture-card"
-                    showUploadList={false}
-                    beforeUpload={beforeUploadBannerImg}
-                    onChange={onChangeBannerImg}
-                  >
-                    {selectedBannerImgSrc ? (
-                      <img src={selectedBannerImgSrc} alt="avatar" style={{ height: '270px' }} />
-                    ) : (
-                      uploadBannerImgButton
-                    )}
-                  </Upload>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
+              </Flex>
+            </Box>
+          </Box>
+        </GridItem>
+      </Grid>
     </Wrapper>
   );
 };
