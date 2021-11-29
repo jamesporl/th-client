@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalHeader, ModalBody } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import useStores from 'core/stores/useStores';
 import styled from 'styled-components';
@@ -27,7 +28,12 @@ const ModalContent = () => {
 
   const modalContent = React.createElement(modalComponent);
 
-  return <Wrapper>{modalContent}</Wrapper>;
+  return (
+    <Wrapper>
+      <ModalHeader>{uiStore.globalModalParams.title}</ModalHeader>
+      <ModalBody mb={4}>{modalContent}</ModalBody>
+    </Wrapper>
+  );
 };
 
 export default observer(ModalContent);

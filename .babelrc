@@ -1,7 +1,6 @@
 {
   "presets": ["next/babel"],
   "plugins": [
-    ["import", { "libraryName": "antd", "style": true }],
     ["styled-components"],
     ["module-resolver", { "root": ["./src"] }],
     ["@babel/plugin-proposal-decorators", { "legacy": true }],

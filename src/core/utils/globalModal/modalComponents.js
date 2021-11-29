@@ -1,5 +1,7 @@
-import websiteModalComponents from 'mods/website/apps/modals/modalComponents';
+import appsModalComponents from 'mods/website/apps/modals/modalComponents';
+import profileModalComponents from 'mods/website/profile/modals/modalComponents';
 
 export default {
-  ...websiteModalComponents,
+  ...appsModalComponents,
+  ...profileModalComponents,
 };

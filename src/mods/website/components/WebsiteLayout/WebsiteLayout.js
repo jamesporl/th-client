@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Layout, Modal } from 'antd';
+import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
@@ -28,17 +28,8 @@ const Wrapper = styled.div`
 
     .child-container {
       flex-grow: 1;
-      margin-top: 4rem;
+      margin-top: 6rem;
     }
-  }
-`;
-
-const WrappedModal = styled(Modal)`
-  max-height: ${(props) => props.screenheight * 0.9};
-
-  .ant-modal-content {
-    max-height: ${(props) => props.screenheight * 0.9};
-    overflow-y: auto;
   }
 `;
 
@@ -62,29 +53,23 @@ const WebsiteLayout = ({ children }) => {
 
   return (
     <>
-      <Layout className="layout">
-        <WebsiteNavbar />
-        <Layout.Content>
-          <Wrapper>
-            <div className="container">
-              <div className="child-container">{children}</div>
-            </div>
-          </Wrapper>
-        </Layout.Content>
-      </Layout>
-      <WrappedModal
-        visible={uiStore.isGlobalModalOpen}
-        okText="Submit"
-        onCancel={uiStore.closeGlobalModal}
-        centered
-        destroyOnClose
-        width={900}
-        title={uiStore.globalModalParams.title}
-        screenheight={uiStore.screenheight}
-        {...(uiStore.globalModalParams.props || {})}
+      <WebsiteNavbar />
+      <Wrapper>
+        <div className="container">
+          <div className="child-container">{children}</div>
+        </div>
+      </Wrapper>
+      <Modal
+        isOpen={uiStore.isGlobalModalOpen}
+        onClose={uiStore.closeGlobalModal}
+        size="lg"
+        {...uiStore.globalModalParams.props}
       >
-        <GlobalModalContent />
-      </WrappedModal>
+        <ModalOverlay />
+        <ModalContent>
+          <GlobalModalContent />
+        </ModalContent>
+      </Modal>
     </>
   );
 };

@@ -1,11 +1,21 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { message, Form, Input, Button } from 'antd';
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  useToast,
+} from '@chakra-ui/react';
+import { Formik, Form, Field } from 'formik';
+import * as yup from 'yup';
 import Link from 'next/link';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import LoginMtn from 'mods/auth/gql/LoginMtn';
+import PasswordFormControl from 'mods/auth/components/PasswordFormControl';
 import AuthPageContainer from '../../components/AuthPageContainer';
 
 const Wrapper = styled.div`
@@ -24,13 +34,18 @@ const Wrapper = styled.div`
   }
 `;
 
-const LoginPage = () => {
-  const [loginForm] = Form.useForm();
+const LoginSchema = yup.object().shape({
+  email: yup.string().max(50, 'Too long').required('E-mail is equired').email('Invalid e-mail'),
+  password: yup.string().max(50, 'Too long').required('Password is required'),
+});
+
+const Login = () => {
   const { authStore } = useStores();
+  const toast = useToast();
 
   const [login] = useMutation(LoginMtn);
 
-  const onFinish = async (values) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     const { email, password } = values;
     const input = {
       email,
@@ -42,51 +57,75 @@ const LoginPage = () => {
       authStore.login(authToken);
       window.location.href = '/';
     } catch (error) {
-      message.error(error.message.replace('GraphQL error :', ''));
+      toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
+      setSubmitting(false);
     }
   };
 
-  const emailRules = [{ required: true, message: 'E-mail is required.' }];
-  const pwRules = [{ required: true, message: 'Password is required.' }];
-
   return (
     <AuthPageContainer>
-      <Helmet title="Login | Tech Hustlers" />
+      <Helmet title="Login" />
       <Wrapper>
-        <Form form={loginForm} onFinish={onFinish} layout="vertical" hideRequiredMark>
-          <Form.Item name="email" label="E-mail address" rules={emailRules}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="password" rules={pwRules} label="Password">
-            <Input.Password />
-          </Form.Item>
-          <div style={{ marginTop: '10px' }} />
-          <Button type="primary" block htmlType="submit" className="auth-btn">
-            Log in
-          </Button>
-        </Form>
-        <div className="terms">
-          <small>
-            By continuing, you agree to our
-            <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
-              Terms and Conditions.
-            </a>
-          </small>
-        </div>
-        <div className="forgot-password">
-          <Link href="/account/forgot-password" as="/account/forgot-password" passHref>
-            <a>Forgot password?</a>
-          </Link>
-        </div>
-        <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
-          Don&apos;t have an account? &nbsp;
-          <Link href="/account/signup" as="/account/signup" passHref>
-            <a>Sign up here.</a>
-          </Link>
-        </div>
+        <Formik
+          validationSchema={LoginSchema}
+          onSubmit={handleSubmit}
+          initialValues={{ email: '', password: '' }}
+        >
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <Field name="email">
+                {({ field }) => (
+                  <FormControl isInvalid={errors.email && touched.email}>
+                    <FormLabel htmlFor="email">E-mail address</FormLabel>
+                    <Input {...field} id="email" type="email" />
+                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+              <Field name="password">
+                {({ field }) => (
+                  <PasswordFormControl
+                    field={field}
+                    touched={touched.password}
+                    error={errors.password}
+                  />
+                )}
+              </Field>
+              <Button
+                colorScheme="green"
+                isFullWidth
+                size="md"
+                type="submit"
+                mt={8}
+                isLoading={isSubmitting}
+              >
+                Log in
+              </Button>
+              <div className="terms">
+                <small>
+                  By continuing, you agree to our
+                  <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+                    Terms and Conditions.
+                  </a>
+                </small>
+              </div>
+              <div className="forgot-password">
+                <Link href="/account/forgot-password" as="/account/forgot-password" passHref>
+                  <a>Forgot password?</a>
+                </Link>
+              </div>
+              <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
+                Don&apos;t have an account? &nbsp;
+                <Link href="/account/signup" as="/account/signup" passHref>
+                  <a>Sign up here.</a>
+                </Link>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Wrapper>
     </AuthPageContainer>
   );
 };
 
-export default LoginPage;
+export default Login;

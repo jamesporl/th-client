@@ -1,18 +1,22 @@
 import React from 'react';
-import { Tag } from 'antd';
+import { Tag } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
 const AppDraftStatusTag = ({ appDraftStatus }) => {
   const { key, label } = appDraftStatus;
 
-  let color = '#ff851b'; // orange
+  let colorScheme = 'orange';
   if (key === 'submitted') {
-    color = '#39cccc'; // teal
+    colorScheme = 'teal'; // teal
   } else if (key === 'approved') {
-    color = '#2ecc40'; // green
+    colorScheme = 'green'; // green
   }
 
-  return <Tag color={color}>{label}</Tag>;
+  return (
+    <Tag colorScheme={colorScheme} variant="solid">
+      {label}
+    </Tag>
+  );
 };
 
 AppDraftStatusTag.propTypes = {

@@ -11,6 +11,10 @@ export default gql`
       _id
       medium
     }
+    tags {
+      _id
+      name
+    }
     videoUrl
     bannerImgs {
       image {
@@ -23,7 +27,6 @@ export default gql`
     appStoreUrl
     playStoreUrl
     websiteUrl
-    publishDate
     status {
       key
       label

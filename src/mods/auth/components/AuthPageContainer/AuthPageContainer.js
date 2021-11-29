@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { Box, Flex } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -19,17 +20,9 @@ const Wrapper = styled.div`
     filter: brightness(50%);
   }
 
-  .login-logo {
-    text-align: center;
-    margin-bottom: 2rem;
-    img {
-      height: 2rem;
-    }
-  }
-
   .form-box {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px;
@@ -52,14 +45,14 @@ const Wrapper = styled.div`
 const AuthPageContainer = ({ children }) => (
   <Wrapper>
     <div className="form-box">
-      <div className="login-logo">
+      <Flex w="100%" justifyContent="center">
         <Link href="/" as="/" passHref>
           <a>
-            <img src="/logo.png" alt="logo" />
+            <img src="/logo.png" alt="logo" width="280px" />
           </a>
         </Link>
-      </div>
-      {children}
+      </Flex>
+      <Box mt={8}>{children}</Box>
     </div>
   </Wrapper>
 );
