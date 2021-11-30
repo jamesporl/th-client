@@ -174,7 +174,7 @@ const EditApp = () => {
             </Step>
             <Step label="Preview and submit" key="preview">
               <Box mt={12}>
-                <Preview app={data?.appDraft || {}} />
+                <Preview app={data?.appDraft || {}} onSubmitToServer={handleSubmitToServer} />
               </Box>
             </Step>
           </Steps>

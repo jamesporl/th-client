@@ -31,5 +31,9 @@ export default gql`
       _id
       name
     }
+    publishedAt
+    supportsCount
+    isSupported
+    isSponsored
   }
 `;

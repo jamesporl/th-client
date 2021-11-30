@@ -1,12 +1,13 @@
 /* eslint-disable react/no-danger */
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useToast, Box, Button, Flex } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
 import AppHeader from 'mods/website/profile/components/AppHeader';
-import UpdateAppDraftStatusMtn from '../../../gql/UpdateAppDraftStatusMtn';
+import SubmitAppDraftMtn from '../../../gql/SubmitAppDraftMtn';
 
 const Wrapper = styled.div`
   .desc-container {
@@ -20,16 +21,23 @@ const Wrapper = styled.div`
   }
 `;
 
-const Preview = ({ app }) => {
-  const [updateAppStatus] = useMutation(UpdateAppDraftStatusMtn);
+const Preview = ({ app, onSubmitToServer }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  const [submitAppDraft] = useMutation(SubmitAppDraftMtn);
   const toast = useToast();
 
   const handleClickSubmit = async () => {
+    setIsSubmitting(true);
     try {
-      const input = { appId: app.appId, status: 'submitted' };
-      await updateAppStatus({ variables: { input } });
+      await onSubmitToServer();
+      const input = { appId: app.appId };
+      await submitAppDraft({ variables: { input } });
+      router.push('/my/apps');
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
+      setIsSubmitting(false);
     }
   };
 
@@ -56,7 +64,12 @@ const Preview = ({ app }) => {
           </Box>
         </Box>
         <Box flexGrow="1" ml="2rem">
-          <Button colorScheme="blue" isFullWidth onClick={handleClickSubmit}>
+          <Button
+            colorScheme="blue"
+            isFullWidth
+            onClick={handleClickSubmit}
+            isLoading={isSubmitting}
+          >
             Submit
           </Button>
         </Box>
@@ -67,6 +80,7 @@ const Preview = ({ app }) => {
 
 Preview.propTypes = {
   app: PropTypes.object.isRequired,
+  onSubmitToServer: PropTypes.func.isRequired,
 };
 
 export default Preview;
