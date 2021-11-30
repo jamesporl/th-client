@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Flex, Heading, Text, Tag, HStack } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
-const AppHeader = ({ logoImgSrc, shortDesc, name, tags }) => {
+const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored }) => {
   let src = logoImgSrc;
   if (!logoImgSrc) {
     src = '/img-sq-placeholder.png';
@@ -21,16 +21,28 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags }) => {
     );
   }
 
+  let sponsorTag = false;
+  if (isSponsored) {
+    sponsorTag = (
+      <Tag colorScheme="yellow" variant="solid" size="sm" ml={2}>
+        Sponsored
+      </Tag>
+    );
+  }
+
   return (
     <Flex>
       <Box mr={4}>
         <img src={src} alt="logo" width="80px" style={{ borderRadius: '0.5rem' }} />
       </Box>
       <div>
-        <Heading as="h3" size="md">
-          {name || 'Best App Ever'}
-        </Heading>
-        <Text color="gray.500" mt={1}>
+        <Flex alignItems="center">
+          <Heading as="h3" size="md">
+            {name || 'Best App Ever'}
+          </Heading>
+          {sponsorTag}
+        </Flex>
+        <Text color="gray.600" mt={1}>
           {shortDesc || '100% catchy slogan'}
         </Text>
         {tagsList}
@@ -44,6 +56,7 @@ AppHeader.propTypes = {
   logoImgSrc: PropTypes.string,
   shortDesc: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.object),
+  isSponsored: PropTypes.bool,
 };
 
 AppHeader.defaultProps = {
@@ -51,6 +64,7 @@ AppHeader.defaultProps = {
   shortDesc: '',
   name: '',
   tags: [],
+  isSponsored: false,
 };
 
 export default AppHeader;

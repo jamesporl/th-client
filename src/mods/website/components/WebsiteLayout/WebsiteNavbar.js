@@ -10,7 +10,7 @@ import {
   MenuButton,
   HStack,
 } from '@chakra-ui/react';
-import { BellOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useApolloClient } from '@apollo/client';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
@@ -43,6 +43,10 @@ const WebsiteNavbar = () => {
     window.location.href = '/';
   };
 
+  const handleClickMyApps = () => {
+    router.push('/my/apps');
+  };
+
   const handleClickNewApp = async () => {
     if (authStore.myProfile) {
       const { data } = await apolloClient.query({
@@ -73,8 +77,8 @@ const WebsiteNavbar = () => {
         <MenuItem key="1" icon={<UserOutlined />}>
           My Account
         </MenuItem>
-        <MenuItem key="2" icon={<BellOutlined />}>
-          Notifications
+        <MenuItem key="2" icon={<AppstoreOutlined />} onClick={handleClickMyApps}>
+          My Apps
         </MenuItem>
         <MenuDivider />
         <MenuItem key="logout" icon={<LogoutOutlined />} onClick={handleClickLogout}>
