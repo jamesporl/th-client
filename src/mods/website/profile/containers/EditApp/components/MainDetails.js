@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Box,
   Grid,
+  GridItem,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -19,6 +20,15 @@ const MainDetailsSchema = yup.object().shape({
   playStoreUrl: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
   websiteUrl: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
   appStoreUrl: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+  socialUrls: yup
+    .object({
+      facebook: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+      instagram: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+      twitter: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+      linkedIn: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+      github: yup.string().max(120, 'Too long').url('Invalid URL').nullable(),
+    })
+    .nullable(),
 });
 
 const MainDetails = ({ initialValues, onChange, onChangeTags, onSubmitToServer }) => {
@@ -41,7 +51,7 @@ const MainDetails = ({ initialValues, onChange, onChangeTags, onSubmitToServer }
         {({ errors, touched, handleBlur, handleChange, validateForm }) => (
           <Form>
             <Grid templateColumns="repeat(2, 1fr)" gap={8}>
-              <Box>
+              <GridItem>
                 <Heading as="h3" size="md">
                   Name and slogan
                 </Heading>
@@ -73,8 +83,8 @@ const MainDetails = ({ initialValues, onChange, onChangeTags, onSubmitToServer }
                     </FormControl>
                   )}
                 </Field>
-              </Box>
-              <Box>
+              </GridItem>
+              <GridItem>
                 <Heading as="h3" size="md">
                   App links
                 </Heading>
@@ -120,7 +130,113 @@ const MainDetails = ({ initialValues, onChange, onChangeTags, onSubmitToServer }
                     </FormControl>
                   )}
                 </Field>
-              </Box>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Heading as="h3" size="md">
+                  Social Media
+                </Heading>
+                <Grid templateColumns="repeat(2, 1fr)" gap={8}>
+                  <GridItem>
+                    <Field name="socialUrls.facebook">
+                      {({ field }) => (
+                        <FormControl
+                          isInvalid={errors.socialUrls?.facebook && touched.socialUrls?.facebook}
+                          mt={8}
+                        >
+                          <FormLabel htmlFor="facebook">Facebook</FormLabel>
+                          <Input
+                            {...field}
+                            id="facebook"
+                            onChange={(ev) =>
+                              handleChangeField('socialUrls.facebook', ev, handleChange)
+                            }
+                            onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                          />
+                          <FormErrorMessage>{errors.socialUrls?.facebook}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="socialUrls.instagram">
+                      {({ field }) => (
+                        <FormControl
+                          isInvalid={errors.socialUrls?.instagram && touched.socialUrls?.instagram}
+                          mt={8}
+                        >
+                          <FormLabel htmlFor="instagram">Instagram</FormLabel>
+                          <Input
+                            {...field}
+                            id="instagram"
+                            onChange={(ev) =>
+                              handleChangeField(['socialUrls.instagram'], ev, handleChange)
+                            }
+                            onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                          />
+                          <FormErrorMessage>{errors.socialUrls?.instagram}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="socialUrls.twitter">
+                      {({ field }) => (
+                        <FormControl
+                          isInvalid={errors.socialUrls?.twitter && touched.socialUrls?.twitter}
+                          mt={8}
+                        >
+                          <FormLabel htmlFor="twitter">Twitter</FormLabel>
+                          <Input
+                            {...field}
+                            id="twitter"
+                            onChange={(ev) =>
+                              handleChangeField(['socialUrls.twitter'], ev, handleChange)
+                            }
+                            onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                          />
+                          <FormErrorMessage>{errors.socialUrls?.twitter}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </GridItem>
+                  <GridItem>
+                    <Field name="socialUrls.linkedIn">
+                      {({ field }) => (
+                        <FormControl
+                          isInvalid={errors.socialUrls?.linkedIn && touched.socialUrls?.linkedIn}
+                          mt={8}
+                        >
+                          <FormLabel htmlFor="linkedIn">LinkedIn</FormLabel>
+                          <Input
+                            {...field}
+                            id="linkedIn"
+                            onChange={(ev) =>
+                              handleChangeField(['socialUrls.linkedIn'], ev, handleChange)
+                            }
+                            onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                          />
+                          <FormErrorMessage>{errors.socialUrls?.linkedIn}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="socialUrls.github">
+                      {({ field }) => (
+                        <FormControl
+                          isInvalid={errors.socialUrls?.github && touched.socialUrls?.github}
+                          mt={8}
+                        >
+                          <FormLabel htmlFor="github">Github</FormLabel>
+                          <Input
+                            {...field}
+                            id="github"
+                            onChange={(ev) =>
+                              handleChangeField(['socialUrls.github'], ev, handleChange)
+                            }
+                            onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                          />
+                          <FormErrorMessage>{errors.socialUrls?.github}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </GridItem>
+                </Grid>
+              </GridItem>
             </Grid>
           </Form>
         )}

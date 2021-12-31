@@ -17,7 +17,7 @@ import useStores from 'core/stores/useStores';
 import AddAppMtn from '../gql/AddAppMtn';
 
 const NewAppSchema = yup.object().shape({
-  name: yup.string().max(50, 'Too long').required('Name of app is equired'),
+  name: yup.string().max(50, 'Too long').required('Name of app is required'),
   shortDesc: yup.string().max(80, 'Too long').required('Short description is required'),
 });
 

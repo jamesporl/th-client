@@ -30,7 +30,8 @@
     "react/jsx-props-no-spreading": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "off",
-    "no-template-curly-in-string": "off"
+    "no-template-curly-in-string": "off",
+    "react/no-children-prop": "off"
   },
   "settings": {
     "import/resolver": {

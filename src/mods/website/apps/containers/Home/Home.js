@@ -12,6 +12,7 @@ const Home = () => {
   if (!loading) {
     appsList = data?.apps?.nodes.map((app) => <App key={app._id} app={app} />);
   }
+
   return (
     <WebsiteLayout>
       <Box width="100%">

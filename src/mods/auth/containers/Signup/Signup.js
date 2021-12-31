@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 const SignupSchema = yup.object().shape({
   firstName: yup.string().max(50, 'Too long').required('First name is required'),
   lastName: yup.string().max(50, 'Too long').required('Last name is required'),
-  email: yup.string().max(50, 'Too long').required('E-mail is equired').email('Invalid e-mail'),
+  email: yup.string().max(50, 'Too long').required('E-mail is required').email('Invalid e-mail'),
   username: yup.string().max(50, 'Too long').required('Username is required'),
   password: yup.string().max(50, 'Too long').required('Password is required'),
 });

@@ -4,7 +4,6 @@ export default gql`
   fragment CommonApp on App {
     _id
     name
-
     shortDesc
     desc
     logoImg {
@@ -31,6 +30,7 @@ export default gql`
       _id
       name
     }
+    slug
     publishedAt
     supportsCount
     isSupported

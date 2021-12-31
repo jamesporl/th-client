@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Heading, Flex, Box, Skeleton } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
+import set from 'lodash/set';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
@@ -31,7 +32,21 @@ const EditApp = () => {
   });
   const localStorageDraftKey = `appDraft_${appId}`;
 
-  const [initialValues, setInitialValues] = useState({});
+  const [initialValues, setInitialValues] = useState({
+    name: '',
+    shortDesc: '',
+    websiteUrl: '',
+    playStoreUrl: '',
+    appStoreUrl: '',
+    socialUrls: {
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      linkedIn: '',
+      github: '',
+    },
+    tags: [],
+  });
   const [desc, setDesc] = useState('');
   const [descIsTouched, setDescIsTouched] = useState(false);
   const [initialDesc, setInitialDesc] = useState('');
@@ -75,6 +90,7 @@ const EditApp = () => {
       appStoreUrl,
       websiteUrl,
       tags,
+      socialUrls,
     } = savedValues;
 
     const tagIds = (tags || []).map((tag) => tag._id);
@@ -89,6 +105,7 @@ const EditApp = () => {
       appStoreUrl,
       websiteUrl,
       tagIds,
+      socialUrls,
     };
     await updateAppDraft({ variables: { input } });
     refetch();
@@ -104,10 +121,9 @@ const EditApp = () => {
 
   const handleValuesChange = (changedValues) => {
     const savedValues = JSON.parse(localStorage.getItem(localStorageDraftKey));
-    localStorage.setItem(
-      localStorageDraftKey,
-      JSON.stringify({ ...savedValues, ...changedValues }),
-    );
+    const newValues = { ...savedValues };
+    Object.keys(changedValues).forEach((k) => set(newValues, k, changedValues[k]));
+    localStorage.setItem(localStorageDraftKey, JSON.stringify(newValues));
   };
 
   const handleChangeDesc = (value) => {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Flex, Heading, Text, Tag, HStack } from '@chakra-ui/react';
+import { Box, Flex, Link, Heading, Text, Tag, HStack } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 
-const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored }) => {
+const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable, slug }) => {
   let src = logoImgSrc;
   if (!logoImgSrc) {
     src = '/img-sq-placeholder.png';
@@ -30,16 +31,33 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored }) => {
     );
   }
 
+  let img = <img src={src} alt="logo" width="80px" style={{ borderRadius: '0.5rem' }} />;
+  let title = (
+    <Heading as="h3" size="md">
+      {name || 'Best App Ever'}
+    </Heading>
+  );
+  if (isClickable) {
+    img = (
+      <NextLink href={`/apps/${slug}`} passHref>
+        <Link>{img}</Link>
+      </NextLink>
+    );
+    title = (
+      <NextLink href={`/apps/${slug}`} passHref>
+        <Link>{title}</Link>
+      </NextLink>
+    );
+  }
+
   return (
     <Flex>
-      <Box mr={4}>
-        <img src={src} alt="logo" width="80px" style={{ borderRadius: '0.5rem' }} />
+      <Box mr={4} cursor="pointer">
+        {img}
       </Box>
       <div>
         <Flex alignItems="center">
-          <Heading as="h3" size="md">
-            {name || 'Best App Ever'}
-          </Heading>
+          {title}
           {sponsorTag}
         </Flex>
         <Text color="gray.600" mt={1}>
@@ -56,7 +74,9 @@ AppHeader.propTypes = {
   logoImgSrc: PropTypes.string,
   shortDesc: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.object),
+  isClickable: PropTypes.bool,
   isSponsored: PropTypes.bool,
+  slug: PropTypes.string,
 };
 
 AppHeader.defaultProps = {
@@ -64,7 +84,9 @@ AppHeader.defaultProps = {
   shortDesc: '',
   name: '',
   tags: [],
+  isClickable: false,
   isSponsored: false,
+  slug: '',
 };
 
 export default AppHeader;

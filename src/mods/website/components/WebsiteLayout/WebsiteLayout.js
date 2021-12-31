@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
     .child-container {
       flex-grow: 1;
-      margin-top: 6rem;
+      margin-top: 3rem;
     }
   }
 `;
