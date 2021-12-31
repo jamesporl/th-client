@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 `;
 
 const LoginSchema = yup.object().shape({
-  email: yup.string().max(50, 'Too long').required('E-mail is equired').email('Invalid e-mail'),
+  email: yup.string().max(50, 'Too long').required('E-mail is required').email('Invalid e-mail'),
   password: yup.string().max(50, 'Too long').required('Password is required'),
 });
 

@@ -30,6 +30,8 @@ const App = ({ app }) => (
         shortDesc={app.shortDesc}
         tags={app.tags}
         isSponsored={app.isSponsored}
+        isClickable
+        slug={app.slug}
       />
       <Box>
         <Text color="gray.300" fontSize="sm">

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Avatar,
+  Box,
   Flex,
   Button,
   Menu,
@@ -9,8 +10,23 @@ import {
   MenuDivider,
   MenuButton,
   HStack,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  useBreakpointValue,
+  IconButton,
+  useDisclosure,
+  Collapse,
+  VStack,
 } from '@chakra-ui/react';
-import { AppstoreOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  CloseOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  SearchOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useApolloClient } from '@apollo/client';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
@@ -37,6 +53,8 @@ const WebsiteNavbar = () => {
   const { authStore, uiStore } = useStores();
   const router = useRouter();
   const apolloClient = useApolloClient();
+
+  const { isOpen, onToggle } = useDisclosure();
 
   const handleClickLogout = () => {
     authStore.logout();
@@ -69,6 +87,15 @@ const WebsiteNavbar = () => {
     }
   };
 
+  const desktopLogoImg = <img src="/logo-full.png" alt="logo" width="200px" />;
+  const mobileLogoImg = <img src="/logo-simple.png" alt="logo" width="40px" />;
+
+  const submitAppBtn = (
+    <Button colorScheme="green" size="sm" onClick={handleClickNewApp}>
+      Submit an App
+    </Button>
+  );
+
   let profileAvatar = null;
 
   if (authStore.myProfile) {
@@ -96,6 +123,29 @@ const WebsiteNavbar = () => {
       </Menu>
     );
   }
+
+  const desktopRightNav = (
+    <HStack spacing="1rem">
+      <Menu placement="bottom-end" size="lg">
+        <MenuButton>About</MenuButton>
+        <MenuList>
+          <MenuItem key="1">About us</MenuItem>
+        </MenuList>
+      </Menu>
+      {submitAppBtn}
+      {profileAvatar}
+    </HStack>
+  );
+
+  const mobileRightNavBtn = (
+    <IconButton
+      onClick={onToggle}
+      icon={isOpen ? <CloseOutlined /> : <MenuOutlined />}
+      variant="ghost"
+      aria-label="Toggle Navigation"
+    />
+  );
+
   return (
     <Wrapper>
       <Flex
@@ -104,27 +154,36 @@ const WebsiteNavbar = () => {
         w="100%"
         justifyContent="center"
         alignItems="center"
-        h="80px"
+        h="60px"
+        pl={useBreakpointValue({ base: 4, xl: 0 })}
+        pr={useBreakpointValue({ base: 4, xl: 0 })}
         className="header"
       >
         <Flex alignItems="center" justifyContent="space-between" className="container">
-          <Flex alignItems="center">
+          <Flex alignItems="center" mr={8}>
             <Link href="/" as="/" passHref>
-              <a>
-                <img src="/logo.png" alt="logo" width="280px" />
-              </a>
+              <a>{useBreakpointValue({ base: mobileLogoImg, md: desktopLogoImg })}</a>
             </Link>
           </Flex>
-          <Flex alignItems="center" justifyContent="flex-end">
-            <HStack spacing="1rem">
-              <Button colorScheme="green" size="md" onClick={handleClickNewApp}>
-                Submit an App
-              </Button>
-              {profileAvatar}
-            </HStack>
+          <Flex alignItems="center" flexGrow="1">
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<SearchOutlined style={{ color: '#ccc' }} />}
+              />
+              <Input placeholder="Search Tech Hustlers" size="md" />
+            </InputGroup>
+          </Flex>
+          <Flex alignItems="center" justifyContent="flex-end" ml={8}>
+            {useBreakpointValue({ base: mobileRightNavBtn, md: desktopRightNav })}
           </Flex>
         </Flex>
       </Flex>
+      <Collapse in={isOpen} animateOpacity style={{ paddingTop: '60px' }}>
+        <VStack p={4} display={{ md: 'none' }}>
+          {submitAppBtn}
+        </VStack>
+      </Collapse>
     </Wrapper>
   );
 };
