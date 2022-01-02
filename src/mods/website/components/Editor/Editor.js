@@ -10,19 +10,25 @@ import '../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
 
   .th-editor-wrapper {
-    width: 800px;
+    width: 100%;
   }
 
   .th-editor {
     border: 1px solid #f1f1f1;
     padding: 0.5rem;
-    min-height: 10rem;
+    width: 100%;
+    min-height: ${(props) => props.minHeight};
+
+    .public-DraftStyleDefault-block {
+      margin: 2px;
+    }
   }
 `;
 
-const THEditor = ({ onChange, initialHtmlValue }) => {
+const THEditor = ({ onChange, initialHtmlValue, minHeight, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   useEffect(() => {
@@ -40,7 +46,7 @@ const THEditor = ({ onChange, initialHtmlValue }) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper minHeight={minHeight}>
       <Editor
         editorState={editorState}
         wrapperClassName="th-editor-wrapper"
@@ -70,6 +76,7 @@ const THEditor = ({ onChange, initialHtmlValue }) => {
             options: ['unordered', 'ordered'],
           },
         }}
+        {...rest}
       />
     </Wrapper>
   );
@@ -78,11 +85,13 @@ const THEditor = ({ onChange, initialHtmlValue }) => {
 THEditor.propTypes = {
   onChange: PropTypes.func,
   initialHtmlValue: PropTypes.string,
+  minHeight: PropTypes.string,
 };
 
 THEditor.defaultProps = {
   onChange: () => undefined,
   initialHtmlValue: '',
+  minHeight: '10rem',
 };
 
 export default THEditor;

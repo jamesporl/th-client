@@ -14,7 +14,7 @@ const App = () => {
 
   let appDetails = null;
   if (data) {
-    appDetails = <AppDetails app={data.app} />;
+    appDetails = <AppDetails app={data.app} showComments />;
   }
   return <WebsiteLayout>{appDetails}</WebsiteLayout>;
 };

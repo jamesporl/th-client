@@ -3,17 +3,18 @@ import { useMutation } from '@apollo/client';
 import { Text, Flex, Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { SmileOutlined, SmileTwoTone } from '@ant-design/icons';
-import ToggleAppSupportMtn from '../../../gql/ToggleAppSupportMtn';
 
-const SupportBlock = ({ app }) => {
-  const [supportsCount, setSupportsCount] = useState(app.supportsCount);
-  const [isSupported, setIsSupported] = useState(app.isSupported);
-
-  const [toggleAppSupport] = useMutation(ToggleAppSupportMtn);
+const SupportComment = ({
+  commentId,
+  supportsCount: iSupportsCount,
+  isSupported: iIsSupported,
+}) => {
+  const [supportsCount, setSupportsCount] = useState(iSupportsCount);
+  const [isSupported, setIsSupported] = useState(iIsSupported);
 
   const submitToServer = () => {
-    const input = { appId: app._id };
-    toggleAppSupport({ variables: { input } });
+    const input = { commentId };
+    // toggleAppSupport({ variables: { input } });
   };
 
   const handleClickSupport = () => {
@@ -33,11 +34,11 @@ const SupportBlock = ({ app }) => {
       colorScheme="blue"
       variant="ghost"
       leftIcon={<SmileOutlined />}
-      size="md"
-      mr="4"
+      size="sm"
       onClick={handleClickSupport}
+      mr={2}
     >
-      Support this app
+      Support
     </Button>
   );
   if (isSupported) {
@@ -46,9 +47,9 @@ const SupportBlock = ({ app }) => {
         colorScheme="blue"
         variant="ghost"
         leftIcon={<SmileTwoTone />}
-        size="md"
-        mr="4"
+        size="sm"
         onClick={handleClickUnsupport}
+        mr={2}
       >
         Supported
       </Button>
@@ -61,15 +62,19 @@ const SupportBlock = ({ app }) => {
   }
 
   return (
-    <Flex mt={4} alignItems="center">
+    <Flex alignItems="center">
       {supportBtn}
-      <Text fontWeight="bold">{`${supportsCount} ${supportText}`} </Text>
+      <Text fontSize="sm" color="gray.600">
+        {`${supportsCount} ${supportText}`}
+      </Text>
     </Flex>
   );
 };
 
-SupportBlock.propTypes = {
-  app: PropTypes.object.isRequired,
+SupportComment.propTypes = {
+  commentId: PropTypes.string.isRequired,
+  supportsCount: PropTypes.number.isRequired,
+  isSupported: PropTypes.bool.isRequired,
 };
 
-export default SupportBlock;
+export default SupportComment;
