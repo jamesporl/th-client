@@ -9,7 +9,7 @@ import AddCommentToAppMtn from '../../gql/AddCommentToAppMtn';
 import SupportComment from './SupportComment';
 import CommentInput from './CommentInput';
 
-const Comment = ({ app, comment }) => {
+const Comment = ({ app, comment, onRefetchComments }) => {
   const [showReply, setShowReply] = useState(false);
 
   const toast = useToast();
@@ -31,11 +31,12 @@ const Comment = ({ app, comment }) => {
           variant: 'subtle',
           description: 'Your feedback has been posted',
         });
+        setShowReply(false);
       } catch (error) {
         toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
       }
     },
-    [app],
+    [app, comment],
   );
 
   let replyInput = null;
@@ -43,6 +44,7 @@ const Comment = ({ app, comment }) => {
     replyInput = (
       <CommentInput
         placeholder="Contribute to the the discussion"
+        onRefetchComments={onRefetchComments}
         onSubmitComment={handleSubmitAddComment}
       />
     );
@@ -126,6 +128,7 @@ const Comment = ({ app, comment }) => {
 Comment.propTypes = {
   app: PropTypes.object.isRequired,
   comment: PropTypes.object.isRequired,
+  onRefetchComments: PropTypes.func.isRequired,
 };
 
 export default Comment;

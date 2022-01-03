@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 `;
 
 const Comments = ({ app }) => {
-  const [getAppComments, { data: appCommentsData }] = useLazyQuery(AppCommentsQry);
+  const [getAppComments, { data: appCommentsData, refetch }] = useLazyQuery(AppCommentsQry);
   const [addCommentToApp] = useMutation(AddCommentToAppMtn);
 
   const toast = useToast();
@@ -52,7 +52,9 @@ const Comments = ({ app }) => {
     </Box>
   );
   if (comments.length) {
-    commentsList = comments.map((c) => <Comment comment={c} app={app} />);
+    commentsList = comments.map((c) => (
+      <Comment key={c._id} comment={c} app={app} onRefetchComments={refetch} />
+    ));
   }
 
   if (!app) {
@@ -68,6 +70,7 @@ const Comments = ({ app }) => {
         <CommentInput
           onSubmitComment={handleSubmitAddComment}
           placeholder="Got something nice to say about the app?"
+          onRefetchComments={refetch}
         />
       </Flex>
       <Box mt={8}>{commentsList}</Box>

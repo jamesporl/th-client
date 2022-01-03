@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ContentState, EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -28,11 +28,24 @@ const Wrapper = styled.div`
   }
 `;
 
-const THEditor = ({ onChange, initialHtmlValue, minHeight, ...rest }) => {
+const THEditor = ({ onChange, initialHtmlValue, minHeight, editorRef, ...rest }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
+  useImperativeHandle(
+    editorRef,
+    () => ({
+      setValue: (value) => {
+        const contentBlock = htmlToDraft(value);
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        setEditorState(EditorState.createWithContent(contentState));
+        onChange(value);
+      },
+    }),
+    [onChange],
+  );
+
   useEffect(() => {
-    const contentBlock = htmlToDraft(initialHtmlValue);
+    const contentBlock = htmlToDraft(initialHtmlValue || '');
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
       setEditorState(EditorState.createWithContent(contentState));
@@ -86,9 +99,11 @@ THEditor.propTypes = {
   onChange: PropTypes.func,
   initialHtmlValue: PropTypes.string,
   minHeight: PropTypes.string,
+  editorRef: PropTypes.object,
 };
 
 THEditor.defaultProps = {
+  editorRef: null,
   onChange: () => undefined,
   initialHtmlValue: '',
   minHeight: '10rem',
