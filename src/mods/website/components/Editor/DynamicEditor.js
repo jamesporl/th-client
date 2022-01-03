@@ -1,3 +1,8 @@
+import React, { forwardRef } from 'react';
 import dynamic from 'next/dynamic';
 
-export default dynamic(() => import('./Editor'), { ssr: false });
+const Editor = dynamic(() => import('./Editor'), { ssr: false });
+
+const EditorWithForwardeddRef = forwardRef((props, ref) => <Editor {...props} editorRef={ref} />);
+
+export default EditorWithForwardeddRef;

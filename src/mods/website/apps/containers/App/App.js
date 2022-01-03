@@ -10,7 +10,7 @@ const App = () => {
 
   const { slug } = router.query;
 
-  const { data } = useQuery(AppQry, { variables: { slug } });
+  const { data } = useQuery(AppQry, { variables: { slug }, skip: !slug });
 
   let appDetails = null;
   if (data) {
