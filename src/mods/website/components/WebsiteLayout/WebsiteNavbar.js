@@ -1,21 +1,21 @@
 import React from 'react';
 import {
   Avatar,
-  Flex,
   Button,
+  Collapse,
+  Flex,
+  HStack,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  IconButton,
   Menu,
   MenuList,
   MenuItem,
   MenuDivider,
   MenuButton,
-  HStack,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  useBreakpointValue,
-  IconButton,
   useDisclosure,
-  Collapse,
+  useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
 import {
@@ -28,7 +28,7 @@ import {
 } from '@ant-design/icons';
 import { useApolloClient } from '@apollo/client';
 import { observer } from 'mobx-react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
@@ -62,6 +62,10 @@ const WebsiteNavbar = () => {
 
   const handleClickMyApps = () => {
     router.push('/my/apps');
+  };
+
+  const handleClickMyProfile = () => {
+    router.push('/my/profile');
   };
 
   const handleClickNewApp = async () => {
@@ -100,8 +104,8 @@ const WebsiteNavbar = () => {
   if (authStore.myProfile) {
     const menu = (
       <MenuList>
-        <MenuItem key="1" icon={<UserOutlined />}>
-          My Account
+        <MenuItem key="1" icon={<UserOutlined />} onClick={handleClickMyProfile}>
+          My Profile
         </MenuItem>
         <MenuItem key="2" icon={<AppstoreOutlined />} onClick={handleClickMyApps}>
           My Apps
@@ -116,7 +120,11 @@ const WebsiteNavbar = () => {
     profileAvatar = (
       <Menu placement="bottom-end" size="lg">
         <MenuButton>
-          <Avatar name={authStore.myProfile?.firstName} size="sm" />
+          <Avatar
+            name={authStore.myProfile?.firstName}
+            size="sm"
+            src={authStore.myProfile?.image.thumbnail}
+          />
         </MenuButton>
         {menu}
       </Menu>
@@ -160,9 +168,9 @@ const WebsiteNavbar = () => {
       >
         <Flex alignItems="center" justifyContent="space-between" className="container">
           <Flex alignItems="center" mr={8}>
-            <Link href="/" as="/" passHref>
+            <NextLink href="/" as="/" passHref>
               <a>{useBreakpointValue({ base: mobileLogoImg, md: desktopLogoImg })}</a>
-            </Link>
+            </NextLink>
           </Flex>
           <Flex alignItems="center" flexGrow="1">
             <InputGroup>

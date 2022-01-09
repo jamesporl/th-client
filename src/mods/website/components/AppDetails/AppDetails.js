@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import Comments from 'mods/website/apps/containers/App/Comments';
+import SocialUrlLinks from './SocialUrlLinks';
+import AppUrlLinks from './AppUrlLinks';
 
 const Wrapper = styled.div`
   .desc-container {
@@ -28,11 +30,12 @@ const AppDetails = ({ app, showComments }) => {
       </Box>
     );
   }
+
   return (
     <Wrapper>
       <Flex>
         <Box>
-          <Box width="720px">
+          <Box width="800px">
             <AppHeader
               name={app.name}
               shortDesc={app.shortDesc}
@@ -52,7 +55,12 @@ const AppDetails = ({ app, showComments }) => {
           </Box>
         </Box>
         <Box flexGrow="1" ml="2rem">
-          hello
+          <SocialUrlLinks socialUrls={app.socialUrls} />
+          <AppUrlLinks
+            websiteUrl={app.websiteUrl}
+            playStoreUrl={app.playStoreUrl}
+            appStoreUrl={app.appStoreUrl}
+          />
         </Box>
       </Flex>
     </Wrapper>

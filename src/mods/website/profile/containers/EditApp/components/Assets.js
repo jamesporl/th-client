@@ -33,7 +33,7 @@ const Wrapper = styled.div`
   }
 `;
 
-async function dataUrltoFile(dataUrl, filename, type) {
+export async function dataUrltoFile(dataUrl, filename, type) {
   const res = await fetch(dataUrl);
   const blob = await res.blob();
   return new File([blob], filename, { type });

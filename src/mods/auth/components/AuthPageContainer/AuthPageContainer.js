@@ -48,7 +48,7 @@ const AuthPageContainer = ({ children }) => (
       <Flex w="100%" justifyContent="center">
         <Link href="/" as="/" passHref>
           <a>
-            <img src="/logo.png" alt="logo" width="280px" />
+            <img src="/logo-full.png" alt="logo" width="280px" />
           </a>
         </Link>
       </Flex>

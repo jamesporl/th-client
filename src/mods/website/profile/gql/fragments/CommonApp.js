@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import CommonSocialUrls from './CommonSocialUrls';
 
 export default gql`
   fragment CommonApp on App {
@@ -19,6 +20,9 @@ export default gql`
       }
       order
     }
+    socialUrls {
+      ...CommonSocialUrls
+    }
     appStoreUrl
     playStoreUrl
     websiteUrl
@@ -36,4 +40,5 @@ export default gql`
     isSupported
     isSponsored
   }
+  ${CommonSocialUrls}
 `;

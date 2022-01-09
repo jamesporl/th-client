@@ -7,7 +7,7 @@ import 'react-alice-carousel/lib/alice-carousel.css';
 
 const Wrapper = styled.div`
   .main {
-    width: 688px;
+    width: 768px;
 
     .alice-carousel__stage-item:not(:last-child) .carousel-item {
       padding-right: 1rem;

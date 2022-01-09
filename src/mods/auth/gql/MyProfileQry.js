@@ -1,18 +1,11 @@
 import { gql } from '@apollo/client';
+import CommonProfile from './fragments/CommonProfile';
 
 export default gql`
   query MyProfile {
     myProfile {
-      _id
-      firstName
-      lastName
-      email
-      userId
-      roleId
-      roles {
-        key
-        label
-      }
+      ...CommonProfile
     }
   }
+  ${CommonProfile}
 `;

@@ -45,7 +45,7 @@ const Preview = ({ app, onSubmitToServer }) => {
     <Wrapper>
       <Flex>
         <Box>
-          <Box mt={24} width="720px">
+          <Box mt={24} width="800px">
             <AppHeader
               name={app.name}
               shortDesc={app.shortDesc}

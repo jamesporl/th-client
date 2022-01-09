@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import CommonSocialUrls from './CommonSocialUrls';
 
 export default gql`
   fragment CommonAppDraft on AppDraft {
@@ -31,5 +32,9 @@ export default gql`
       key
       label
     }
+    socialUrls {
+      ...CommonSocialUrls
+    }
   }
+  ${CommonSocialUrls}
 `;
