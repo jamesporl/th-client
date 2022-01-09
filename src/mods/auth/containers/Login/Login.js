@@ -58,8 +58,8 @@ const Login = () => {
       window.location.href = '/';
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
-      setSubmitting(false);
     }
+    setSubmitting(false);
   };
 
   return (

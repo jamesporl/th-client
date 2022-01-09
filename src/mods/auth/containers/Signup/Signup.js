@@ -7,8 +7,6 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
-  InputGroup,
-  InputLeftAddon,
   SimpleGrid,
   useToast,
 } from '@chakra-ui/react';
@@ -37,7 +35,6 @@ const SignupSchema = yup.object().shape({
   firstName: yup.string().max(50, 'Too long').required('First name is required'),
   lastName: yup.string().max(50, 'Too long').required('Last name is required'),
   email: yup.string().max(50, 'Too long').required('E-mail is required').email('Invalid e-mail'),
-  username: yup.string().max(50, 'Too long').required('Username is required'),
   password: yup.string().max(50, 'Too long').required('Password is required'),
 });
 
@@ -55,11 +52,11 @@ const Signup = () => {
       window.location.href = '/';
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
-      setSubmitting(false);
     }
+    setSubmitting(false);
   };
 
-  const initialValues = { email: '', password: '', username: '', firstName: '', lastName: '' };
+  const initialValues = { email: '', password: '', firstName: '', lastName: '' };
 
   return (
     <AuthPageContainer>
@@ -96,19 +93,6 @@ const Signup = () => {
                   </Field>
                 </Box>
               </SimpleGrid>
-              <Field name="username">
-                {({ field }) => (
-                  <FormControl isInvalid={errors.username && touched.username} mt={8}>
-                    <FormLabel htmlFor="username">Username</FormLabel>
-                    <InputGroup>
-                      {/* eslint-disable-next-line react/no-children-prop */}
-                      <InputLeftAddon children="@" />
-                      <Input {...field} id="username" />
-                    </InputGroup>
-                    <FormErrorMessage>{errors.username}</FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field>
               <Field name="email">
                 {({ field }) => (
                   <FormControl isInvalid={errors.email && touched.email} mt={8}>

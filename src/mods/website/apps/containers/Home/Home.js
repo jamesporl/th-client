@@ -21,7 +21,7 @@ const Home = () => {
             <Heading as="h3" size="md">
               The next big things in the PH Tech scene
             </Heading>
-            <Box mt={8} width="720px">
+            <Box mt={8} width="800px">
               {appsList}
             </Box>
           </Box>
