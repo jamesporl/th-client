@@ -2,6 +2,15 @@ import React from 'react';
 import { Box, Flex, Link, Heading, Text, Tag, HStack } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  display: flex;
+
+  .title:hover {
+    text-decoration: none;
+  }
+`;
 
 const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable, slug }) => {
   let src = logoImgSrc;
@@ -45,13 +54,13 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable
     );
     title = (
       <NextLink href={`/apps/${slug}`} passHref>
-        <Link>{title}</Link>
+        <Link className="title">{title}</Link>
       </NextLink>
     );
   }
 
   return (
-    <Flex>
+    <Wrapper>
       <Box mr={4} cursor="pointer">
         {img}
       </Box>
@@ -65,7 +74,7 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable
         </Text>
         {tagsList}
       </div>
-    </Flex>
+    </Wrapper>
   );
 };
 

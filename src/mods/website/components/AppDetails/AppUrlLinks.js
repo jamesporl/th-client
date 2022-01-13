@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalOutlined } from '@ant-design/icons';
+import { AndroidOutlined, AppleFilled, GlobalOutlined } from '@ant-design/icons';
 import { Link, Button, VStack } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -30,16 +30,20 @@ const AppUrlLinks = ({ websiteUrl, appStoreUrl, playStoreUrl }) => {
   let appStoreBtn = null;
   if (appStoreUrl) {
     appStoreBtn = (
-      <Link href={appStoreUrl} isExternal>
-        <img src="/app-store-badge.svg" alt="app-store" width="160px" />
+      <Link href={appStoreUrl} isExternal style={{ width: '100%' }} className="website-btn">
+        <Button variant="outline" colorScheme="gray" isFullWidth leftIcon={<AppleFilled />}>
+          App Store
+        </Button>
       </Link>
     );
   }
   let playStoreBtn = null;
   if (playStoreUrl) {
     playStoreBtn = (
-      <Link href={playStoreUrl} isExternal>
-        <img src="/google-play-badge.png" alt="google-play" width="160px" />
+      <Link href={playStoreUrl} isExternal style={{ width: '100%' }} className="website-btn">
+        <Button variant="outline" colorScheme="gray" isFullWidth leftIcon={<AndroidOutlined />}>
+          Google Play
+        </Button>
       </Link>
     );
   }
