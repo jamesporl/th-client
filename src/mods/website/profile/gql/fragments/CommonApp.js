@@ -37,6 +37,7 @@ export default gql`
     slug
     publishedAt
     supportsCount
+    commentsCount
     isSupported
     isSponsored
   }

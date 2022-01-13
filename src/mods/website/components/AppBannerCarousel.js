@@ -19,6 +19,13 @@ const Wrapper = styled.div`
         border-radius: 0.5rem;
       }
     }
+
+    .carousel-placeholder {
+      img {
+        height: 387px;
+        border-radius: 0.5rem;
+      }
+    }
   }
 
   .thumbnails {
@@ -88,8 +95,14 @@ const Carousel = ({ bannerImgs, videoUrl }) => {
     }
   };
 
-  let mainCarousel = null;
-  let thumbnailItems = null;
+  let mainCarousel = (
+    <div className="carousel-placeholder">
+      <img src="/carousel-placeholder.png" alt="app-banner" height="387px" draggable={false} />
+    </div>
+  );
+  let thumbnailItems = (
+    <img src="/img-rect-thumbnail-placeholder.png" alt="app-banner" height="36px" />
+  );
 
   if ((sortedBannerImgs?.length || videoUrl) && allImgsLoaded) {
     let items = sortedBannerImgs.map((i, idx) => (
@@ -113,7 +126,7 @@ const Carousel = ({ bannerImgs, videoUrl }) => {
 
     if (videoUrl) {
       const videoItem = (
-        <div className="carousel-item" key="video" style={{ width: '688px' }}>
+        <div className="carousel-item" key="video" style={{ width: '704px' }}>
           <iframe
             width="688"
             height="387"

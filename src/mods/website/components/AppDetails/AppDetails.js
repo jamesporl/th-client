@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
@@ -10,6 +10,8 @@ import SocialUrlLinks from './SocialUrlLinks';
 import AppUrlLinks from './AppUrlLinks';
 
 const Wrapper = styled.div`
+  display: flex;
+
   .desc-container {
     margin-top: 1rem;
     border: 1px solid #f0f0f0;
@@ -33,36 +35,32 @@ const AppDetails = ({ app, showComments }) => {
 
   return (
     <Wrapper>
-      <Flex>
-        <Box>
-          <Box width="800px">
-            <AppHeader
-              name={app.name}
-              shortDesc={app.shortDesc}
-              logoImgSrc={app.logoImg?.medium}
-              tags={app.tags}
-            />
-            <div className="desc-container">
-              <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
-              <div
-                className="desc"
-                dangerouslySetInnerHTML={{
-                  __html: app.desc,
-                }}
-              />
-            </div>
-            {commentsSection}
-          </Box>
-        </Box>
-        <Box flexGrow="1" ml="2rem">
-          <SocialUrlLinks socialUrls={app.socialUrls} />
-          <AppUrlLinks
-            websiteUrl={app.websiteUrl}
-            playStoreUrl={app.playStoreUrl}
-            appStoreUrl={app.appStoreUrl}
+      <Box flexGrow="1">
+        <AppHeader
+          name={app.name}
+          shortDesc={app.shortDesc}
+          logoImgSrc={app.logoImg?.medium}
+          tags={app.tags}
+        />
+        <div className="desc-container">
+          <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
+          <div
+            className="desc"
+            dangerouslySetInnerHTML={{
+              __html: app.desc,
+            }}
           />
-        </Box>
-      </Flex>
+        </div>
+        {commentsSection}
+      </Box>
+      <Box width="280px" ml="2rem">
+        <SocialUrlLinks socialUrls={app.socialUrls} />
+        <AppUrlLinks
+          websiteUrl={app.websiteUrl}
+          playStoreUrl={app.playStoreUrl}
+          appStoreUrl={app.appStoreUrl}
+        />
+      </Box>
     </Wrapper>
   );
 };

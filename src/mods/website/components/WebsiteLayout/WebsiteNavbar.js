@@ -17,6 +17,7 @@ import {
   useDisclosure,
   useBreakpointValue,
   VStack,
+  Link,
 } from '@chakra-ui/react';
 import {
   AppstoreOutlined,
@@ -33,6 +34,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import MyAppDraftsQry from 'mods/website/profile/gql/MyAppDraftsQry';
+import SearchModal from './SearchModal';
 
 const Wrapper = styled.div`
   .header {
@@ -53,7 +55,8 @@ const WebsiteNavbar = () => {
   const router = useRouter();
   const apolloClient = useApolloClient();
 
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen: isMobileNavOpen, onToggle: onToggleMobileNav } = useDisclosure();
+  const { isOpen: isSearchOpen, onOpen: onOpenSearch, onClose: onCloseSearch } = useDisclosure();
 
   const handleClickLogout = () => {
     authStore.logout();
@@ -66,6 +69,10 @@ const WebsiteNavbar = () => {
 
   const handleClickMyProfile = () => {
     router.push('/my/profile');
+  };
+
+  const handleClickSearch = () => {
+    onOpenSearch();
   };
 
   const handleClickNewApp = async () => {
@@ -123,7 +130,7 @@ const WebsiteNavbar = () => {
           <Avatar
             name={authStore.myProfile?.firstName}
             size="sm"
-            src={authStore.myProfile?.image.thumbnail}
+            src={authStore.myProfile?.image?.thumbnail}
           />
         </MenuButton>
         {menu}
@@ -136,7 +143,11 @@ const WebsiteNavbar = () => {
       <Menu placement="bottom-end" size="lg">
         <MenuButton>About</MenuButton>
         <MenuList>
-          <MenuItem key="1">About us</MenuItem>
+          <NextLink href="/site/about-us" passHref>
+            <Link style={{ textDecoration: 'none' }}>
+              <MenuItem key="1">About us</MenuItem>
+            </Link>
+          </NextLink>
         </MenuList>
       </Menu>
       {submitAppBtn}
@@ -146,8 +157,8 @@ const WebsiteNavbar = () => {
 
   const mobileRightNavBtn = (
     <IconButton
-      onClick={onToggle}
-      icon={isOpen ? <CloseOutlined /> : <MenuOutlined />}
+      onClick={onToggleMobileNav}
+      icon={isMobileNavOpen ? <CloseOutlined /> : <MenuOutlined />}
       variant="ghost"
       aria-label="Toggle Navigation"
     />
@@ -178,7 +189,7 @@ const WebsiteNavbar = () => {
                 pointerEvents="none"
                 children={<SearchOutlined style={{ color: '#ccc' }} />}
               />
-              <Input placeholder="Search Tech Hustlers" size="md" />
+              <Input placeholder="Search Tech Hustlers" size="md" onFocus={handleClickSearch} />
             </InputGroup>
           </Flex>
           <Flex alignItems="center" justifyContent="flex-end" ml={8}>
@@ -186,11 +197,12 @@ const WebsiteNavbar = () => {
           </Flex>
         </Flex>
       </Flex>
-      <Collapse in={isOpen} animateOpacity style={{ paddingTop: '60px' }}>
+      <Collapse in={isMobileNavOpen} animateOpacity style={{ paddingTop: '60px' }}>
         <VStack p={4} display={{ md: 'none' }}>
           {submitAppBtn}
         </VStack>
       </Collapse>
+      <SearchModal isOpen={isSearchOpen} onClose={onCloseSearch} />
     </Wrapper>
   );
 };

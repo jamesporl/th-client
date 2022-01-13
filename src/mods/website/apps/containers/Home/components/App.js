@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Box, Flex, Text, Input } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import styled from 'styled-components';
 import AppHeader from 'mods/website/profile/components/AppHeader';
-import SupportBlock from './SupportBlock';
+import SupportsAndCommentsBlock from './SupportsAndCommentsBlock';
 
 const Wrapper = styled.div`
   border: 1px solid #efefef;
@@ -39,13 +39,7 @@ const App = ({ app }) => (
         </Text>
       </Box>
     </Flex>
-    <SupportBlock app={app} />
-    <div className="comments">
-      <Text color="gray.600">See all 10 comments...</Text>
-      <div className="input">
-        <Input placeholder="Write some feedback..." mt={4} />
-      </div>
-    </div>
+    <SupportsAndCommentsBlock app={app} />
   </Wrapper>
 );
 
