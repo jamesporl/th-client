@@ -7,6 +7,7 @@ import {
   FormErrorMessage,
   Input,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
@@ -16,6 +17,7 @@ import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import LoginMtn from 'mods/auth/gql/LoginMtn';
 import PasswordFormControl from 'mods/auth/components/PasswordFormControl';
+import GoogleLoginButton from 'mods/auth/components/GoogleLoginButton';
 import AuthPageContainer from '../../components/AuthPageContainer';
 
 const Wrapper = styled.div`
@@ -91,16 +93,18 @@ const Login = () => {
                   />
                 )}
               </Field>
-              <Button
-                colorScheme="green"
-                isFullWidth
-                size="md"
-                type="submit"
-                mt={8}
-                isLoading={isSubmitting}
-              >
-                Log in
-              </Button>
+              <VStack spacing={4} mt={8}>
+                <Button
+                  colorScheme="green"
+                  isFullWidth
+                  size="md"
+                  type="submit"
+                  isLoading={isSubmitting}
+                >
+                  Log in
+                </Button>
+                <GoogleLoginButton />
+              </VStack>
               <div className="terms">
                 <small>
                   By continuing, you agree to our

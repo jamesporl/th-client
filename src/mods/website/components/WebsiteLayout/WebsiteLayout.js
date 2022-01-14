@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import { PropTypes } from 'prop-types';
@@ -35,21 +35,6 @@ const Wrapper = styled.div`
 
 const WebsiteLayout = ({ children }) => {
   const { uiStore } = useStores();
-
-  useEffect(() => {
-    const handleResize = () => uiStore.setScreenSize(window.innerWidth, window.innerHeight);
-    // trigger resize on mount, and listen to resize event afterwards
-    if (typeof window !== 'undefined') {
-      handleResize();
-      window.addEventListener('resize', handleResize);
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', handleResize);
-      }
-    };
-  }, []);
 
   return (
     <>

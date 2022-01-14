@@ -9,6 +9,7 @@ import {
   Input,
   SimpleGrid,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ import useStores from 'core/stores/useStores';
 import SignupMtn from '../../gql/SignupMtn';
 import PasswordFormControl from '../../components/PasswordFormControl';
 import AuthPageContainer from '../../components/AuthPageContainer';
+import GoogleLoginButton from '../../components/GoogleLoginButton';
 
 const Wrapper = styled.div`
   .terms {
@@ -111,16 +113,18 @@ const Signup = () => {
                   />
                 )}
               </Field>
-              <Button
-                colorScheme="green"
-                isFullWidth
-                size="md"
-                type="submit"
-                mt={8}
-                isLoading={isSubmitting}
-              >
-                Sign up
-              </Button>
+              <VStack mt={8} spacing={4}>
+                <Button
+                  colorScheme="green"
+                  isFullWidth
+                  size="md"
+                  type="submit"
+                  isLoading={isSubmitting}
+                >
+                  Sign up
+                </Button>
+                <GoogleLoginButton />
+              </VStack>
               <div className="terms">
                 <small>
                   By continuing, you agree to our
