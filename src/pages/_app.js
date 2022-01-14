@@ -9,9 +9,24 @@ import chakraCustomTheme from 'utils/styles/chakraCustomTheme';
 
 /* eslint-disable react/jsx-props-no-spreading,react/prop-types */
 function App({ Component, pageProps }) {
-  const { authStore } = useStores();
+  const { authStore, uiStore } = useStores();
 
   const apolloClient = useApollo(pageProps.initialApolloState);
+
+  useEffect(() => {
+    const handleResize = () => uiStore.setScreenSize(window.innerWidth, window.innerHeight);
+    // trigger resize on mount, and listen to resize event afterwards
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const getAuthData = async () => {
