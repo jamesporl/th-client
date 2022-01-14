@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
-import { Box, Flex } from '@chakra-ui/react';
+import NextLink from 'next/link';
+import { Box, Flex, Link } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -46,11 +46,11 @@ const AuthPageContainer = ({ children }) => (
   <Wrapper>
     <div className="form-box">
       <Flex w="100%" justifyContent="center">
-        <Link href="/" as="/" passHref>
-          <a>
+        <NextLink href="/" as="/" passHref>
+          <Link>
             <img src="/logo-full.png" alt="logo" width="280px" />
-          </a>
-        </Link>
+          </Link>
+        </NextLink>
       </Flex>
       <Box mt={8}>{children}</Box>
     </div>

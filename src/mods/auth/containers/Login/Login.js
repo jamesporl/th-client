@@ -8,16 +8,18 @@ import {
   Input,
   useToast,
   VStack,
+  Link,
+  Flex,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import LoginMtn from 'mods/auth/gql/LoginMtn';
-import PasswordFormControl from 'mods/auth/components/PasswordFormControl';
-import GoogleLoginButton from 'mods/auth/components/GoogleLoginButton';
+import PasswordFormControl from '../../components/PasswordFormControl';
+import GoogleLoginButton from '../../components/GoogleLoginButton';
 import AuthPageContainer from '../../components/AuthPageContainer';
 
 const Wrapper = styled.div`
@@ -113,16 +115,16 @@ const Login = () => {
                   </a>
                 </small>
               </div>
-              <div className="forgot-password">
-                <Link href="/account/forgot-password" as="/account/forgot-password" passHref>
-                  <a>Forgot password?</a>
-                </Link>
-              </div>
+              <Flex mt={8} justifyContent="center">
+                <NextLink href="/account/forgot-password" passHref>
+                  <Link style={{ textDecoration: 'none' }}>Forgot password?</Link>
+                </NextLink>
+              </Flex>
               <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
                 Don&apos;t have an account? &nbsp;
-                <Link href="/account/signup" as="/account/signup" passHref>
-                  <a>Sign up here.</a>
-                </Link>
+                <NextLink href="/account/signup" as="/account/signup" passHref>
+                  <Link style={{ textDecoration: 'none' }}>Sign up here.</Link>
+                </NextLink>
               </div>
             </Form>
           )}
