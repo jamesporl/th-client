@@ -8,27 +8,17 @@ import GlobalModalContent from 'mods/base/components/GlobalModalContent';
 import WebsiteNavbar from './WebsiteNavbar';
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-
   .container {
     display: flex;
-    width: 100%;
-    max-width: 1100px;
-    justify-content: space-between;
-    padding: 3rem 0;
-
-    @media (max-width: 1100px) {
-      padding: 3rem 2rem;
-    }
-
-    @media (max-width: 767px) {
-      padding: 3rem 1rem;
-    }
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
 
     .child-container {
-      flex-grow: 1;
-      margin-top: 3rem;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 6rem;
+      margin-bottom: 3rem;
     }
   }
 `;
@@ -38,8 +28,8 @@ const WebsiteLayout = ({ children }) => {
 
   return (
     <>
-      <WebsiteNavbar />
       <Wrapper>
+        <WebsiteNavbar />
         <div className="container">
           <div className="child-container">{children}</div>
         </div>

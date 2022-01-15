@@ -25,6 +25,15 @@ export default gql`
       }
       order
     }
+    ownedBy {
+      _id
+      firstName
+      lastName
+      image {
+        _id
+        thumbnail
+      }
+    }
     appStoreUrl
     playStoreUrl
     websiteUrl

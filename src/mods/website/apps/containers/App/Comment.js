@@ -55,7 +55,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
     childCommentsList = comment.comments.nodes.map((c) => (
       <Flex mt={4} w="100%">
         <Flex mr={4} mt={2}>
-          <Avatar name={c.createdBy?.firstName} size="sm" />
+          <Avatar name={c.createdBy?.firstName} src={c.createdBy?.image?.thumbnail} size="sm" />
         </Flex>
         <Flex flexGrow={1} flexDir="column">
           <HStack spacing={2}>
@@ -74,7 +74,11 @@ const Comment = ({ app, comment, onRefetchComments }) => {
             }}
           />
           <HStack spacing={4} mt={2}>
-            <SupportComment commentId={c._id} isSupported={false} supportsCount={10} />
+            <SupportComment
+              commentId={c._id}
+              isSupported={c.isSupported}
+              supportsCount={c.supportsCount}
+            />
           </HStack>
         </Flex>
       </Flex>
@@ -85,7 +89,11 @@ const Comment = ({ app, comment, onRefetchComments }) => {
     <>
       <Flex mt={4} w="100%">
         <Flex mr={4} mt={2}>
-          <Avatar name={comment.createdBy?.firstName} size="sm" />
+          <Avatar
+            name={comment.createdBy?.firstName}
+            src={comment.createdBy?.image?.thumbnail}
+            size="sm"
+          />
         </Flex>
         <Flex flexGrow={1} flexDir="column">
           <HStack spacing={2}>
@@ -104,15 +112,22 @@ const Comment = ({ app, comment, onRefetchComments }) => {
             }}
           />
           <HStack spacing={4} mt={2}>
-            <SupportComment commentId={comment._id} isSupported={false} supportsCount={10} />
+            <SupportComment
+              commentId={comment._id}
+              isSupported={comment.isSupported}
+              supportsCount={comment.supportsCount}
+            />
             <Button
               colorScheme="blue"
-              variant="ghost"
-              leftIcon={<RollbackOutlined />}
+              variant="link"
               size="sm"
               onClick={handleClickReply}
+              style={{ textDecoration: 'none' }}
             >
-              Reply
+              <RollbackOutlined style={{ fontSize: 20 }} />
+              <Text fontWeight="bold" ml={2}>
+                Reply
+              </Text>
             </Button>
           </HStack>
         </Flex>

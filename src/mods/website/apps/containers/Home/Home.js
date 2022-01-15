@@ -25,21 +25,20 @@ const Home = () => {
   }
 
   const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' });
-  const appsListWidth = useBreakpointValue({ base: '100%', lg: '720px' });
 
   return (
     <WebsiteLayout>
       <Box width="100%">
-        <Flex width="100%">
+        <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
             <Heading as="h3" size="md">
               A showcase of what the PH Tech scene is made of
             </Heading>
-            <Box mt={8} width={appsListWidth}>
+            <Box mt={8} width="100%">
               {appsList}
             </Box>
           </Box>
-          <Box flexGrow="1" ml="2rem" style={{ display: rightColDisplay }}>
+          <Box flexGrow="1" ml="2rem" style={{ display: rightColDisplay }} maxWidth="300px">
             <Heading as="h4" size="md">
               This platform
             </Heading>
