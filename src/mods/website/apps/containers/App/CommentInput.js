@@ -22,7 +22,11 @@ const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
   return (
     <Flex w="100%">
       <Flex mr={4} mt={2}>
-        <Avatar name={authStore.myProfile?.firstName} size="sm" />
+        <Avatar
+          name={authStore.myProfile?.firstName}
+          src={authStore.myProfile?.image?.thumbnail}
+          size="sm"
+        />
       </Flex>
       <Flex flexGrow={1} flexDir="column">
         <Editor

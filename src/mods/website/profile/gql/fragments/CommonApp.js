@@ -34,6 +34,15 @@ export default gql`
       _id
       name
     }
+    ownedBy {
+      _id
+      firstName
+      lastName
+      image {
+        _id
+        thumbnail
+      }
+    }
     slug
     publishedAt
     supportsCount

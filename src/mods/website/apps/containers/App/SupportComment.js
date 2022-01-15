@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useMutation } from '@apollo/client';
 import { Text, Flex, Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { SmileOutlined, SmileTwoTone } from '@ant-design/icons';
+import ToggleAppCommentSupportMtn from '../../gql/ToggleAppCommentSupportMtn';
 
 const SupportComment = ({
   commentId,
@@ -12,61 +13,44 @@ const SupportComment = ({
   const [supportsCount, setSupportsCount] = useState(iSupportsCount);
   const [isSupported, setIsSupported] = useState(iIsSupported);
 
-  const submitToServer = () => {
+  const [toggleAppCommentSupport] = useMutation(ToggleAppCommentSupportMtn);
+
+  const handleClickSupport = useCallback(() => {
+    setIsSupported(!isSupported);
+    if (isSupported) {
+      setSupportsCount((c) => c - 1);
+    } else {
+      setSupportsCount((c) => c + 1);
+    }
     const input = { commentId };
-    // toggleAppSupport({ variables: { input } });
-  };
-
-  const handleClickSupport = () => {
-    setIsSupported(true);
-    setSupportsCount((c) => c + 1);
-    submitToServer();
-  };
-
-  const handleClickUnsupport = () => {
-    setIsSupported(false);
-    setSupportsCount((c) => c - 1);
-    submitToServer();
-  };
-
-  let supportBtn = (
-    <Button
-      colorScheme="blue"
-      variant="ghost"
-      leftIcon={<SmileOutlined />}
-      size="sm"
-      onClick={handleClickSupport}
-      mr={2}
-    >
-      Support
-    </Button>
-  );
-  if (isSupported) {
-    supportBtn = (
-      <Button
-        colorScheme="blue"
-        variant="ghost"
-        leftIcon={<SmileTwoTone />}
-        size="sm"
-        onClick={handleClickUnsupport}
-        mr={2}
-      >
-        Supported
-      </Button>
-    );
-  }
+    toggleAppCommentSupport({ variables: { input } });
+  }, [isSupported]);
 
   let supportText = 'supports';
   if (supportsCount === 1) {
     supportText = 'support';
   }
 
+  let supportIcon = <SmileTwoTone style={{ fontSize: 20 }} />;
+  if (!isSupported) {
+    supportIcon = <SmileOutlined style={{ fontSize: 20, color: '#2b6cb0' }} />;
+  }
+
   return (
     <Flex alignItems="center">
-      {supportBtn}
-      <Text fontSize="sm" color="gray.600">
-        {`${supportsCount} ${supportText}`}
-      </Text>
+      <Button
+        className="support-btn"
+        colorScheme="blue"
+        variant="link"
+        onClick={handleClickSupport}
+        size="sm"
+        style={{ textDecoration: 'none' }}
+      >
+        {supportIcon}
+        <Text fontWeight="bold" ml={2}>
+          {`${supportsCount} ${supportText}`}
+        </Text>
+      </Button>
     </Flex>
   );
 };

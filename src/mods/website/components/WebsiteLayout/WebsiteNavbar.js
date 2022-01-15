@@ -42,11 +42,11 @@ const Wrapper = styled.div`
     background-color: #fff;
     z-index: 1000;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
 
-  .container {
-    width: 100%;
-    max-width: 1100px;
+    .nav-container {
+      width: 100%;
+      max-width: 1100px;
+    }
   }
 `;
 
@@ -173,11 +173,11 @@ const WebsiteNavbar = () => {
         justifyContent="center"
         alignItems="center"
         h="60px"
-        pl={useBreakpointValue({ base: 4, xl: 0 })}
-        pr={useBreakpointValue({ base: 4, xl: 0 })}
+        pl={4}
+        pr={4}
         className="header"
       >
-        <Flex alignItems="center" justifyContent="space-between" className="container">
+        <Flex alignItems="center" justifyContent="space-between" className="nav-container">
           <Flex alignItems="center" mr={8}>
             <NextLink href="/" as="/" passHref>
               <a>{useBreakpointValue({ base: mobileLogoImg, md: desktopLogoImg })}</a>

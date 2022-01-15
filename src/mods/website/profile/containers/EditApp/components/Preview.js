@@ -60,7 +60,7 @@ const Preview = ({ app, onSubmitToServer }) => {
           </Text>
         </Box>
       </Flex>
-      <AppDetails app={app} />
+      <AppDetails app={app} isPreview />
     </Wrapper>
   );
 };

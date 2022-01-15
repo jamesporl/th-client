@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MessageTwoTone, SmileTwoTone } from '@ant-design/icons';
+import React, { useCallback, useState } from 'react';
+import { MessageTwoTone, SmileOutlined, SmileTwoTone } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { Text, Flex, Button, HStack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
@@ -8,6 +8,9 @@ import styled from 'styled-components';
 import ToggleAppSupportMtn from '../../../gql/ToggleAppSupportMtn';
 
 const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
   .support-btn {
     border-radius: 0.25rem;
   }
@@ -22,44 +25,42 @@ const SupportsAndCommentsBlock = ({ app }) => {
 
   const [toggleAppSupport] = useMutation(ToggleAppSupportMtn);
 
-  const submitToServer = () => {
+  const handleClickSupport = useCallback(() => {
+    setIsSupported(!isSupported);
+    if (isSupported) {
+      setSupportsCount((c) => c - 1);
+    } else {
+      setSupportsCount((c) => c + 1);
+    }
     const input = { appId: app._id };
     toggleAppSupport({ variables: { input } });
-  };
-
-  const handleClickSupport = () => {
-    setIsSupported(true);
-    setSupportsCount((c) => c + 1);
-    submitToServer();
-  };
-
-  const handleClickUnsupport = () => {
-    setIsSupported(false);
-    setSupportsCount((c) => c - 1);
-    submitToServer();
-  };
+  }, [isSupported]);
 
   let supportText = 'supports';
   if (supportsCount === 1) {
     supportText = 'support';
   }
 
+  let supportIcon = <SmileTwoTone style={{ fontSize: 24 }} />;
+  if (!isSupported) {
+    supportIcon = <SmileOutlined style={{ fontSize: 24, color: '#2b6cb0' }} />;
+  }
+
   return (
     <Wrapper>
-      <HStack mt={4} alignItems="center">
+      <HStack mt={4} alignItems="center" spacing={16}>
         <Button
           className="support-btn"
-          colorScheme={isSupported ? 'blue' : 'teal'}
+          colorScheme="blue"
           variant="link"
           size="md"
-          onClick={isSupported ? handleClickUnsupport : handleClickSupport}
+          onClick={handleClickSupport}
         >
-          <SmileTwoTone style={{ fontSize: 24 }} />
+          {supportIcon}
           <Text fontWeight="bold" ml={2}>
             {`${supportsCount} ${supportText}`}
           </Text>
         </Button>
-
         <NextLink href={`/apps/${app.slug}`} passHref>
           <Link className="support-btn">
             <Flex>

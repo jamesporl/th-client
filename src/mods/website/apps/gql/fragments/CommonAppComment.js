@@ -7,6 +7,10 @@ export default gql`
       _id
       firstName
       lastName
+      image {
+        _id
+        thumbnail
+      }
     }
     content
     createdAt
@@ -15,6 +19,8 @@ export default gql`
       key
       label
     }
+    supportsCount
+    isSupported
     comments {
       nodes {
         _id
@@ -22,6 +28,10 @@ export default gql`
           _id
           firstName
           lastName
+          image {
+            _id
+            thumbnail
+          }
         }
         content
         createdAt
@@ -29,6 +39,8 @@ export default gql`
           key
           label
         }
+        supportsCount
+        isSupported
       }
       totalCount
     }
