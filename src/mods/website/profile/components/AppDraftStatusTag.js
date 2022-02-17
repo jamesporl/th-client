@@ -10,6 +10,8 @@ const AppDraftStatusTag = ({ appDraftStatus }) => {
     colorScheme = 'teal'; // teal
   } else if (key === 'approved') {
     colorScheme = 'green'; // green
+  } else if (key === 'published') {
+    colorScheme = 'purple'; // green
   }
 
   return (
