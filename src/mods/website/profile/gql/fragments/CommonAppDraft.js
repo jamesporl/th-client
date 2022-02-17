@@ -10,6 +10,7 @@ export default gql`
     desc
     logoImg {
       _id
+      thumbnail
       medium
     }
     tags {
