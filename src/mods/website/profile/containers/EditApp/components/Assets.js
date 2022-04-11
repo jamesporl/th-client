@@ -236,7 +236,7 @@ const Assets = ({
                 Logo
               </Heading>
             </Box>
-            <Flex justifyContent="center" alignContent="center" mt={8} mb={8}>
+            <Flex justifyContent="center" alignItems="center" mt={8} mb={8}>
               <UploadImage
                 uploadText="Upload (512px x 512px)"
                 onChange={handleChangeLogo}
@@ -282,7 +282,7 @@ const Assets = ({
                   </Grid>
                 </Box>
               </Flex>
-              <Flex justifyContent="center" alignContent="center" mt={8} mb={8}>
+              <Flex justifyContent="center" alignItems="center" mt={8} mb={8}>
                 <UploadImage
                   uploadText="Upload (1980px or less x 1080px)"
                   onChange={handleChangeBanner}

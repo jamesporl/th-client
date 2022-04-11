@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { useMutation } from '@apollo/client';
 import { Text, Flex, Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
-import { SmileOutlined, SmileTwoTone } from '@ant-design/icons';
 import ToggleAppCommentSupportMtn from '../../gql/ToggleAppCommentSupportMtn';
 
 const SupportComment = ({
@@ -26,31 +25,18 @@ const SupportComment = ({
     toggleAppCommentSupport({ variables: { input } });
   }, [isSupported]);
 
-  let supportText = 'supports';
-  if (supportsCount === 1) {
-    supportText = 'support';
-  }
-
-  let supportIcon = <SmileTwoTone style={{ fontSize: 20 }} />;
-  if (!isSupported) {
-    supportIcon = <SmileOutlined style={{ fontSize: 20, color: '#2b6cb0' }} />;
-  }
-
   return (
     <Flex alignItems="center">
       <Button
-        className="support-btn"
-        colorScheme="blue"
-        variant="link"
+        colorScheme={isSupported ? 'blue' : 'gray'}
+        variant={isSupported ? 'solid' : 'outline'}
         onClick={handleClickSupport}
-        size="sm"
-        style={{ textDecoration: 'none' }}
+        size="xs"
+        mr={4}
       >
-        {supportIcon}
-        <Text fontWeight="bold" ml={2}>
-          {`${supportsCount} ${supportText}`}
-        </Text>
+        Support
       </Button>
+      <Text fontSize="sm" color="gray.500">{` ${supportsCount}`}</Text>
     </Flex>
   );
 };

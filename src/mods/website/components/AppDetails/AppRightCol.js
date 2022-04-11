@@ -7,29 +7,23 @@ import AppUrlLinks from './AppUrlLinks';
 const AppRightCol = ({ app }) => (
   <Flex justifyContent="center" width="100%">
     <Box width="100%">
-      <SocialUrlLinks socialUrls={app.socialUrls} />
       <AppUrlLinks
         websiteUrl={app.websiteUrl}
         playStoreUrl={app.playStoreUrl}
         appStoreUrl={app.appStoreUrl}
       />
-      <Flex
-        mt={8}
-        alignItems="center"
-        backgroundColor="gray.100"
-        padding={4}
-        borderRadius={4}
-        flexDirection="column"
-        width="100%"
-      >
-        <Text fontSize="sm" textTransform="uppercase" letterSpacing="2px" fontWeight="bold">
-          Creator
+      <Box mt={12}>
+        <SocialUrlLinks socialUrls={app.socialUrls} />
+      </Box>
+      <Box mt={12}>
+        <Text fontSize="xs" color="gray.600" fontWeight="500">
+          Created By
         </Text>
         <Flex mt={4} alignItems="center">
           <Avatar name={app.ownedBy.firstName} src={app.ownedBy?.image?.thumbnail} size="sm" />
           <Text ml={4}>{`${app.ownedBy.firstName} ${app.ownedBy.lastName}`}</Text>
         </Flex>
-      </Flex>
+      </Box>
     </Box>
   </Flex>
 );

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React, { useState, useCallback } from 'react';
-import { RollbackOutlined } from '@ant-design/icons';
+import { MessageOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { Avatar, Box, Button, Flex, HStack, Text, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
@@ -59,11 +59,11 @@ const Comment = ({ app, comment, onRefetchComments }) => {
         </Flex>
         <Flex flexGrow={1} flexDir="column">
           <HStack spacing={2}>
-            <Text fontSize="sm" color="gray.600">
+            <Text fontSize="xs" color="gray.600">
               {`${c.createdBy.firstName} ${c.createdBy.lastName} • `}
             </Text>
             &bull;
-            <Text fontSize="sm" color="gray.500" as="i">
+            <Text fontSize="xs" color="gray.500" as="i">
               {moment(c.createdAt).fromNow()}
             </Text>
           </HStack>
@@ -87,7 +87,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
 
   return (
     <>
-      <Flex mt={4} w="100%">
+      <Flex mt={8} w="100%">
         <Flex mr={4} mt={2}>
           <Avatar
             name={comment.createdBy?.firstName}
@@ -124,7 +124,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
               onClick={handleClickReply}
               style={{ textDecoration: 'none' }}
             >
-              <RollbackOutlined style={{ fontSize: 20 }} />
+              <MessageOutlined style={{ fontSize: 12 }} />
               <Text fontWeight="bold" ml={2}>
                 Reply
               </Text>

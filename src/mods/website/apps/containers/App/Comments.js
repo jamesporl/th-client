@@ -63,10 +63,10 @@ const Comments = ({ app }) => {
 
   return (
     <Wrapper>
-      <Text fontSize="lg" fontWeight="bold">
-        Feedback
+      <Text fontSize="2xl" fontWeight="500">
+        Share Your Feedback
       </Text>
-      <Flex mt={4} w="100%">
+      <Flex mt={8} w="100%">
         <CommentInput
           onSubmitComment={handleSubmitAddComment}
           placeholder="Got something nice to say about the app?"

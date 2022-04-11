@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Link, Heading, Text, Tag, HStack } from '@chakra-ui/react';
+import { Box, Flex, Link, Text, Tag, HStack } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable, slug }) => {
+const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => {
   let src = logoImgSrc;
   if (!logoImgSrc) {
     src = '/img-sq-placeholder.png';
@@ -21,7 +21,7 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable
   let tagsList = null;
   if (tags?.length) {
     tagsList = (
-      <Box mt={1}>
+      <Box mt={2}>
         <HStack spacing={2}>
           {tags.map((t) => (
             <Tag key={t._id}>{t.name}</Tag>
@@ -31,20 +31,11 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable
     );
   }
 
-  let sponsorTag = false;
-  if (isSponsored) {
-    sponsorTag = (
-      <Tag colorScheme="yellow" variant="solid" size="sm" ml={2}>
-        Sponsored
-      </Tag>
-    );
-  }
-
-  let img = <img src={src} alt="logo" width="80px" style={{ borderRadius: '0.5rem' }} />;
+  let img = <img src={src} alt="logo" width="88px" style={{ borderRadius: '0.5rem' }} />;
   let title = (
-    <Heading as="h3" size="md">
+    <Text fontSize="xl" fontWeight="bold">
       {name || 'Best App Ever'}
-    </Heading>
+    </Text>
   );
   if (isClickable) {
     img = (
@@ -65,13 +56,8 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isSponsored, isClickable
         {img}
       </Box>
       <div>
-        <Flex alignItems="center">
-          {title}
-          {sponsorTag}
-        </Flex>
-        <Text color="gray.600" mt={1}>
-          {shortDesc || '100% catchy slogan'}
-        </Text>
+        <Flex alignItems="center">{title}</Flex>
+        <Text mt={1}>{shortDesc || '100% catchy slogan'}</Text>
         {tagsList}
       </div>
     </Wrapper>
@@ -84,7 +70,6 @@ AppHeader.propTypes = {
   shortDesc: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.object),
   isClickable: PropTypes.bool,
-  isSponsored: PropTypes.bool,
   slug: PropTypes.string,
 };
 
@@ -94,7 +79,6 @@ AppHeader.defaultProps = {
   name: '',
   tags: [],
   isClickable: false,
-  isSponsored: false,
   slug: '',
 };
 

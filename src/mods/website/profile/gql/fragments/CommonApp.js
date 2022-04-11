@@ -48,7 +48,7 @@ export default gql`
     supportsCount
     commentsCount
     isSupported
-    isSponsored
+    isFeatured
   }
   ${CommonSocialUrls}
 `;

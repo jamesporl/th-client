@@ -49,7 +49,7 @@ const AppUrlLinks = ({ websiteUrl, appStoreUrl, playStoreUrl }) => {
   }
   return (
     <Wrapper>
-      <VStack spacing={2} mt={8} alignContent="center">
+      <VStack spacing={2} alignItems="center">
         {websiteBtn}
         {appStoreBtn}
         {playStoreBtn}

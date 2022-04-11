@@ -3,7 +3,7 @@ import { ModalHeader, ModalBody } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import useStores from 'core/stores/useStores';
 import styled from 'styled-components';
-import modalComponents from 'core/utils/globalModal/modalComponents';
+import modalComponents from 'core/utils/modalComponents';
 
 const Wrapper = styled.div`
   .not-found {

@@ -5,8 +5,10 @@ import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import GlobalModalContent from 'mods/base/components/GlobalModalContent';
+import { Helmet } from 'react-helmet';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
+import SearchDrawer from './SearchDrawer';
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,14 +25,20 @@ const Wrapper = styled.div`
   }
 `;
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = ({ children, title }) => {
   const { uiStore } = useStores();
   const { isOpen: isSidebarOpen, onToggle: onToggleSidebarOpen } = useDisclosure({
     defaultIsOpen: true,
   });
 
+  let titleComp = null;
+  if (title) {
+    titleComp = <Helmet title={title} />;
+  }
+
   return (
     <>
+      {titleComp}
       <Wrapper screenheight={uiStore.screenheight} width="100%">
         <AdminSidebar className="side-bar" isCollapsed={!isSidebarOpen} />
         <Box flexGrow="1" height={`${uiStore.screenheight}px`} overflowY="hidden">
@@ -38,6 +46,7 @@ const AdminLayout = ({ children }) => {
           <div className="content">{children}</div>
         </Box>
       </Wrapper>
+      <SearchDrawer />
       <Modal
         isOpen={uiStore.isGlobalModalOpen}
         onClose={uiStore.closeGlobalModal}
@@ -55,6 +64,11 @@ const AdminLayout = ({ children }) => {
 
 AdminLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  title: PropTypes.string,
+};
+
+AdminLayout.defaultProps = {
+  title: '',
 };
 
 export default observer(AdminLayout);
