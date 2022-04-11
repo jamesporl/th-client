@@ -45,6 +45,7 @@ export default gql`
     socialUrls {
       ...CommonSocialUrls
     }
+    createdAt
   }
   ${CommonSocialUrls}
 `;

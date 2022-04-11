@@ -17,7 +17,7 @@ const Wrapper = styled.div`
     .child-container {
       width: 100%;
       max-width: 1100px;
-      margin-top: 6rem;
+      margin-top: 8rem;
       margin-bottom: 3rem;
     }
   }

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React, { useState, useCallback } from 'react';
-import { SmileOutlined, SmileTwoTone } from '@ant-design/icons';
+import { SmileTwoTone } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { Box, Text, Button, Flex, useBreakpointValue } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
@@ -12,9 +12,6 @@ import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import AppRightCol from './AppRightCol';
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-
   .desc-container {
     margin-top: 1rem;
     border: 1px solid #f0f0f0;
@@ -51,64 +48,80 @@ const AppDetails = ({ app, isPreview }) => {
   let commentsSection = null;
   if (!isPreview) {
     commentsSection = (
-      <Box mt={8}>
+      <Box mt={16}>
         <Comments app={app} />
       </Box>
     );
   }
 
-  let supportIcon = <SmileTwoTone style={{ fontSize: 24 }} />;
-  if (!isSupported) {
-    supportIcon = <SmileOutlined style={{ fontSize: 24, color: '#2b6cb0' }} />;
-  }
-
   const supportsComp = (
-    <Flex justifyContent="center" mt={8}>
-      <Text mr={8} color="gray.600" fontSize="sm">
-        Are you happy to support this app?
-      </Text>
-      <Button
-        className="support-btn"
-        colorScheme="blue"
-        variant="link"
-        size="md"
-        onClick={handleClickSupport}
-        style={{ textDecoration: 'none' }}
-      >
-        {supportIcon}
-        <Text fontWeight="bold" ml={2}>
-          {`${supportsCount} ${supportsCount === 1 ? 'support' : 'supports'}`}
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      mt={16}
+      mb={16}
+      border="2px"
+      borderColor="gray.200"
+      borderRadius={4}
+      p={6}
+    >
+      <Box>
+        <Text fontWeight="500" fontSize="lg">
+          Are you happy to support this app? &nbsp;
+          <SmileTwoTone />
         </Text>
-      </Button>
+      </Box>
+      <Flex alignItems="center">
+        <Box mr={6}>
+          <Button
+            colorScheme={isSupported ? 'blue' : 'gray'}
+            variant={isSupported ? 'solid' : 'outline'}
+            onClick={handleClickSupport}
+            size="xs"
+          >
+            Support
+          </Button>
+        </Box>
+
+        <Box>
+          <Text fontSize="2xl" fontWeight="bold">
+            {supportsCount}
+          </Text>
+        </Box>
+      </Flex>
     </Flex>
   );
 
   return (
     <Wrapper>
-      <Box width="100%">
-        <AppHeader
-          name={app.name}
-          shortDesc={app.shortDesc}
-          logoImgSrc={app.logoImg?.medium}
-          tags={app.tags}
-        />
-        <div className="desc-container">
-          <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
-          {supportsComp}
-          <div
-            className="desc"
-            dangerouslySetInnerHTML={{
-              __html: app.desc,
-            }}
-          />
-        </div>
-        <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={8}>
-          <AppRightCol app={app} />
+      <AppHeader
+        name={app.name}
+        shortDesc={app.shortDesc}
+        logoImgSrc={app.logoImg?.medium}
+        tags={app.tags}
+      />
+      <Box width="100%" mt={12}>
+        <Flex width="100%" justifyContent="space-between">
+          <Box width="100%">
+            <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
+            <Box mt={12}>
+              <div
+                className="desc"
+                dangerouslySetInnerHTML={{
+                  __html: app.desc,
+                }}
+              />
+            </Box>
+            {supportsComp}
+            <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={8}>
+              <AppRightCol app={app} />
+            </Flex>
+            {commentsSection}
+          </Box>
+          <Box flexGrow="1" ml="4rem" style={{ display: rightColDisplay }} width="350px">
+            <AppRightCol app={app} />
+          </Box>
         </Flex>
-        {commentsSection}
-      </Box>
-      <Box flexGrow="1" ml="2rem" style={{ display: rightColDisplay }} width="300px">
-        <AppRightCol app={app} />
       </Box>
     </Wrapper>
   );

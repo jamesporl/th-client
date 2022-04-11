@@ -9,17 +9,7 @@ import AppDetails from 'mods/website/components/AppDetails';
 import { InfoCircleFilled } from '@ant-design/icons';
 import SubmitAppDraftMtn from '../../../gql/SubmitAppDraftMtn';
 
-const Wrapper = styled.div`
-  .desc-container {
-    margin-top: 1rem;
-    border: 1px solid #f0f0f0;
-    padding: 1rem;
-
-    .desc {
-      margin-top: 2rem;
-    }
-  }
-`;
+const Wrapper = styled.div``;
 
 const Preview = ({ app, onSubmitToServer }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);

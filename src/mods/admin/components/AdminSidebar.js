@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppstoreOutlined, TeamOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, GlobalOutlined, TeamOutlined } from '@ant-design/icons';
 import NextLink from 'next/link';
 import {
   ProSidebar,
@@ -53,6 +53,9 @@ const AdminSidebar = ({ isCollapsed }) => {
         <SidebarHeader>{headerImg}</SidebarHeader>
         <SidebarContent>
           <Menu iconShape="square">
+            <MenuItem icon={<GlobalOutlined />}>
+              <NextLink href="/">Go To Website</NextLink>
+            </MenuItem>
             <SubMenu title="Apps" icon={<AppstoreOutlined />}>
               <MenuItem>
                 <NextLink href="/site-admin/app-drafts">Drafts</NextLink>
