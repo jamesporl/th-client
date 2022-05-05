@@ -1,8 +1,9 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { Button, Flex, Avatar } from '@chakra-ui/react';
+import { Flex, Avatar } from '@chakra-ui/react';
 import useStores from 'core/stores/useStores';
 import PropTypes from 'prop-types';
 import { SendOutlined } from '@ant-design/icons';
+import AuthButton from 'mods/website/components/AuthButton';
 import Editor from '../../../components/Editor/DynamicEditor';
 
 const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
@@ -37,14 +38,14 @@ const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
           ref={editorRef}
         />
         <Flex mt={2}>
-          <Button
+          <AuthButton
             colorScheme="blue"
             leftIcon={<SendOutlined />}
             size="sm"
             onClick={handleSubmitAddComment}
           >
             Post
-          </Button>
+          </AuthButton>
         </Flex>
       </Flex>
     </Flex>

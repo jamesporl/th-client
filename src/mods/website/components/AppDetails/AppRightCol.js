@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Avatar, Flex, Text } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
+import FormattedDate from 'mods/base/components/FormattedDate';
 import SocialUrlLinks from './SocialUrlLinks';
 import AppUrlLinks from './AppUrlLinks';
 
@@ -23,6 +24,12 @@ const AppRightCol = ({ app }) => (
           <Avatar name={app.ownedBy.firstName} src={app.ownedBy?.image?.thumbnail} size="sm" />
           <Text ml={4}>{`${app.ownedBy.firstName} ${app.ownedBy.lastName}`}</Text>
         </Flex>
+      </Box>
+      <Box mt={12}>
+        <Text fontSize="xs" color="gray.600" fontWeight="500">
+          Published On
+        </Text>
+        <FormattedDate date={app.publishedAt} format="shortDate" />
       </Box>
     </Box>
   </Flex>

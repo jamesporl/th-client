@@ -54,12 +54,18 @@ const PersonalInfoForm = ({ myProfile, onRefetch }) => {
     setSubmitting(false);
   };
 
+  const initialVals = {
+    firstName: myProfile.firstName,
+    lastName: myProfile.lastName,
+    shortDesc: myProfile.shortDesc || '',
+  };
+
   return (
     <Wrapper>
       <Formik
         validationSchema={PersonalInfoSchema}
         onSubmit={handleSubmit}
-        initialValues={myProfile}
+        initialValues={initialVals}
         enableReinitialize
       >
         {({ errors, touched, isSubmitting, values }) => (
