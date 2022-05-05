@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { SmileTwoTone } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
-import { Box, Text, Button, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Text, Flex, useBreakpointValue } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
@@ -10,6 +10,7 @@ import AppHeader from 'mods/website/profile/components/AppHeader';
 import Comments from 'mods/website/apps/containers/App/Comments';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import AppRightCol from './AppRightCol';
+import AuthButton from '../AuthButton';
 
 const Wrapper = styled.div`
   .desc-container {
@@ -73,14 +74,14 @@ const AppDetails = ({ app, isPreview }) => {
       </Box>
       <Flex alignItems="center">
         <Box mr={6}>
-          <Button
+          <AuthButton
             colorScheme={isSupported ? 'blue' : 'gray'}
             variant={isSupported ? 'solid' : 'outline'}
             onClick={handleClickSupport}
             size="xs"
           >
             Support
-          </Button>
+          </AuthButton>
         </Box>
 
         <Box>

@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text, Link } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import styled from 'styled-components';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import FormattedDate from 'mods/base/components/FormattedDate';
+import AuthButton from 'mods/website/components/AuthButton';
 
 const Wrapper = styled.div`
   border: 1px solid #efefef;
@@ -58,19 +60,23 @@ const App = ({ app }) => {
       <Flex justifyContent="space-between" alignItems="center" mt={6}>
         <Flex alignItems="center">
           <Box width="88px" mr={4} textAlign="center">
-            <Button
+            <AuthButton
               colorScheme={isSupported ? 'blue' : 'gray'}
               variant={isSupported ? 'solid' : 'outline'}
               onClick={handleClickSupport}
               size="xs"
             >
               Support
-            </Button>
+            </AuthButton>
           </Box>
           <Box>
-            <Text color="gray.700" fontSize="sm">
-              {`${supportsCount} ${supportText} and ${app.commentsCount} ${commentText}`}
-            </Text>
+            <NextLink href={`/apps/${app.slug}`} passHref>
+              <Link style={{ textDecoration: 'none' }}>
+                <Text color="gray.700" fontSize="sm">
+                  {`${supportsCount} ${supportText} and ${app.commentsCount} ${commentText}`}
+                </Text>
+              </Link>
+            </NextLink>
           </Box>
         </Flex>
         <Box>
