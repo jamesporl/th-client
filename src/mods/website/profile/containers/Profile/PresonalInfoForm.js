@@ -55,9 +55,9 @@ const PersonalInfoForm = ({ myProfile, onRefetch }) => {
   };
 
   const initialVals = {
-    firstName: myProfile.firstName,
-    lastName: myProfile.lastName,
-    shortDesc: myProfile.shortDesc || '',
+    firstName: myProfile?.firstName || '',
+    lastName: myProfile?.lastName || '',
+    shortDesc: myProfile?.shortDesc || '',
   };
 
   return (
