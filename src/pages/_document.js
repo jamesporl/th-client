@@ -1,9 +1,10 @@
+/* eslint-disable react/no-danger */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { Helmet } from 'react-helmet';
 
-/* eslint-disable react/jsx-props-no-spreading */
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
@@ -32,7 +33,26 @@ class MyDocument extends Document {
   }
 
   render() {
-    const { helmet } = this.props;
+    const { helmet, dangerousAsPath } = this.props;
+
+    let gaScript = null;
+    if (!dangerousAsPath?.startsWith('/my') && !dangerousAsPath?.startsWith('/site-admin')) {
+      gaScript = (
+        <>
+          <script async src="https://www.googletagmanager.com/gtag/js?id=[Tracking ID]" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', ${process.env.NEXT_PUBLIC_GA_TRACKING_ID}, { page_path: window.location.pathname });
+            `,
+            }}
+          />
+        </>
+      );
+    }
 
     const htmlAttrs = helmet.htmlAttributes.toComponent();
     const bodyAttrs = helmet.bodyAttributes.toComponent();
@@ -83,6 +103,7 @@ class MyDocument extends Document {
           {Object.keys(helmet)
             .filter((el) => el !== 'htmlAttributes' && el !== 'bodyAttributes')
             .map((el) => this.props.helmet[el].toComponent())}
+          {gaScript}
         </Head>
         <body {...bodyAttrs}>
           <Main />
