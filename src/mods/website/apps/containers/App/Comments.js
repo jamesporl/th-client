@@ -27,7 +27,7 @@ const Comments = ({ app }) => {
   const handleSubmitAddComment = useCallback(
     async (content) => {
       try {
-        const input = { appId: app._id, content };
+        const input = { appId: app._id, jsonContent: content };
         await addCommentToApp({ variables: { input } });
         toast({
           position: 'top',

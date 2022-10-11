@@ -6,7 +6,7 @@ export default gql`
     _id
     name
     shortDesc
-    desc
+    htmlDesc
     logoImg {
       _id
       medium

@@ -1,5 +1,11 @@
 import React from 'react';
-import { DeleteOutlined, DownOutlined, EditOutlined, UndoOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  EyeOutlined,
+  UndoOutlined,
+} from '@ant-design/icons';
 import { Button, Flex, Menu, MenuButton, MenuList, MenuItem, MenuDivider } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import AppHeader from 'mods/website/profile/components/AppHeader';
@@ -12,7 +18,7 @@ const App = ({ app }) => {
       justifyContent="space-between"
       alignItems="center"
       borderWidth="1px"
-      padding={4}
+      padding={12}
       borderRadius={8}
     >
       <AppHeader
@@ -28,6 +34,15 @@ const App = ({ app }) => {
         <MenuList>
           <MenuItem icon={<EditOutlined />} onClick={handleClickEdit}>
             Edit
+          </MenuItem>
+          <MenuItem
+            icon={<EyeOutlined />}
+            as="a"
+            href={`/apps/${app.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View in Site
           </MenuItem>
           <MenuItem icon={<UndoOutlined />}>Unpublish</MenuItem>
           <MenuDivider />

@@ -92,7 +92,7 @@ const Profile = () => {
                 Delete Account
               </Heading>
               <Text color="gray.600">
-                This will permanently delete all your records in Tech hustlers including your
+                This will permanently delete all your records in TechHustlers including your
                 account, apps you have posted, supports, and comments on posts.
               </Text>
               <Button colorScheme="red" variant="outline" mt={4}>

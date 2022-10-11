@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Flex, Avatar } from '@chakra-ui/react';
 import useStores from 'core/stores/useStores';
 import PropTypes from 'prop-types';
@@ -9,13 +9,15 @@ import Editor from '../../../components/Editor/DynamicEditor';
 const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
   const { authStore } = useStores();
 
-  const [newComment, setNewComment] = useState('');
-  const editorRef = useRef(null);
+  const [newComment, setNewComment] = useState(null);
+
+  const handleSetNewComment = (value) => {
+    setNewComment(() => value);
+  };
 
   const handleSubmitAddComment = useCallback(async () => {
     if (newComment) {
       await onSubmitComment(newComment);
-      editorRef?.current?.setValue('');
       onRefetchComments();
     }
   }, [newComment, onRefetchComments, onSubmitComment]);
@@ -30,13 +32,7 @@ const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
         />
       </Flex>
       <Flex flexGrow={1} flexDir="column">
-        <Editor
-          onChange={setNewComment}
-          minHeight="1rem"
-          toolbarHidden
-          placeholder={placeholder}
-          ref={editorRef}
-        />
+        <Editor onChange={handleSetNewComment} minHeight="1rem" placeholder={placeholder} />
         <Flex mt={2}>
           <AuthButton
             colorScheme="blue"

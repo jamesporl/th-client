@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Link, Text, Tag, HStack } from '@chakra-ui/react';
+import { Box, Flex, Link, Text, Tag, HStack, Heading } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -33,9 +33,9 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
 
   let img = <img src={src} alt="logo" width="88px" style={{ borderRadius: '0.5rem' }} />;
   let title = (
-    <Text fontSize="xl" fontWeight="bold">
+    <Heading as="h4" fontSize="xl" fontWeight="700">
       {name || 'Best App Ever'}
-    </Text>
+    </Heading>
   );
   if (isClickable) {
     img = (
@@ -57,7 +57,9 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
       </Box>
       <div>
         <Flex alignItems="center">{title}</Flex>
-        <Text mt={1}>{shortDesc || '100% catchy slogan'}</Text>
+        <Text mt={1} color="gray.600">
+          {shortDesc || '100% catchy slogan'}
+        </Text>
         {tagsList}
       </div>
     </Wrapper>

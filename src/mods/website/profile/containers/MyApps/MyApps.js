@@ -39,17 +39,11 @@ const MyApps = () => {
       if (drafts.length) {
         draftsList = (
           <>
-            <Text
-              color="gray.500"
-              fontSize="xl"
-              textTransform="uppercase"
-              fontWeight="bold"
-              mt={16}
-            >
+            <Text color="gray.400" fontSize="lg" fontWeight="bold" mt={16}>
               Drafts
             </Text>
             <Text color="gray.400" fontSize="sm">
-              Submitted apps are pending the approval of a Tech Hustler admin. Expect an e-mail from
+              Submitted apps are pending the approval of a TechHustler admin. Expect an e-mail from
               us very soon!
             </Text>
             <Box mt={8}>
@@ -67,14 +61,8 @@ const MyApps = () => {
       if (apps.length) {
         appsList = (
           <>
-            <Text
-              color="gray.500"
-              fontSize="xl"
-              textTransform="uppercase"
-              fontWeight="bold"
-              mt={16}
-            >
-              Apps
+            <Text color="gray.400" fontSize="lg" fontWeight="bold" mt={16}>
+              Published
             </Text>
             <Box mt={8}>
               {apps.map((a) => (

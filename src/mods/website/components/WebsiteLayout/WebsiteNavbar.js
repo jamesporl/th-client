@@ -101,7 +101,7 @@ const WebsiteNavbar = () => {
   const mobileLogoImg = <img src="/logo-simple.png" alt="logo" width="40px" />;
 
   const submitAppBtn = (
-    <Button colorScheme="green" size="sm" onClick={handleClickNewApp}>
+    <Button colorScheme="blue" size="sm" onClick={handleClickNewApp}>
       Submit an App
     </Button>
   );
@@ -139,17 +139,10 @@ const WebsiteNavbar = () => {
   }
 
   const desktopRightNav = (
-    <HStack spacing="1rem">
-      <Menu placement="bottom-end" size="lg">
-        <MenuButton>About</MenuButton>
-        <MenuList>
-          <NextLink href="/site/about-us" passHref>
-            <Link style={{ textDecoration: 'none' }}>
-              <MenuItem key="1">About us</MenuItem>
-            </Link>
-          </NextLink>
-        </MenuList>
-      </Menu>
+    <HStack spacing="2rem">
+      <NextLink href="/site/about-us" passHref>
+        <Link style={{ textDecoration: 'none' }}>About Us</Link>
+      </NextLink>
       {submitAppBtn}
       {profileAvatar}
     </HStack>
@@ -189,7 +182,7 @@ const WebsiteNavbar = () => {
                 pointerEvents="none"
                 children={<SearchOutlined style={{ color: '#ccc' }} />}
               />
-              <Input placeholder="Search Tech Hustlers" size="md" onFocus={handleClickSearch} />
+              <Input placeholder="Search TechHustlers" size="md" onFocus={handleClickSearch} />
             </InputGroup>
           </Flex>
           <Flex alignItems="center" justifyContent="flex-end" ml={8}>

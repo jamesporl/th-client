@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/client';
 import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroller';
 import moment from 'moment';
+import { WarningOutlined } from '@ant-design/icons';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppsQry from '../../gql/AppsQry';
 import App from './components/App';
@@ -125,7 +126,7 @@ const Home = () => {
       if (loadedCount > 2) {
         shouldGetMore = false;
       }
-      if (startOfMonth.isBefore(moment().subtract(24, 'months'))) {
+      if (startOfMonth.isBefore(moment('2022-07-01'))) {
         shouldGetMore = false;
         setHasMoreApps(false);
       }
@@ -181,26 +182,31 @@ const Home = () => {
       <Box width="100%">
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
-            <Heading as="h3" size="lg" fontWeight="500">
-              Get to know the Philippine Tech scene
+            <Heading as="h4" size="lg" fontWeight="700" fontSize="2xl">
+              Discover the next tech unicorn here... &#127477;&#127469; &#129412;
             </Heading>
             <Box mt={8} width="100%">
               {appsList}
             </Box>
           </Box>
           <Box flexGrow="1" ml="4rem" style={{ display: rightColDisplay }} maxWidth="350px">
-            <Text textTransform="uppercase" fontWeight="bold">
+            <Text
+              textTransform="uppercase"
+              fontWeight="700"
+              color="gray.700"
+              textDecoration="underline"
+            >
               This platform
             </Text>
             <Text mt={8} mb={8} color="gray.600" fontSize="sm">
-              <strong>Tech Hustlers</strong> is a community that aims to promote tech products built
-              for Filipinos. Tech startups, web and mobile apps, e-commerce sites, and all
-              software-related products are welcome to showcase their apps here.
+              TechHustlers is a community that aims to promote tech products built for Filipinos.
+              Tech startups, web and mobile apps, e-commerce sites, and all software-related
+              products are welcome to showcase their apps here.
             </Text>
             <hr />
             <Text mt={8} color="gray.600" fontSize="sm">
-              This site is still under heavy development. We are working hard to ship more features
-              to improve your eperience in this site.
+              <WarningOutlined /> This site is still under heavy development. We are working hard to
+              ship more features to improve your eperience in this site.
             </Text>
           </Box>
         </Flex>

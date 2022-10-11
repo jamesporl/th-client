@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import useStores from 'core/stores/useStores';
 
 const AuthButton = (props) => {
-  const { children, ...buttonProps } = props;
+  const { children, onClick, ...buttonProps } = props;
 
   const { authStore } = useStores();
 
@@ -14,11 +14,11 @@ const AuthButton = (props) => {
 
   const handleClick = useCallback(() => {
     if (authStore.myProfile) {
-      buttonProps.onClick();
+      onClick();
     } else {
       router.push('/account/login');
     }
-  }, [authStore.myProfile]);
+  }, [authStore.myProfile, onClick]);
 
   return (
     <Button {...buttonProps} onClick={handleClick}>
@@ -29,6 +29,11 @@ const AuthButton = (props) => {
 
 AuthButton.propTypes = {
   children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
+};
+
+AuthButton.defaultProps = {
+  onClick: () => undefined,
 };
 
 export default observer(AuthButton);

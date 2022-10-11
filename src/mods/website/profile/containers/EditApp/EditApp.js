@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Heading, Flex, Box, Skeleton } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
@@ -6,7 +6,8 @@ import set from 'lodash/set';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import Editor from '../../../components/Editor/DynamicEditor';
+import { DEFAULT_EDITOR_VALUE } from 'mods/website/components/Editor/_utils';
+import Editor from '../../../components/Editor/Editor';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppDraftQry from '../../gql/AppDraftQry';
 import UpdateAppDraftMtn from '../../gql/UpdateAppDraftMtn';
@@ -30,7 +31,8 @@ const EditApp = () => {
   const { activeStep, setStep } = useSteps({
     initialStep: 0,
   });
-  const localStorageDraftKey = `appDraft_${appId}`;
+
+  const localStorageDraftKey = useMemo(() => `appDraft_${appId}`, [router.query?.appId]);
 
   const [initialValues, setInitialValues] = useState({
     name: '',
@@ -49,7 +51,7 @@ const EditApp = () => {
   });
   const [desc, setDesc] = useState('');
   const [descIsTouched, setDescIsTouched] = useState(false);
-  const [initialDesc, setInitialDesc] = useState('');
+  const [initialDesc, setInitialDesc] = useState(null);
 
   const { data, loading, error, refetch } = useQuery(AppDraftQry, {
     variables: { _id: appId },
@@ -74,8 +76,8 @@ const EditApp = () => {
   useEffect(() => {
     if (activeStep === 2) {
       const savedValues = JSON.parse(localStorage.getItem(localStorageDraftKey));
-      setInitialDesc(savedValues.desc || '');
-      setDesc(savedValues.desc || '');
+      setInitialDesc(savedValues.jsonDesc || DEFAULT_EDITOR_VALUE);
+      setDesc(savedValues.jsonDesc || DEFAULT_EDITOR_VALUE);
     }
   }, [activeStep]);
 
@@ -84,7 +86,7 @@ const EditApp = () => {
     const {
       name,
       shortDesc,
-      desc: savedDesc,
+      jsonDesc,
       videoUrl,
       playStoreUrl,
       appStoreUrl,
@@ -99,7 +101,7 @@ const EditApp = () => {
       appId,
       name,
       shortDesc,
-      desc: savedDesc,
+      jsonDesc,
       videoUrl,
       playStoreUrl,
       appStoreUrl,
@@ -129,7 +131,7 @@ const EditApp = () => {
   const handleChangeDesc = (value) => {
     setDescIsTouched(true);
     const lValues = JSON.parse(localStorage.getItem(localStorageDraftKey) || '{}');
-    const updatedValues = { ...lValues, desc: value };
+    const updatedValues = { ...lValues, jsonDesc: value || [] };
     localStorage.setItem(localStorageDraftKey, JSON.stringify(updatedValues));
     setDesc(value);
   };
@@ -150,6 +152,16 @@ const EditApp = () => {
   };
 
   let content = <Skeleton />;
+  let editorComp = null;
+  if (initialDesc) {
+    editorComp = (
+      <Editor
+        onChange={handleChangeDesc}
+        initialValue={initialDesc}
+        placeholder="A good app description will take you far"
+      />
+    );
+  }
   if (!loading) {
     if (error) {
       content = (
@@ -184,9 +196,11 @@ const EditApp = () => {
               </Box>
             </Step>
             <Step label="Description" key="desc">
-              <Box mt={12}>
-                <Editor onChange={handleChangeDesc} initialHtmlValue={initialDesc} />
-              </Box>
+              <Flex mt={12} justifyContent="center">
+                <Box width="100%" maxWidth={800}>
+                  {editorComp}
+                </Box>
+              </Flex>
             </Step>
             <Step label="Preview and submit" key="preview">
               <Box mt={12}>
