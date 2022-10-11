@@ -16,7 +16,7 @@ function App({ Component, pageProps }) {
   const apolloClient = useApollo(pageProps.initialApolloState);
 
   const handleRouteChange = (url) => {
-    if (!url.startsWith('/my') && !url.startsWith('/site-admin')) {
+    if (typeof window !== 'undefined' && !url.startsWith('/my') && !url.startsWith('/site-admin')) {
       window.gtag('config', `${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`, {
         page_path: url,
       });
@@ -62,8 +62,8 @@ function App({ Component, pageProps }) {
     <ApolloProvider client={apolloClient}>
       <ChakraProvider theme={chakraCustomTheme}>
         <Helmet
-          titleTemplate="Tech Hustlers | %s"
-          defaultTitle="Tech Hustlers | Launch your apps here"
+          titleTemplate="%s - TechHustlers"
+          defaultTitle="TechHustlers - Local Tech Products in One Place"
         />
         <Component {...pageProps} />
       </ChakraProvider>

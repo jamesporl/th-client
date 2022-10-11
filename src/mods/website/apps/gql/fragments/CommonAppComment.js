@@ -12,7 +12,7 @@ export default gql`
         thumbnail
       }
     }
-    content
+    htmlContent
     createdAt
     isPinned
     status {
@@ -33,7 +33,7 @@ export default gql`
             thumbnail
           }
         }
-        content
+        htmlContent
         createdAt
         status {
           key

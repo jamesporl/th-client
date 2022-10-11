@@ -23,7 +23,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
   const handleSubmitAddComment = useCallback(
     async (content) => {
       try {
-        const input = { appId: app._id, content, parentCommentId: comment._id };
+        const input = { appId: app._id, jsonContent: content, parentCommentId: comment._id };
         await addCommentToApp({ variables: { input } });
         toast({
           position: 'top',
@@ -70,7 +70,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
           <div
             className="desc"
             dangerouslySetInnerHTML={{
-              __html: c.content,
+              __html: c.htmlContent,
             }}
           />
           <HStack spacing={4} mt={2}>
@@ -108,7 +108,7 @@ const Comment = ({ app, comment, onRefetchComments }) => {
           <div
             className="desc"
             dangerouslySetInnerHTML={{
-              __html: comment.content,
+              __html: comment.htmlContent,
             }}
           />
           <HStack spacing={4} mt={2}>

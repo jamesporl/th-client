@@ -7,7 +7,8 @@ export default gql`
     appId
     name
     shortDesc
-    desc
+    jsonDesc
+    htmlDesc
     logoImg {
       _id
       thumbnail

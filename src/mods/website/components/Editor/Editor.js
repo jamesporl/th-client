@@ -1,112 +1,83 @@
-import React, { useEffect, useImperativeHandle, useState } from 'react';
-import PropTypes from 'prop-types';
-import { ContentState, EditorState, convertToRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
+import React, { useMemo } from 'react';
+import { createEditor } from 'slate';
 import styled from 'styled-components';
-import htmlToDraft from 'html-to-draftjs';
-import draftToHtml from 'draftjs-to-html';
-import '../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import PropTypes from 'prop-types';
+import { Slate, Editable, withReact } from 'slate-react';
+import { withHistory } from 'slate-history';
+import isHotkey from 'is-hotkey';
+import renderElement from './renderElement';
+import renderLeaf from './renderLeaf';
+import Toolbar from './Toolbar';
+import { DEFAULT_EDITOR_VALUE, HOTKEYS_MAP, HOTKEYS_MAP_KEYS, toggleMark } from './_utils';
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
   width: 100%;
 
-  .th-editor-wrapper {
+  .editor {
     width: 100%;
-  }
-
-  .th-editor {
-    border: 1px solid #f1f1f1;
+    border: 2px solid #e2e8f0;
     padding: 0.5rem;
-    width: 100%;
-    min-height: ${(props) => props.minHeight};
+    margin: 0.5rem;
+    border-radius: 0.25rem;
+    min-height: ${(props) => props.minHeight}px;
 
-    .public-DraftStyleDefault-block {
-      margin: 2px;
+    ul,
+    ol {
+      margin: revert;
+      padding: revert;
     }
   }
 `;
 
-const THEditor = ({ onChange, initialHtmlValue, minHeight, editorRef, ...rest }) => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+const THEditor = (props) => {
+  const { initialValue, onChange, minHeight, placeholder } = props;
 
-  useImperativeHandle(
-    editorRef,
-    () => ({
-      setValue: (value) => {
-        const contentBlock = htmlToDraft(value);
-        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-        setEditorState(EditorState.createWithContent(contentState));
-        onChange(value);
-      },
-    }),
-    [onChange],
-  );
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
-  useEffect(() => {
-    const contentBlock = htmlToDraft(initialHtmlValue || '');
-    if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      setEditorState(EditorState.createWithContent(contentState));
+  const handleKeyPress = (event) => {
+    /* eslint-disable-next-line no-restricted-syntax */
+    for (const hotkey of HOTKEYS_MAP_KEYS) {
+      if (isHotkey(hotkey, event)) {
+        event.preventDefault();
+        const format = HOTKEYS_MAP.get(hotkey);
+        toggleMark(editor, format);
+        break;
+      }
     }
-  }, [initialHtmlValue]);
-
-  const handleChangeEditorState = (newEditorState) => {
-    setEditorState(newEditorState);
-    const newHtmlValue = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    onChange(newHtmlValue);
+    if (isHotkey('backspace', event)) {
+      console.log('BBBAAAACKSAPCE!');
+    }
   };
 
   return (
     <Wrapper minHeight={minHeight}>
-      <Editor
-        editorState={editorState}
-        wrapperClassName="th-editor-wrapper"
-        editorClassName="th-editor"
-        onEditorStateChange={handleChangeEditorState}
-        toolbar={{
-          options: ['inline', 'blockType', 'list', 'link', 'emoji'],
-          inline: {
-            inDropdown: false,
-            className: undefined,
-            component: undefined,
-            dropdownClassName: undefined,
-            options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
-          },
-          blockType: {
-            inDropdown: false,
-            options: ['Code'],
-            className: undefined,
-            component: undefined,
-            dropdownClassName: undefined,
-          },
-          list: {
-            inDropdown: false,
-            className: undefined,
-            component: undefined,
-            dropdownClassName: undefined,
-            options: ['unordered', 'ordered'],
-          },
-        }}
-        {...rest}
-      />
+      <Slate editor={editor} value={initialValue} onChange={onChange}>
+        <Toolbar />
+        <div className="editor">
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            placeholder={placeholder}
+            spellCheck
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+      </Slate>
     </Wrapper>
   );
 };
 
 THEditor.propTypes = {
-  onChange: PropTypes.func,
-  initialHtmlValue: PropTypes.string,
-  minHeight: PropTypes.string,
-  editorRef: PropTypes.object,
+  minHeight: PropTypes.number,
+  initialValue: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
 };
 
 THEditor.defaultProps = {
-  editorRef: null,
-  onChange: () => undefined,
-  initialHtmlValue: '',
-  minHeight: '10rem',
+  minHeight: 250,
+  initialValue: DEFAULT_EDITOR_VALUE,
+  placeholder: 'Type something here...',
 };
 
 export default THEditor;

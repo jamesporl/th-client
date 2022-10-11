@@ -58,7 +58,7 @@ const AppDraft = ({ appDraft }) => {
       justifyContent="space-between"
       alignItems="center"
       borderWidth="1px"
-      padding={4}
+      padding={12}
       borderRadius={8}
     >
       <AppHeader

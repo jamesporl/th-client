@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { SmileTwoTone } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
-import { Box, Text, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Text, Flex, useBreakpointValue, Heading } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
@@ -11,16 +11,13 @@ import Comments from 'mods/website/apps/containers/App/Comments';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import AppRightCol from './AppRightCol';
 import AuthButton from '../AuthButton';
+import EditorContentDisplayWrapper from '../EditorContentDisplayWrapper';
 
 const Wrapper = styled.div`
   .desc-container {
     margin-top: 1rem;
     border: 1px solid #f0f0f0;
     padding: 1rem;
-
-    .desc {
-      margin-top: 2rem;
-    }
   }
 `;
 
@@ -67,10 +64,10 @@ const AppDetails = ({ app, isPreview }) => {
       p={6}
     >
       <Box>
-        <Text fontWeight="500" fontSize="lg">
+        <Heading as="h4" fontWeight="700" fontSize="xl">
           Are you happy to support this app? &nbsp;
           <SmileTwoTone />
-        </Text>
+        </Heading>
       </Box>
       <Flex alignItems="center">
         <Box mr={6}>
@@ -106,12 +103,13 @@ const AppDetails = ({ app, isPreview }) => {
           <Box width="100%">
             <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
             <Box mt={12}>
-              <div
-                className="desc"
-                dangerouslySetInnerHTML={{
-                  __html: app.desc,
-                }}
-              />
+              <EditorContentDisplayWrapper>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: app.htmlDesc,
+                  }}
+                />
+              </EditorContentDisplayWrapper>
             </Box>
             {supportsComp}
             <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={8}>

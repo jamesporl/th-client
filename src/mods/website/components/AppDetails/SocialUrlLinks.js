@@ -87,7 +87,13 @@ const SocialUrlLinks = ({ socialUrls }) => {
   }
   return (
     <>
-      <Text fontSize="xs" textTransform="uppercase" color="gray.600" fontWeight="500">
+      <Text
+        fontSize="xs"
+        textTransform="uppercase"
+        color="blue.500"
+        fontWeight="700"
+        letterSpacing={2}
+      >
         Follow this app
       </Text>
       <HStack spacing={4} mt={4}>
