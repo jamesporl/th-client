@@ -46,7 +46,7 @@ const Comments = ({ app }) => {
 
   let commentsList = (
     <Box textAlign="center">
-      <Text color="gray.400" fontWeight="bold" textAlign="center">
+      <Text color="gray.400" fontWeight="bold" textAlign="center" fontSize="lg">
         This app has no comments yet.
       </Text>
     </Box>

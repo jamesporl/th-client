@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { observable, action, makeObservable } from 'mobx';
-import { AUTH_TOKEN_KEY } from '../utils/storageKeys';
+import { AUTH_TOKEN_KEY, VERIFICATION_TOKEN_KEY } from '../utils/storageKeys';
 
 export default class AuthStore {
   constructor() {
@@ -9,14 +9,22 @@ export default class AuthStore {
 
   @observable authToken = '';
 
+  @observable verificationToken = '';
+
   @observable myProfile = null;
 
-  @action setAuthToken = (authToken) => {
-    this.authToken = authToken;
+  @action setVerificationToken = (token) => {
+    this.verificationToken = token;
+    localStorage.setItem(VERIFICATION_TOKEN_KEY, token);
   };
 
   @action setMyProfile = (profile) => {
     this.myProfile = profile;
+  };
+
+  @action removeVerificationToken = () => {
+    this.verificationToken = '';
+    localStorage.removeItem(VERIFICATION_TOKEN_KEY);
   };
 
   @action login = (authToken) => {

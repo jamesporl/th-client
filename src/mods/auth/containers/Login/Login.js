@@ -58,8 +58,13 @@ const Login = () => {
     try {
       const { data } = await login({ variables: { input } });
       const authToken = data.login;
-      authStore.login(authToken);
-      window.location.href = '/';
+      if (authToken) {
+        authStore.login(authToken);
+        window.location.href = '/';
+      } else {
+        const encodedEMail = encodeURIComponent(email);
+        window.location.href = `/account/email-verification?email=${encodedEMail}`;
+      }
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
@@ -97,7 +102,7 @@ const Login = () => {
               </Field>
               <VStack spacing={4} mt={8}>
                 <Button
-                  colorScheme="green"
+                  colorScheme="blue"
                   isFullWidth
                   size="md"
                   type="submit"

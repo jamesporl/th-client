@@ -1,15 +1,15 @@
 /* eslint-disable no-await-in-loop */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroller';
 import moment from 'moment';
-import { WarningOutlined } from '@ant-design/icons';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppsQry from '../../gql/AppsQry';
 import App from './components/App';
 import AppsByMonth, { APPS_PAGE_SIZE } from './components/AppsByMonth';
 import AppSkeleton from './components/AppSkeleton';
+import HomeRightSide from './components/HomeRightSide';
 
 const Home = () => {
   const apolloClient = useApolloClient();
@@ -175,8 +175,6 @@ const Home = () => {
     );
   }
 
-  const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' });
-
   return (
     <WebsiteLayout>
       <Box width="100%">
@@ -189,26 +187,7 @@ const Home = () => {
               {appsList}
             </Box>
           </Box>
-          <Box flexGrow="1" ml="4rem" style={{ display: rightColDisplay }} maxWidth="350px">
-            <Text
-              textTransform="uppercase"
-              fontWeight="700"
-              color="gray.700"
-              textDecoration="underline"
-            >
-              This platform
-            </Text>
-            <Text mt={8} mb={8} color="gray.600" fontSize="sm">
-              TechHustlers is a community that aims to promote tech products built for Filipinos.
-              Tech startups, web and mobile apps, e-commerce sites, and all software-related
-              products are welcome to showcase their apps here.
-            </Text>
-            <hr />
-            <Text mt={8} color="gray.600" fontSize="sm">
-              <WarningOutlined /> This site is still under heavy development. We are working hard to
-              ship more features to improve your eperience in this site.
-            </Text>
-          </Box>
+          <HomeRightSide />
         </Flex>
       </Box>
     </WebsiteLayout>

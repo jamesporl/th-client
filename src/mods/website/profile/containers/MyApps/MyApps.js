@@ -43,8 +43,8 @@ const MyApps = () => {
               Drafts
             </Text>
             <Text color="gray.400" fontSize="sm">
-              Submitted apps are pending the approval of a TechHustler admin. Expect an e-mail from
-              us very soon!
+              Submitted apps are pending the approval of a TechHustlers PH admin. Expect an e-mail
+              from us very soon!
             </Text>
             <Box mt={8}>
               {drafts.map((d) => (

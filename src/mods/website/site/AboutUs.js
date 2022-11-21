@@ -199,8 +199,8 @@ const AboutUs = () => (
                 <Text as="p">
                   Yes. To ensure the quality of content in our site, all app submissions are being
                   queued for review. We require apps to have good descriptions, appropriate tags,
-                  and good quality images and screenshots. TechHustlers admins reserve the right to
-                  decline submissions not meeting our standards.
+                  and good quality images and screenshots. TechHustlers PH admins reserve the right
+                  to decline submissions not meeting our standards.
                 </Text>
               </AccordionPanel>
             </AccordionItem>
