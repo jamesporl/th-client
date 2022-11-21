@@ -62,8 +62,8 @@ function App({ Component, pageProps }) {
     <ApolloProvider client={apolloClient}>
       <ChakraProvider theme={chakraCustomTheme}>
         <Helmet
-          titleTemplate="%s - TechHustlers"
-          defaultTitle="TechHustlers - Local Tech Products in One Place"
+          titleTemplate="%s - TechHustlers PH"
+          defaultTitle="TechHustlers PH - Local Tech Products in One Place"
         />
         <Component {...pageProps} />
       </ChakraProvider>

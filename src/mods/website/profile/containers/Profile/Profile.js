@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApolloClient } from '@apollo/client';
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import useStores from 'core/stores/useStores';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import MyProfileQry from 'mods/auth/gql/MyProfileQry';
 import ResetPasswordForm from './ResetPasswordForm';
-import UpdateEmailForm from './UpdateEmailForm';
+// import UpdateEmailForm from './UpdateEmailForm';
 import PersonalInfoForm from './PresonalInfoForm';
 import UploadPhoto from './UploadPhoto';
 
@@ -16,9 +16,8 @@ const Wrapper = styled.div`
   .profile-box {
     width: 100%;
     max-width: 800px;
-    border: 1px solid #ccc;
-    padding: 1rem;
-    border-radius: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 1rem 3rem 1rem;
 
     :not(:first-child) {
       margin-top: 2rem;
@@ -46,7 +45,7 @@ const Profile = () => {
         <Flex mt={8} alignItems="center" flexDir="column">
           <div className="profile-box">
             <div>
-              <Heading as="h3" size="md">
+              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
                 Photo
               </Heading>
               <Box w="100%" mt={8}>
@@ -56,7 +55,7 @@ const Profile = () => {
           </div>
           <div className="profile-box">
             <div>
-              <Heading as="h3" size="md">
+              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
                 Personal Information
               </Heading>
               <Box w="100%" mt={8}>
@@ -69,15 +68,15 @@ const Profile = () => {
           </div>
           <div className="profile-box">
             <div>
-              <Heading as="h3" size="md">
+              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
                 Reset Password
               </Heading>
               <ResetPasswordForm />
             </div>
           </div>
-          <div className="profile-box">
+          {/* <div className="profile-box">
             <div>
-              <Heading as="h3" size="md">
+              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
                 E-mail
               </Heading>
               <Text color="gray.600">You will be required validate your new e-mail.</Text>
@@ -88,18 +87,18 @@ const Profile = () => {
           </div>
           <div className="profile-box">
             <div>
-              <Heading as="h3" size="md">
+              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
                 Delete Account
               </Heading>
               <Text color="gray.600">
-                This will permanently delete all your records in TechHustlers including your
+                This will permanently delete all your records in TechHustlers PH including your
                 account, apps you have posted, supports, and comments on posts.
               </Text>
               <Button colorScheme="red" variant="outline" mt={4}>
                 Delete
               </Button>
             </div>
-          </div>
+          </div> */}
         </Flex>
       </Wrapper>
     </WebsiteLayout>

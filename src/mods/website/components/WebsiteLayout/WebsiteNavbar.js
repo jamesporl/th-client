@@ -27,13 +27,12 @@ import {
   SearchOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { useApolloClient } from '@apollo/client';
 import { observer } from 'mobx-react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
-import MyAppDraftsQry from 'mods/website/profile/gql/MyAppDraftsQry';
+import useClickSubmitAnApp from 'mods/website/hooks/useClickSubmitAnApp';
 import SearchModal from './SearchModal';
 
 const Wrapper = styled.div`
@@ -51,9 +50,10 @@ const Wrapper = styled.div`
 `;
 
 const WebsiteNavbar = () => {
-  const { authStore, uiStore } = useStores();
+  const { authStore } = useStores();
   const router = useRouter();
-  const apolloClient = useApolloClient();
+
+  const handleClickSubmitAnApp = useClickSubmitAnApp();
 
   const { isOpen: isMobileNavOpen, onToggle: onToggleMobileNav } = useDisclosure();
   const { isOpen: isSearchOpen, onOpen: onOpenSearch, onClose: onCloseSearch } = useDisclosure();
@@ -75,33 +75,11 @@ const WebsiteNavbar = () => {
     onOpenSearch();
   };
 
-  const handleClickNewApp = async () => {
-    if (authStore.myProfile) {
-      const { data } = await apolloClient.query({
-        query: MyAppDraftsQry,
-        fetchPolicy: 'network-only',
-      });
-      const appDrafts = data.myAppDrafts.nodes;
-      const inProgressDrafts = appDrafts.filter((a) => a.status.key === 'inProgress');
-      if (inProgressDrafts.length === 1) {
-        router.push(`/my/apps/edit/${appDrafts[0].appId}`);
-        return;
-      }
-      if (appDrafts.length > 0) {
-        router.push('/my/apps');
-        return;
-      }
-      uiStore.openGlobalModal('newAppForm', 'New App');
-    } else {
-      window.location.href = '/account/login';
-    }
-  };
-
   const desktopLogoImg = <img src="/logo-full.png" alt="logo" width="200px" />;
   const mobileLogoImg = <img src="/logo-simple.png" alt="logo" width="40px" />;
 
   const submitAppBtn = (
-    <Button colorScheme="blue" size="sm" onClick={handleClickNewApp}>
+    <Button colorScheme="blue" size="sm" onClick={handleClickSubmitAnApp}>
       Submit an App
     </Button>
   );

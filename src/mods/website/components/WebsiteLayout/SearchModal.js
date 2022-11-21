@@ -129,7 +129,7 @@ const SearchModal = ({ isOpen, onClose }) => {
               size="lg"
             />
             <Input
-              placeholder="Search Tech Hustlers"
+              placeholder="Search TechHustlers"
               size="lg"
               onChange={debounce(handleChangeSearch, 800)}
             />

@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import * as yup from 'yup';
-import useStores from 'core/stores/useStores';
 import SignupMtn from '../../gql/SignupMtn';
 import PasswordFormControl from '../../components/PasswordFormControl';
 import AuthPageContainer from '../../components/AuthPageContainer';
@@ -41,17 +40,15 @@ const SignupSchema = yup.object().shape({
 });
 
 const Signup = () => {
-  const { authStore } = useStores();
   const toast = useToast();
 
   const [signup] = useMutation(SignupMtn);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const { data } = await signup({ variables: { input: values } });
-      const authToken = data.signup;
-      authStore.login(authToken);
-      window.location.href = '/';
+      await signup({ variables: { input: values } });
+      const encodedEMail = encodeURIComponent(values.email);
+      window.location.href = `/account/email-verification?email=${encodedEMail}`;
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
@@ -62,7 +59,7 @@ const Signup = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Sign-up" />
+      <Helmet title="Sign up" />
       <Wrapper>
         <Formik
           validationSchema={SignupSchema}
