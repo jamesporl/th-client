@@ -54,8 +54,9 @@ function createApolloClient(ctx) {
   const omitTypenameLink = new ApolloLink((operation, forward) => {
     if (operation.variables) {
       if (
-        operation.variables.file instanceof File ||
-        operation.variables.input?.file instanceof File
+        typeof window !== 'undefined' &&
+        (operation.variables.file instanceof File ||
+          operation.variables.input?.file instanceof File)
       ) {
         return forward(operation);
       }

@@ -18,11 +18,13 @@ const App = () => {
 
   const { data } = useQuery(AppQry, { variables: { slug }, skip: !slug });
 
+  const app = data?.app;
+
   let appDetails = null;
   let title = '...';
   if (data) {
-    appDetails = <AppDetails app={data.app} isPreview={false} />;
-    title = data.app.name;
+    appDetails = <AppDetails app={app} isPreview={false} />;
+    title = app.name;
   }
 
   let appBcItem = (
@@ -31,11 +33,11 @@ const App = () => {
     </BreadcrumbItem>
   );
 
-  if (data) {
+  if (app) {
     appBcItem = (
       <BreadcrumbItem isCurrentPage isLastChild>
         <BreadcrumbLink>
-          <NextLink href={`/apps/${data.app.slug}`}>{data.app.name}</NextLink>
+          <NextLink href={`/apps/${app.slug}`}>{app.name}</NextLink>
         </BreadcrumbLink>
       </BreadcrumbItem>
     );
