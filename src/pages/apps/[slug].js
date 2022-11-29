@@ -14,7 +14,7 @@ export async function getServerSideProps(ctx) {
   });
 
   return {
-    props: { data: apolloClient.cache.extract() },
+    props: { initialApolloState: apolloClient.cache.extract() },
   };
 }
 

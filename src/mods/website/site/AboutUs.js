@@ -62,165 +62,171 @@ const Wrapper = styled.div`
   }
 `;
 
-const AboutUs = () => (
-  <Wrapper>
-    <WebsiteNavbar />
-    <Helmet title="About Us" />
-    <div className="about-hero-container">
-      <div className="about-hero-bg" />
-      <div className="about-hero">
-        <Flex justifyContent="center" alignItems="center" flexDir="column">
-          <Text fontSize="7xl" fontWeight="extrabold" mt={8} color="yellow.400" as="span">
-            Local Tech Products
-          </Text>
-          <Text fontSize="5xl" fontWeight="extrabold" color="yellow.400">
-            in one place
-          </Text>
-          <Text fontSize="2xl" color="white" mt={8}>
-            See new apps and upcoming startups in the growing tech scene of the Philippines
-          </Text>
-          <HStack spacing={4} mt={8}>
-            <Button size="lg" colorScheme="blue">
-              Join our Community
-            </Button>
-            <Button size="lg" colorScheme="blue">
-              Browse Apps
-            </Button>
-          </HStack>
-        </Flex>
+const AboutUs = () => {
+  const baseUrl = `${process.env.NEXT_PUBLIC_TH_CLIENT_BASE_URL}`;
+
+  return (
+    <Wrapper>
+      <WebsiteNavbar />
+      <Helmet title="About Us">
+        <meta name="og:url" content={`${baseUrl}/site/about-us`} />
+      </Helmet>
+      <div className="about-hero-container">
+        <div className="about-hero-bg" />
+        <div className="about-hero">
+          <Flex justifyContent="center" alignItems="center" flexDir="column">
+            <Text fontSize="7xl" fontWeight="extrabold" mt={8} color="yellow.400" as="span">
+              Local Tech Products
+            </Text>
+            <Text fontSize="5xl" fontWeight="extrabold" color="yellow.400">
+              in one place
+            </Text>
+            <Text fontSize="2xl" color="white" mt={8}>
+              See new apps and upcoming startups in the growing tech scene of the Philippines
+            </Text>
+            <HStack spacing={4} mt={8}>
+              <Button size="lg" colorScheme="blue">
+                Join our Community
+              </Button>
+              <Button size="lg" colorScheme="blue">
+                Browse Apps
+              </Button>
+            </HStack>
+          </Flex>
+        </div>
       </div>
-    </div>
-    <div className="features-container">
+      <div className="features-container">
+        <div className="content-container">
+          <div className="child-container">
+            <Box textAlign="center" pt={16} pb={16} color="white">
+              <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+                <GridItem w="100%">
+                  <Box textAlign="center">
+                    <Text fontSize="4xl" fontWeight="bold">
+                      <ProfileOutlined />
+                    </Text>
+                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                      be discovered
+                    </Text>
+                    <Text mt={4}>
+                      Our main mission is to provide businesses and teams a place where potential
+                      users or customers are easy to find them.
+                    </Text>
+                  </Box>
+                </GridItem>
+                <GridItem w="100%">
+                  <Box textAlign="center">
+                    <Text fontSize="4xl" fontWeight="bold">
+                      <MessageOutlined />
+                    </Text>
+                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                      receive feedback
+                    </Text>
+                    <Text mt={4}>
+                      We encourage our members to provide feedback on apps listed on the platfom
+                      through a healthy discussion.
+                    </Text>
+                  </Box>
+                </GridItem>
+                <GridItem w="100%">
+                  <Box textAlign="center">
+                    <Text fontSize="4xl" fontWeight="bold">
+                      <RocketOutlined />
+                    </Text>
+                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                      get inspired
+                    </Text>
+                    <Text mt={4}>
+                      See what others are up and find your way to contribute to the growing
+                      Philippine tech startup community.
+                    </Text>
+                  </Box>
+                </GridItem>
+              </Grid>
+            </Box>
+          </div>
+        </div>
+      </div>
       <div className="content-container">
         <div className="child-container">
-          <Box textAlign="center" pt={16} pb={16} color="white">
-            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-              <GridItem w="100%">
-                <Box textAlign="center">
-                  <Text fontSize="4xl" fontWeight="bold">
-                    <ProfileOutlined />
+          <Box mt={32}>
+            <Text fontSize="3xl" fontWeight="bold" color="blue.500">
+              Frequently Asked Questions
+            </Text>
+            <Accordion allowToggle mt={16}>
+              <AccordionItem pb={8} pt={8}>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    <Text fontSize="xl">Is submitting an app free</Text>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={8} pt={8}>
+                  <Text as="p">Absolutely!</Text>
+                </AccordionPanel>
+              </AccordionItem>
+              <AccordionItem pb={8} pt={8}>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    <Text fontSize="xl">What kind of apps can be submitted?</Text>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={8} pt={8}>
+                  <Text as="p">
+                    We welcome all kinds of apps - be it a web app, a mobile app, or both. Online
+                    shops are welcome too, for as long as they are in their own website and not just
+                    in a marketplace.
                   </Text>
-                  <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                    be discovered
+                  <br />
+                  <Text as="p">The following conditions should also be satisfied:</Text>
+                  <ul>
+                    <li>
+                      <Text as="p">Must be built by a Filipino team/individual</Text>
+                    </li>
+                    <li>
+                      <Text as="p">
+                        Must be accessible to potential users with ready core functionalities to be
+                        used or tested
+                      </Text>
+                    </li>
+                  </ul>
+                </AccordionPanel>
+              </AccordionItem>
+              <AccordionItem pb={8} pt={8}>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    <Text fontSize="xl">Are app submissions being reviewed?</Text>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={8} pt={8}>
+                  <Text as="p">
+                    Yes. To ensure the quality of content in our site, all app submissions are being
+                    queued for review. We require apps to have good descriptions, appropriate tags,
+                    and good quality images and screenshots. TechHustlers PH admins reserve the
+                    right to decline submissions not meeting our standards.
                   </Text>
-                  <Text mt={4}>
-                    Our main mission is to provide businesses and teams a place where potential
-                    users or customers are easy to find them.
-                  </Text>
-                </Box>
-              </GridItem>
-              <GridItem w="100%">
-                <Box textAlign="center">
-                  <Text fontSize="4xl" fontWeight="bold">
-                    <MessageOutlined />
-                  </Text>
-                  <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                    receive feedback
-                  </Text>
-                  <Text mt={4}>
-                    We encourage our members to provide feedback on apps listed on the platfom
-                    through a healthy discussion.
-                  </Text>
-                </Box>
-              </GridItem>
-              <GridItem w="100%">
-                <Box textAlign="center">
-                  <Text fontSize="4xl" fontWeight="bold">
-                    <RocketOutlined />
-                  </Text>
-                  <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                    get inspired
-                  </Text>
-                  <Text mt={4}>
-                    See what others are up and find your way to contribute to the growing Philippine
-                    tech startup community.
-                  </Text>
-                </Box>
-              </GridItem>
-            </Grid>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Box>
+          <Box mt={32} mb={32} textAlign="center">
+            <Text fontSize="3xl" fontWeight="bold" color="blue.500">
+              Contact Us
+            </Text>
+            <Text fontSize="lg" mt={16} color="gray.600">
+              We will be more than happy to help you get published in our platform. Please send us
+              an e-mail at
+            </Text>
+            <Text fontSize="xl" fontWeight="bold" mt={8}>
+              <MailOutlined /> &nbsp; admin@techhustlers.ph
+            </Text>
           </Box>
         </div>
       </div>
-    </div>
-    <div className="content-container">
-      <div className="child-container">
-        <Box mt={32}>
-          <Text fontSize="3xl" fontWeight="bold" color="blue.500">
-            Frequently Asked Questions
-          </Text>
-          <Accordion allowToggle mt={16}>
-            <AccordionItem pb={8} pt={8}>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  <Text fontSize="xl">Is submitting an app free</Text>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={8} pt={8}>
-                <Text as="p">Absolutely!</Text>
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem pb={8} pt={8}>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  <Text fontSize="xl">What kind of apps can be submitted?</Text>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={8} pt={8}>
-                <Text as="p">
-                  We welcome all kinds of apps - be it a web app, a mobile app, or both. Online
-                  shops are welcome too, for as long as they are in their own website and not just
-                  in a marketplace.
-                </Text>
-                <br />
-                <Text as="p">The following conditions should also be satisfied:</Text>
-                <ul>
-                  <li>
-                    <Text as="p">Must be built by a Filipino team/individual</Text>
-                  </li>
-                  <li>
-                    <Text as="p">
-                      Must be accessible to potential users with ready core functionalities to be
-                      used or tested
-                    </Text>
-                  </li>
-                </ul>
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem pb={8} pt={8}>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  <Text fontSize="xl">Are app submissions being reviewed?</Text>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={8} pt={8}>
-                <Text as="p">
-                  Yes. To ensure the quality of content in our site, all app submissions are being
-                  queued for review. We require apps to have good descriptions, appropriate tags,
-                  and good quality images and screenshots. TechHustlers PH admins reserve the right
-                  to decline submissions not meeting our standards.
-                </Text>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Box>
-        <Box mt={32} mb={32} textAlign="center">
-          <Text fontSize="3xl" fontWeight="bold" color="blue.500">
-            Contact Us
-          </Text>
-          <Text fontSize="lg" mt={16} color="gray.600">
-            We will be more than happy to help you get published in our platform. Please send us an
-            e-mail at
-          </Text>
-          <Text fontSize="xl" fontWeight="bold" mt={8}>
-            <MailOutlined /> &nbsp; admin@techhustlers.ph
-          </Text>
-        </Box>
-      </div>
-    </div>
-  </Wrapper>
-);
+    </Wrapper>
+  );
+};
 
 export default AboutUs;
