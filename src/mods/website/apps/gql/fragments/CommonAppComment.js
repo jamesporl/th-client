@@ -12,6 +12,7 @@ export default gql`
         thumbnail
       }
     }
+    isParent
     htmlContent
     createdAt
     isPinned
