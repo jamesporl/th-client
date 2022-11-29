@@ -7,9 +7,11 @@ export default gql`
     name
     shortDesc
     htmlDesc
+    textDesc
     logoImg {
       _id
       medium
+      large
     }
     videoUrl
     bannerImgs {
