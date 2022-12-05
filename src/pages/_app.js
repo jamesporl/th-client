@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { Helmet } from 'react-helmet';
 import { ChakraProvider } from '@chakra-ui/react';
 import { useApollo } from 'core/apollo/createApolloClient';
@@ -17,13 +16,49 @@ function App({ Component, pageProps }) {
 
   const apolloClient = useApollo(pageProps.initialApolloState);
 
+  const shouldGALoadInUrl = (url) => {
+    if (!url) {
+      return false;
+    }
+    return !url.startsWith('/my') && !url.startsWith('/site-admin') && !url.startsWith('/account');
+  };
+
   useEffect(() => {
+    const gaScriptId = 'ga-script';
     if (
       typeof window !== 'undefined' &&
-      isGAScriptReady &&
-      !router.asPath?.startsWith('/my') &&
-      !router.asPath?.startsWith('/site-admin')
+      shouldGALoadInUrl(router.asPath) &&
+      document.getElementById(gaScriptId) === null
     ) {
+      const gaScript = document.createElement('script');
+      gaScript.setAttribute(
+        'src',
+        `https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`,
+      );
+      gaScript.setAttribute('id', gaScriptId);
+      document.body.appendChild(gaScript);
+
+      const gaTagScript = document.createElement('script');
+      const gaTagInlineScript = document.createTextNode(
+        `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}');
+       `,
+      );
+      gaTagScript.appendChild(gaTagInlineScript);
+      document.body.appendChild(gaTagScript);
+
+      // now wait for it to load...
+      gaScript.onload = () => {
+        setIsGAScriptReady(true);
+      };
+    }
+  }, [router.asPath]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isGAScriptReady && shouldGALoadInUrl(router?.asPath)) {
       window.gtag('config', `${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`, {
         page_path: router.asPath,
       });
@@ -58,29 +93,16 @@ function App({ Component, pageProps }) {
     getAuthData();
   }, []);
 
-  let gaScript = null;
-  if (!router.pathname?.startsWith('/my') && !router.pathname?.startsWith('/site-admin')) {
-    gaScript = (
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-        onReady={() => setIsGAScriptReady(true)}
-      />
-    );
-  }
-
   return (
-    <>
-      <ApolloProvider client={apolloClient}>
-        <ChakraProvider theme={chakraCustomTheme}>
-          <Helmet
-            titleTemplate="%s - TechHustlers PH"
-            defaultTitle="TechHustlers PH - Local Tech Products in One Place"
-          />
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </ApolloProvider>
-      {gaScript}
-    </>
+    <ApolloProvider client={apolloClient}>
+      <ChakraProvider theme={chakraCustomTheme}>
+        <Helmet
+          titleTemplate="%s - TechHustlers PH"
+          defaultTitle="TechHustlers PH - Local Tech Products in One Place"
+        />
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </ApolloProvider>
   );
 }
 
