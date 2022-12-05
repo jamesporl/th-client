@@ -26,7 +26,7 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
   const { authStore } = useStores();
 
   const otherMenuItems = [];
-  if (comment.isParent && authStore.myProfile._id === app.ownedBy._id) {
+  if (comment.isParent && authStore.myProfile?._id === app.ownedBy._id) {
     let togglePinText = 'Pin Comment';
     if (comment.isPinned) {
       togglePinText = 'Unpin Comment';
@@ -66,7 +66,7 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
   }
 
   let creatorTag = null;
-  if (comment.createdBy._id === authStore.myProfile._id) {
+  if (comment.createdBy._id === authStore.myProfile?._id) {
     creatorTag = (
       <Tag size="sm" variant="outline" colorScheme="yellow">
         Creator

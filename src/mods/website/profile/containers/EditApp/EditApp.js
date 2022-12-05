@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Heading, Flex, Box, Skeleton } from '@chakra-ui/react';
+import { Button, Heading, Flex, Box, Skeleton } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 import set from 'lodash/set';
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { DEFAULT_EDITOR_VALUE } from 'mods/website/components/Editor/_utils';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import Editor from '../../../components/Editor/Editor';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppDraftQry from '../../gql/AppDraftQry';
@@ -28,7 +29,7 @@ const Wrapper = styled.div`
 const EditApp = () => {
   const router = useRouter();
   const { appId } = router.query;
-  const { activeStep, setStep } = useSteps({
+  const { activeStep, setStep, nextStep, prevStep } = useSteps({
     initialStep: 0,
   });
 
@@ -174,6 +175,16 @@ const EditApp = () => {
         <Flex flexDir="column" width="100%">
           <Steps activeStep={activeStep} onClickStep={(step) => setStep(step)}>
             <Step label="Main Details" key="main-details">
+              <Flex width="100%" justify="flex-end" mt={12}>
+                <Button
+                  onClick={nextStep}
+                  rightIcon={<ArrowRightOutlined />}
+                  colorScheme="green"
+                  variant="outline"
+                >
+                  Next
+                </Button>
+              </Flex>
               <Box mt={12}>
                 <MainDetails
                   onChange={handleValuesChange}
@@ -184,6 +195,25 @@ const EditApp = () => {
               </Box>
             </Step>
             <Step label="Assets" key="assets">
+              <Flex width="100%" justify="flex-end" mt={12}>
+                <Button
+                  onClick={prevStep}
+                  leftIcon={<ArrowLeftOutlined />}
+                  colorScheme="green"
+                  variant="outline"
+                  mr={2}
+                >
+                  Prev
+                </Button>
+                <Button
+                  onClick={nextStep}
+                  rightIcon={<ArrowRightOutlined />}
+                  colorScheme="green"
+                  variant="outline"
+                >
+                  Next
+                </Button>
+              </Flex>
               <Box mt={12}>
                 <Assets
                   appId={appId}
@@ -196,6 +226,25 @@ const EditApp = () => {
               </Box>
             </Step>
             <Step label="Description" key="desc">
+              <Flex width="100%" justify="flex-end" mt={12}>
+                <Button
+                  onClick={prevStep}
+                  leftIcon={<ArrowLeftOutlined />}
+                  colorScheme="green"
+                  variant="outline"
+                  mr={2}
+                >
+                  Prev
+                </Button>
+                <Button
+                  onClick={nextStep}
+                  rightIcon={<ArrowRightOutlined />}
+                  colorScheme="green"
+                  variant="outline"
+                >
+                  Next
+                </Button>
+              </Flex>
               <Flex mt={12} justifyContent="center">
                 <Box width="100%" maxWidth={800}>
                   {editorComp}

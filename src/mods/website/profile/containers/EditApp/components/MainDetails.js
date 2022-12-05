@@ -301,16 +301,18 @@ const MainDetails = ({ initialValues, onChange, onChangeTags, onSubmitToServer }
                       <FormLabel htmlFor="github">
                         <GithubOutlined style={{ fontSize: 20 }} />
                       </FormLabel>
-                      <Input
-                        {...field}
-                        id="github"
-                        placeholder="Github"
-                        onChange={(ev) =>
-                          handleChangeField(['socialUrls.github'], ev, handleChange)
-                        }
-                        onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
-                      />
-                      <FormErrorMessage>{errors.socialUrls?.github}</FormErrorMessage>
+                      <Box className="input-inline">
+                        <Input
+                          {...field}
+                          id="github"
+                          placeholder="Github"
+                          onChange={(ev) =>
+                            handleChangeField(['socialUrls.github'], ev, handleChange)
+                          }
+                          onBlur={(ev) => handleBlurField(ev, handleBlur, validateForm)}
+                        />
+                        <FormErrorMessage>{errors.socialUrls?.github}</FormErrorMessage>
+                      </Box>
                     </FormControl>
                   )}
                 </Field>
