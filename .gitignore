@@ -3,7 +3,7 @@
 .vscode
 .idea
 .c9
-.env
+.env.local
 *.csv
 *.dat
 *.gz
