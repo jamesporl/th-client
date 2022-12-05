@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { Helmet } from 'react-helmet';
 import { ChakraProvider } from '@chakra-ui/react';
 import { useApollo } from 'core/apollo/createApolloClient';
@@ -11,17 +12,23 @@ import chakraCustomTheme from 'utils/styles/chakraCustomTheme';
 /* eslint-disable react/jsx-props-no-spreading,react/prop-types */
 function App({ Component, pageProps }) {
   const { authStore, uiStore } = useStores();
+  const [isGAScriptReady, setIsGAScriptReady] = useState(false);
   const router = useRouter();
 
   const apolloClient = useApollo(pageProps.initialApolloState);
 
-  const handleRouteChange = (url) => {
-    if (typeof window !== 'undefined' && !url.startsWith('/my') && !url.startsWith('/site-admin')) {
+  useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      isGAScriptReady &&
+      !router.asPath?.startsWith('/my') &&
+      !router.asPath?.startsWith('/site-admin')
+    ) {
       window.gtag('config', `${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`, {
-        page_path: url,
+        page_path: router.asPath,
       });
     }
-  };
+  }, [router.asPath, isGAScriptReady]);
 
   useEffect(() => {
     const handleResize = () => uiStore.setScreenSize(window.innerWidth, window.innerHeight);
@@ -39,13 +46,6 @@ function App({ Component, pageProps }) {
   }, []);
 
   useEffect(() => {
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
-  useEffect(() => {
     const getAuthData = async () => {
       try {
         const profileRes = await apolloClient.query({ query: MyProfileQry });
@@ -58,16 +58,29 @@ function App({ Component, pageProps }) {
     getAuthData();
   }, []);
 
+  let gaScript = null;
+  if (!router.pathname?.startsWith('/my') && !router.pathname?.startsWith('/site-admin')) {
+    gaScript = (
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+        onReady={() => setIsGAScriptReady(true)}
+      />
+    );
+  }
+
   return (
-    <ApolloProvider client={apolloClient}>
-      <ChakraProvider theme={chakraCustomTheme}>
-        <Helmet
-          titleTemplate="%s - TechHustlers PH"
-          defaultTitle="TechHustlers PH - Local Tech Products in One Place"
-        />
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </ApolloProvider>
+    <>
+      <ApolloProvider client={apolloClient}>
+        <ChakraProvider theme={chakraCustomTheme}>
+          <Helmet
+            titleTemplate="%s - TechHustlers PH"
+            defaultTitle="TechHustlers PH - Local Tech Products in One Place"
+          />
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </ApolloProvider>
+      {gaScript}
+    </>
   );
 }
 

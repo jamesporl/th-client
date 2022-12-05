@@ -9,6 +9,7 @@ import renderElement from './renderElement';
 import renderLeaf from './renderLeaf';
 import Toolbar from './Toolbar';
 import { DEFAULT_EDITOR_VALUE, HOTKEYS_MAP, HOTKEYS_MAP_KEYS, toggleMark } from './_utils';
+import withCustomPlugins from './withCustomPlugins';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -32,7 +33,7 @@ const Wrapper = styled.div`
 const THEditor = (props) => {
   const { initialValue, onChange, minHeight, placeholder } = props;
 
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(() => withCustomPlugins(withHistory(withReact(createEditor()))), []);
 
   const handleKeyPress = (event) => {
     /* eslint-disable-next-line no-restricted-syntax */
@@ -43,9 +44,6 @@ const THEditor = (props) => {
         toggleMark(editor, format);
         break;
       }
-    }
-    if (isHotkey('backspace', event)) {
-      console.log('BBBAAAACKSAPCE!');
     }
   };
 

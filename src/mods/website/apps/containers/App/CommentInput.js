@@ -49,10 +49,12 @@ const CommentInput = ({ placeholder, onSubmitComment, onRefetchComments }) => {
 };
 CommentInput.propTypes = {
   placeholder: PropTypes.string.isRequired,
-  onRefetchComments: PropTypes.func.isRequired,
+  onRefetchComments: PropTypes.func,
   onSubmitComment: PropTypes.func.isRequired,
 };
 
-CommentInput.defaultProps = {};
+CommentInput.defaultProps = {
+  onRefetchComments: () => undefined,
+};
 
 export default CommentInput;
