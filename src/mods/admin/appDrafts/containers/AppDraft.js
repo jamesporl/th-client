@@ -2,14 +2,11 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import { Button, HStack, Skeleton } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
 import AppDraftQry from 'mods/website/profile/gql/AppDraftQry';
 import AppDetails from 'mods/website/components/AppDetails';
 import DetailsContainer from '../../components/DetailsContainer';
 import PageHeader from '../../components/PageHeader';
 import AdminLayout from '../../components/AdminLayout';
-
-const Wrapper = styled.div``;
 
 const AppDraft = () => {
   const router = useRouter();
