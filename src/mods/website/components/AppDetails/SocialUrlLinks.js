@@ -32,7 +32,7 @@ const SocialUrlLinks = ({ socialUrls }) => {
   let instragramBtn = null;
   if (instagram) {
     instragramBtn = (
-      <Link href={instagram} isExternal as="button">
+      <Link href={instagram} isExternal>
         <IconButton
           variant="outline"
           colorScheme="blackAlpha"

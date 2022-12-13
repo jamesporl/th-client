@@ -70,7 +70,7 @@ const App = ({ app }) => {
             </AuthButton>
           </Box>
           <Box>
-            <NextLink href={`/apps/${app.slug}`} passHref>
+            <NextLink href={`/apps/${app.slug}`} passHref legacyBehavior>
               <Link style={{ textDecoration: 'none' }}>
                 <Text color="gray.700" fontSize="sm">
                   {`${supportsCount} ${supportText} and ${app.commentsCount} ${commentText}`}

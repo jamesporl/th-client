@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useMutation } from '@apollo/client';
-import { Button, useToast, Alert, AlertIcon, AlertDescription, Flex, Link } from '@chakra-ui/react';
+import { Button, useToast, Alert, AlertIcon, AlertDescription, Flex } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -59,7 +59,7 @@ const ResetPassword = () => {
           </Field>
           <Button
             colorScheme="green"
-            isFullWidth
+            width="100%"
             size="md"
             type="submit"
             isLoading={isSubmitting}
@@ -89,9 +89,7 @@ const ResetPassword = () => {
           </AlertDescription>
         </Alert>
         <Flex mt={8} justifyContent="center">
-          <NextLink href="/account/login" passHref>
-            <Link style={{ textDecoration: 'none' }}>Back To Login</Link>
-          </NextLink>
+          <NextLink href="/account/login">Back To Login</NextLink>
         </Flex>
       </>
     );

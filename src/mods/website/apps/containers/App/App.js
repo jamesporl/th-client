@@ -4,13 +4,10 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import sortBy from 'lodash/sortBy';
-import styled from 'styled-components';
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import AppDetails from 'mods/website/components/AppDetails';
 import AppQry from '../../gql/AppQry';
-
-const Wrapper = styled.div``;
 
 const App = () => {
   const router = useRouter();
@@ -51,9 +48,7 @@ const App = () => {
   if (app) {
     appBcItem = (
       <BreadcrumbItem isCurrentPage isLastChild>
-        <BreadcrumbLink>
-          <NextLink href={`/apps/${app.slug}`}>{app.name}</NextLink>
-        </BreadcrumbLink>
+        <NextLink href={`/apps/${app.slug}`}>{app.name}</NextLink>
       </BreadcrumbItem>
     );
   }
@@ -62,9 +57,7 @@ const App = () => {
     <Box mb={12}>
       <Breadcrumb fontSize="sm">
         <BreadcrumbItem>
-          <BreadcrumbLink>
-            <NextLink href="/">Home</NextLink>
-          </BreadcrumbLink>
+          <NextLink href="/">Home</NextLink>
         </BreadcrumbItem>
         {appBcItem}
       </Breadcrumb>
@@ -80,10 +73,10 @@ const App = () => {
         <meta name="og:description" content={`${app?.textDesc?.slice(0, 120)}...`} />
         {ogImageMeta}
       </Helmet>
-      <Wrapper>
+      <div>
         {breadcrumbs}
         {appDetails}
-      </Wrapper>
+      </div>
     </WebsiteLayout>
   );
 };

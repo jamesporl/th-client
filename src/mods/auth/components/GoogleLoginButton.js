@@ -14,7 +14,7 @@ const GoogleLoginButton = () => {
   return (
     <Button
       colorScheme="blue"
-      isFullWidth
+      width="100%"
       variant="outline"
       size="md"
       onClick={handleClickLoginWithGoogle}

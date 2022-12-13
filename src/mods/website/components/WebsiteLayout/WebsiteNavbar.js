@@ -1,8 +1,9 @@
 import React from 'react';
 import {
   Avatar,
+  Box,
   Button,
-  Collapse,
+  Slide,
   Flex,
   HStack,
   InputGroup,
@@ -17,11 +18,9 @@ import {
   useDisclosure,
   useBreakpointValue,
   VStack,
-  Link,
 } from '@chakra-ui/react';
 import {
   AppstoreOutlined,
-  CloseOutlined,
   LogoutOutlined,
   MenuOutlined,
   SearchOutlined,
@@ -78,13 +77,23 @@ const WebsiteNavbar = () => {
   const desktopLogoImg = <img src="/logo-full.png" alt="logo" width="200px" />;
   const mobileLogoImg = <img src="/logo-simple.png" alt="logo" width="40px" />;
 
-  const submitAppBtn = (
+  const submitAppDesktopBtn = (
     <Button colorScheme="blue" size="sm" onClick={handleClickSubmitAnApp}>
       Submit an App
     </Button>
   );
 
+  const aboutUsBtn = (
+    <NextLink href="/site/about-us" passHref legacyBehavior>
+      <Button colorScheme="blue" size="sm" variant="link" as="a">
+        About Us
+      </Button>
+    </NextLink>
+  );
+
   let profileAvatar = null;
+  let loginDesktopBtn = null;
+  let loginMobileBtn = null;
 
   if (authStore.myProfile) {
     const menu = (
@@ -114,25 +123,44 @@ const WebsiteNavbar = () => {
         {menu}
       </Menu>
     );
+  } else {
+    loginDesktopBtn = (
+      <NextLink href="/account/login" legacyBehavior>
+        <Button colorScheme="blue" size="sm" variant="outline">
+          Log in
+        </Button>
+      </NextLink>
+    );
+    loginMobileBtn = (
+      <Box>
+        <NextLink href="/account/login" legacyBehavior>
+          <Button colorScheme="blue" size="sm" variant="link">
+            Log in
+          </Button>
+        </NextLink>
+      </Box>
+    );
   }
 
   const desktopRightNav = (
-    <HStack spacing="2rem">
-      <NextLink href="/site/about-us" passHref>
-        <Link style={{ textDecoration: 'none' }}>About Us</Link>
-      </NextLink>
-      {submitAppBtn}
+    <HStack spacing="1rem">
+      {aboutUsBtn}
+      {loginDesktopBtn}
+      {submitAppDesktopBtn}
       {profileAvatar}
     </HStack>
   );
 
   const mobileRightNavBtn = (
-    <IconButton
-      onClick={onToggleMobileNav}
-      icon={isMobileNavOpen ? <CloseOutlined /> : <MenuOutlined />}
-      variant="ghost"
-      aria-label="Toggle Navigation"
-    />
+    <HStack spacing="0.5rem">
+      <IconButton
+        onClick={onToggleMobileNav}
+        icon={<MenuOutlined />}
+        variant="ghost"
+        aria-label="Toggle Navigation"
+      />
+      {profileAvatar}
+    </HStack>
   );
 
   return (
@@ -150,8 +178,13 @@ const WebsiteNavbar = () => {
       >
         <Flex alignItems="center" justifyContent="space-between" className="nav-container">
           <Flex alignItems="center" mr={8}>
-            <NextLink href="/" as="/" passHref>
-              <a>{useBreakpointValue({ base: mobileLogoImg, md: desktopLogoImg })}</a>
+            <NextLink href="/" as="/" passHref legacyBehavior>
+              <a>
+                {useBreakpointValue(
+                  { base: mobileLogoImg, md: desktopLogoImg },
+                  { fallback: 'md' },
+                )}
+              </a>
             </NextLink>
           </Flex>
           <Flex alignItems="center" flexGrow="1">
@@ -163,16 +196,40 @@ const WebsiteNavbar = () => {
               <Input placeholder="Search TechHustlers" size="md" onFocus={handleClickSearch} />
             </InputGroup>
           </Flex>
-          <Flex alignItems="center" justifyContent="flex-end" ml={8}>
-            {useBreakpointValue({ base: mobileRightNavBtn, md: desktopRightNav })}
+          <Flex
+            alignItems="center"
+            justifyContent="flex-end"
+            ml={useBreakpointValue({ base: 2, md: 8 }, { fallback: 'md' })}
+          >
+            {useBreakpointValue(
+              { base: mobileRightNavBtn, md: desktopRightNav },
+              { fallback: 'md' },
+            )}
           </Flex>
         </Flex>
       </Flex>
-      <Collapse in={isMobileNavOpen} animateOpacity style={{ paddingTop: '60px' }}>
+      <Slide
+        in={isMobileNavOpen}
+        direction="top"
+        style={{
+          paddingTop: '60px',
+          boxShadow: 'rgba(99, 99, 99, 0.05) 0px 8px 8px 0px',
+          borderBottom: '1px solid #efefef',
+          opacity: 1,
+          backgroundColor: '#fff',
+          zIndex: 10,
+        }}
+      >
         <VStack p={4} display={{ md: 'none' }}>
-          {submitAppBtn}
+          <Box>{aboutUsBtn}</Box>
+          {loginMobileBtn}
+          <Box>
+            <Button colorScheme="blue" size="sm" onClick={handleClickSubmitAnApp} variant="link">
+              Submit an App
+            </Button>
+          </Box>
         </VStack>
-      </Collapse>
+      </Slide>
       <SearchModal isOpen={isSearchOpen} onClose={onCloseSearch} />
     </Wrapper>
   );

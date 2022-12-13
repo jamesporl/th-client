@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
+  text-align: center;
 
   .website-btn:hover {
     text-decoration: none;
@@ -21,7 +22,7 @@ const AppUrlLinks = ({ websiteUrl, appStoreUrl, playStoreUrl }) => {
   if (websiteUrl) {
     websiteBtn = (
       <Link href={websiteUrl} isExternal style={{ width: '100%' }} className="website-btn">
-        <Button colorScheme="blue" isFullWidth leftIcon={<GlobalOutlined />}>
+        <Button colorScheme="blue" width="100%" maxWidth="350px" leftIcon={<GlobalOutlined />}>
           Visit Website
         </Button>
       </Link>
@@ -31,7 +32,13 @@ const AppUrlLinks = ({ websiteUrl, appStoreUrl, playStoreUrl }) => {
   if (appStoreUrl) {
     appStoreBtn = (
       <Link href={appStoreUrl} isExternal style={{ width: '100%' }} className="website-btn">
-        <Button variant="outline" colorScheme="gray" isFullWidth leftIcon={<AppleFilled />}>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          width="100%"
+          maxWidth="350px"
+          leftIcon={<AppleFilled />}
+        >
           App Store
         </Button>
       </Link>
@@ -41,7 +48,13 @@ const AppUrlLinks = ({ websiteUrl, appStoreUrl, playStoreUrl }) => {
   if (playStoreUrl) {
     playStoreBtn = (
       <Link href={playStoreUrl} isExternal style={{ width: '100%' }} className="website-btn">
-        <Button variant="outline" colorScheme="gray" isFullWidth leftIcon={<AndroidOutlined />}>
+        <Button
+          variant="outline"
+          colorScheme="gray"
+          width="100%"
+          maxWidth="350px"
+          leftIcon={<AndroidOutlined />}
+        >
           Google Play
         </Button>
       </Link>

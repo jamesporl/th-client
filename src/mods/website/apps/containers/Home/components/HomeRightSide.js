@@ -6,8 +6,6 @@ import useStores from 'core/stores/useStores';
 import useClickSubmitAnApp from 'mods/website/hooks/useClickSubmitAnApp';
 
 const HomeRightSide = () => {
-  const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' });
-
   const { authStore } = useStores();
 
   const handleClickSubmitAnApp = useClickSubmitAnApp();
@@ -15,16 +13,28 @@ const HomeRightSide = () => {
   let loginBtn = null;
   if (!authStore.myProfile) {
     loginBtn = (
-      <NextLink href="/account/login">
-        <Button colorScheme="blue" size="md" isFullWidth mt={8}>
-          Log in or Sign up
-        </Button>
-      </NextLink>
+      <Box textAlign="center">
+        <NextLink href="/account/login" legacyBehavior>
+          <Button
+            colorScheme="blue"
+            size="md"
+            width="100%"
+            maxWidth="350px"
+            mt={8}
+            alignSelf="center"
+          >
+            Log in or Sign up
+          </Button>
+        </NextLink>
+      </Box>
     );
   }
 
+  const containerMaxWidth = useBreakpointValue({ base: 'none', lg: '350px' }, { fallback: 'lg' });
+  const containerML = useBreakpointValue({ base: 'none', lg: '4rem' }, { fallback: 'lg' });
+
   return (
-    <Box flexGrow="1" ml="4rem" style={{ display: rightColDisplay }} maxWidth="350px">
+    <Box flexGrow="1" ml={containerML} maxWidth={containerMaxWidth}>
       <Box borderWidth="1px" padding={4} borderRadius={8} backgroundColor="gray.100">
         <Text fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
           This Platform
@@ -35,7 +45,6 @@ const HomeRightSide = () => {
           are welcome to showcase their apps here.
         </Text>
         {loginBtn}
-
         <Text fontWeight="700" color="green.500" fontSize="lg" mt={12}>
           Be discovered.
         </Text>
@@ -51,9 +60,18 @@ const HomeRightSide = () => {
         <Text mt={8} color="gray.600" fontSize="sm">
           Let&apos;s build this community together.
         </Text>
-        <Button colorScheme="blue" size="md" onClick={handleClickSubmitAnApp} isFullWidth mt={8}>
-          Submit an App
-        </Button>
+        <Box textAlign="center">
+          <Button
+            colorScheme="blue"
+            size="md"
+            onClick={handleClickSubmitAnApp}
+            width="100%"
+            maxWidth="350px"
+            mt={8}
+          >
+            Submit an App
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
