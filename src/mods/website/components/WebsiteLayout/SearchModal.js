@@ -96,7 +96,7 @@ const SearchModal = ({ isOpen, onClose }) => {
         </Box>
         <Box>
           {apps.map((app) => (
-            <NextLink href={`/apps/${app.slug}`} key={app._id} passHref>
+            <NextLink href={`/apps/${app.slug}`} key={app._id} passHref legacyBehavior>
               <Link onClick={handleClose}>
                 <Flex className="app">
                   <img src={app.logoImg.thumbnail} alt="logo" style={{ borderRadius: '0.5rem' }} />

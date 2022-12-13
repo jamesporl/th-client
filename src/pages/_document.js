@@ -68,6 +68,10 @@ class MyDocument extends Document {
         content:
           'user-scalable=0, initial-scale=1 minimum-scale=1, width=device-width, height=device-height',
       },
+      {
+        name: 'google-site-verification',
+        content: '7nKci5fUuvO3y_QAL_qoCAb1MPxstt6GrpreLBOuThI',
+      },
     ];
 
     return (

@@ -1,5 +1,22 @@
 import { extendTheme } from '@chakra-ui/react';
-import { StepsStyleConfig as Steps } from 'chakra-ui-steps';
+import { StepsStyleConfig } from 'chakra-ui-steps';
+
+const CustomSteps = {
+  ...StepsStyleConfig,
+  baseStyle: (props) => {
+    const baseStyle = StepsStyleConfig.baseStyle(props);
+    return {
+      ...baseStyle,
+      stepIconContainer: {
+        ...baseStyle.stepIconContainer,
+        _activeStep: {
+          ...baseStyle.stepIconContainer._activeStep, // eslint-disable-line no-underscore-dangle
+          bg: '#fff',
+        },
+      },
+    };
+  },
+};
 
 export default extendTheme({
   colors: {
@@ -17,6 +34,6 @@ export default extendTheme({
     },
   },
   components: {
-    Steps,
+    Steps: CustomSteps,
   },
 });

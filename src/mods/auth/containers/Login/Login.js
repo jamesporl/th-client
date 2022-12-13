@@ -8,7 +8,6 @@ import {
   Input,
   useToast,
   VStack,
-  Link,
   Flex,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
@@ -103,7 +102,7 @@ const Login = () => {
               <VStack spacing={4} mt={8}>
                 <Button
                   colorScheme="blue"
-                  isFullWidth
+                  width="100%"
                   size="md"
                   type="submit"
                   isLoading={isSubmitting}
@@ -121,14 +120,12 @@ const Login = () => {
                 </small>
               </div>
               <Flex mt={8} justifyContent="center">
-                <NextLink href="/account/forgot-password" passHref>
-                  <Link style={{ textDecoration: 'none' }}>Forgot password?</Link>
-                </NextLink>
+                <NextLink href="/account/forgot-password">Forgot password?</NextLink>
               </Flex>
               <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
                 Don&apos;t have an account? &nbsp;
-                <NextLink href="/account/signup" as="/account/signup" passHref>
-                  <Link style={{ textDecoration: 'none' }}>Sign up here.</Link>
+                <NextLink href="/account/signup" as="/account/signup">
+                  Sign up here.
                 </NextLink>
               </div>
             </Form>

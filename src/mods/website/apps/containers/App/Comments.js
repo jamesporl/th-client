@@ -9,7 +9,7 @@ import Comment from './Comment';
 import CommentInput from './CommentInput';
 
 const Wrapper = styled.div`
-  margin-top: 2rem;
+  margin-top: 1rem;
 `;
 
 const Comments = ({ app }) => {

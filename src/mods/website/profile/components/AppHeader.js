@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Link, Text, Tag, HStack, Heading } from '@chakra-ui/react';
+import { Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -38,14 +38,10 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
     </Heading>
   );
   if (isClickable) {
-    img = (
-      <NextLink href={`/apps/${slug}`} passHref>
-        <Link>{img}</Link>
-      </NextLink>
-    );
+    img = <NextLink href={`/apps/${slug}`}>{img}</NextLink>;
     title = (
-      <NextLink href={`/apps/${slug}`} passHref>
-        <Link className="title">{title}</Link>
+      <NextLink href={`/apps/${slug}`} passHref className="title">
+        {title}
       </NextLink>
     );
   }

@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroller';
 import moment from 'moment';
 import WebsiteLayout from '../../../components/WebsiteLayout';
@@ -141,6 +141,11 @@ const Home = () => {
     </>
   );
 
+  const platformInfo = useBreakpointValue(
+    { base: <HomeRightSide />, lg: null },
+    { fallback: 'lg' },
+  );
+
   if (!isLoadingInitialApps && !isLoadingFeaturedApps) {
     let featuredAppsComp = null;
     if (featuredApps.length) {
@@ -170,6 +175,7 @@ const Home = () => {
         useWindow
       >
         {featuredAppsComp}
+        {platformInfo}
         {appsByMonthComp}
       </InfiniteScroll>
     );
@@ -187,7 +193,7 @@ const Home = () => {
               {appsList}
             </Box>
           </Box>
-          <HomeRightSide />
+          {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
         </Flex>
       </Box>
     </WebsiteLayout>

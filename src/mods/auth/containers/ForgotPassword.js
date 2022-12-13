@@ -8,7 +8,6 @@ import {
   Input,
   useToast,
   Flex,
-  Link,
   Alert,
   AlertIcon,
   AlertTitle,
@@ -63,7 +62,7 @@ const ForgotPassword = () => {
           </Field>
           <Button
             colorScheme="green"
-            isFullWidth
+            width="100%"
             size="md"
             type="submit"
             isLoading={isSubmitting}
@@ -72,9 +71,7 @@ const ForgotPassword = () => {
             Send Password Reset Link
           </Button>
           <Flex mt={8} justifyContent="center">
-            <NextLink href="/account/login" passHref>
-              <Link style={{ textDecoration: 'none' }}>Back To Login</Link>
-            </NextLink>
+            <NextLink href="/account/login">Back To Login</NextLink>
           </Flex>
         </Form>
       )}

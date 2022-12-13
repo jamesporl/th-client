@@ -51,7 +51,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
   let seeMoreBtn = null;
   if (apps.length < totalCount) {
     seeMoreBtn = (
-      <Button size="sm" isFullWidth onClick={handleClickMore}>
+      <Button size="sm" width="100%" onClick={handleClickMore}>
         See more...
       </Button>
     );

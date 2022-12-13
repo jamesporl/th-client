@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import * as yup from 'yup';
@@ -113,7 +113,7 @@ const Signup = () => {
               <VStack mt={8} spacing={4}>
                 <Button
                   colorScheme="green"
-                  isFullWidth
+                  width="100%"
                   size="md"
                   type="submit"
                   isLoading={isSubmitting}
@@ -132,9 +132,7 @@ const Signup = () => {
               </div>
               <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
                 Already have an account? &nbsp;
-                <Link href="/account/login" as="/account/login" passHref>
-                  <a>Log in here.</a>
-                </Link>
+                <NextLink href="/account/login">Log in here</NextLink>
               </div>
             </Form>
           )}

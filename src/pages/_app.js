@@ -36,7 +36,7 @@ function App({ Component, pageProps }) {
         `https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`,
       );
       gaScript.setAttribute('id', gaScriptId);
-      document.body.appendChild(gaScript);
+      document.head.appendChild(gaScript);
 
       const gaTagScript = document.createElement('script');
       const gaTagInlineScript = document.createTextNode(
@@ -48,7 +48,7 @@ function App({ Component, pageProps }) {
        `,
       );
       gaTagScript.appendChild(gaTagInlineScript);
-      document.body.appendChild(gaTagScript);
+      document.head.appendChild(gaTagScript);
 
       // now wait for it to load...
       gaScript.onload = () => {

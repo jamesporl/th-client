@@ -22,8 +22,8 @@ const Wrapper = styled.div`
 `;
 
 const AppDetails = ({ app, isPreview }) => {
-  const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' });
-  const rightColDisplayRev = useBreakpointValue({ base: 'flex', lg: 'none' });
+  const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' }, { fallback: 'lg' });
+  const rightColDisplayRev = useBreakpointValue({ base: 'flex', lg: 'none' }, { fallback: 'lg' });
 
   const [supportsCount, setSupportsCount] = useState(isPreview ? 10 : app.supportsCount);
   const [isSupported, setIsSupported] = useState(isPreview ? true : app.isSupported);
@@ -56,8 +56,7 @@ const AppDetails = ({ app, isPreview }) => {
     <Flex
       justifyContent="space-between"
       alignItems="center"
-      mt={16}
-      mb={16}
+      mt={4}
       border="2px"
       borderColor="gray.200"
       borderRadius={4}
@@ -80,7 +79,6 @@ const AppDetails = ({ app, isPreview }) => {
             Support
           </AuthButton>
         </Box>
-
         <Box>
           <Text fontSize="2xl" fontWeight="bold">
             {supportsCount}
