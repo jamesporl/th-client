@@ -11,13 +11,12 @@ const Wrapper = styled.div`
     position: relative;
     top: 0;
     left: 0;
-    background: url('/auth-bg.jpeg');
+    background: url('/auth-bg.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100vw;
     height: 100vh;
-    filter: brightness(50%);
   }
 
   .form-box {

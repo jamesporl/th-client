@@ -21,12 +21,7 @@ const App = ({ app }) => {
       padding={12}
       borderRadius={8}
     >
-      <AppHeader
-        name={app.name}
-        shortDesc={app.shortDesc}
-        logoImgSrc={app.logoImg?.medium}
-        tags={app.tags}
-      />
+      <AppHeader app={app} />
       <Menu placement="bottom-end">
         <MenuButton as={Button} rightIcon={<DownOutlined />}>
           Actions

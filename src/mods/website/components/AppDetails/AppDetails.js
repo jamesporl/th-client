@@ -56,7 +56,7 @@ const AppDetails = ({ app, isPreview }) => {
     <Flex
       justifyContent="space-between"
       alignItems="center"
-      mt={4}
+      mt={8}
       border="2px"
       borderColor="gray.200"
       borderRadius={4}
@@ -90,12 +90,7 @@ const AppDetails = ({ app, isPreview }) => {
 
   return (
     <Wrapper>
-      <AppHeader
-        name={app.name}
-        shortDesc={app.shortDesc}
-        logoImgSrc={app.logoImg?.medium}
-        tags={app.tags}
-      />
+      <AppHeader app={app} />
       <Box width="100%" mt={12}>
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">

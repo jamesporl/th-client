@@ -12,7 +12,9 @@ import {
   AccordionPanel,
   AccordionItem,
   Accordion,
+  useBreakpointValue,
 } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { MailOutlined, MessageOutlined, ProfileOutlined, RocketOutlined } from '@ant-design/icons';
@@ -64,7 +66,10 @@ const Wrapper = styled.div`
 
 const AboutUs = () => {
   const baseUrl = `${process.env.NEXT_PUBLIC_TH_CLIENT_BASE_URL}`;
-
+  const featsContainerCols = useBreakpointValue(
+    { base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
+    { fallback: 'md' },
+  );
   return (
     <Wrapper>
       <WebsiteNavbar />
@@ -75,22 +80,33 @@ const AboutUs = () => {
         <div className="about-hero-bg" />
         <div className="about-hero">
           <Flex justifyContent="center" alignItems="center" flexDir="column">
-            <Text fontSize="7xl" fontWeight="extrabold" mt={8} color="yellow.400" as="span">
+            <Text
+              fontSize="7xl"
+              fontWeight="extrabold"
+              mt={8}
+              color="yellow.400"
+              as="span"
+              align="center"
+            >
               Local Tech Products
             </Text>
-            <Text fontSize="5xl" fontWeight="extrabold" color="yellow.400">
+            <Text fontSize="5xl" fontWeight="extrabold" color="yellow.400" align="center">
               in one place
             </Text>
-            <Text fontSize="2xl" color="white" mt={8}>
+            <Text fontSize="2xl" color="white" mt={8} align="center">
               See new apps and upcoming startups in the growing tech scene of the Philippines
             </Text>
             <HStack spacing={4} mt={8}>
-              <Button size="lg" colorScheme="blue">
-                Join our Community
-              </Button>
-              <Button size="lg" colorScheme="blue">
-                Browse Apps
-              </Button>
+              <NextLink href="/account/login" passHref legacyBehavior>
+                <Button size="lg" colorScheme="blue">
+                  Join our Community
+                </Button>
+              </NextLink>
+              <NextLink href="/" passHref legacyBehavior>
+                <Button size="lg" colorScheme="blue">
+                  Browse Apps
+                </Button>
+              </NextLink>
             </HStack>
           </Flex>
         </div>
@@ -99,48 +115,54 @@ const AboutUs = () => {
         <div className="content-container">
           <div className="child-container">
             <Box textAlign="center" pt={16} pb={16} color="white">
-              <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-                <GridItem w="100%">
-                  <Box textAlign="center">
-                    <Text fontSize="4xl" fontWeight="bold">
-                      <ProfileOutlined />
-                    </Text>
-                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                      be discovered
-                    </Text>
-                    <Text mt={4}>
-                      Our main mission is to provide businesses and teams a place where potential
-                      users or customers are easy to find them.
-                    </Text>
-                  </Box>
+              <Grid templateColumns={featsContainerCols} gap={6}>
+                <GridItem w="100%" textAlign="center">
+                  <Flex justifyContent="center" alignItems="center">
+                    <Flex textAlign="center" maxWidth="350px" flexDir="column">
+                      <Text fontSize="4xl" fontWeight="bold">
+                        <ProfileOutlined />
+                      </Text>
+                      <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                        be discovered
+                      </Text>
+                      <Text mt={4}>
+                        Our main mission is to provide businesses and teams a place where potential
+                        users or customers are easy to find them.
+                      </Text>
+                    </Flex>
+                  </Flex>
                 </GridItem>
                 <GridItem w="100%">
-                  <Box textAlign="center">
-                    <Text fontSize="4xl" fontWeight="bold">
-                      <MessageOutlined />
-                    </Text>
-                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                      receive feedback
-                    </Text>
-                    <Text mt={4}>
-                      We encourage our members to provide feedback on apps listed on the platfom
-                      through a healthy discussion.
-                    </Text>
-                  </Box>
+                  <Flex justifyContent="center" alignItems="center">
+                    <Flex textAlign="center" maxWidth="350px" flexDir="column">
+                      <Text fontSize="4xl" fontWeight="bold">
+                        <MessageOutlined />
+                      </Text>
+                      <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                        receive feedback
+                      </Text>
+                      <Text mt={4}>
+                        We encourage our members to provide feedback on apps listed on the platfom
+                        through a healthy discussion.
+                      </Text>
+                    </Flex>
+                  </Flex>
                 </GridItem>
                 <GridItem w="100%">
-                  <Box textAlign="center">
-                    <Text fontSize="4xl" fontWeight="bold">
-                      <RocketOutlined />
-                    </Text>
-                    <Text fontSize="2xl" fontWeight="bold" mt={4}>
-                      get inspired
-                    </Text>
-                    <Text mt={4}>
-                      See what others are up and find your way to contribute to the growing
-                      Philippine tech startup community.
-                    </Text>
-                  </Box>
+                  <Flex justifyContent="center" alignItems="center">
+                    <Flex textAlign="center" maxWidth="350px" flexDir="column">
+                      <Text fontSize="4xl" fontWeight="bold">
+                        <RocketOutlined />
+                      </Text>
+                      <Text fontSize="2xl" fontWeight="bold" mt={4}>
+                        get inspired
+                      </Text>
+                      <Text mt={4}>
+                        See what others are up and find your way to contribute to the growing
+                        Philippine tech startup community.
+                      </Text>
+                    </Flex>
+                  </Flex>
                 </GridItem>
               </Grid>
             </Box>
