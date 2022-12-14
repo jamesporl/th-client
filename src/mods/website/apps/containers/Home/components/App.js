@@ -48,15 +48,7 @@ const App = ({ app }) => {
 
   return (
     <Wrapper>
-      <AppHeader
-        logoImgSrc={app.logoImg?.medium}
-        name={app.name}
-        shortDesc={app.shortDesc}
-        tags={app.tags}
-        isClickable
-        slug={app.slug}
-      />
-
+      <AppHeader app={app} isClickable />
       <Flex justifyContent="space-between" alignItems="center" mt={6}>
         <Flex alignItems="center">
           <Box width="88px" mr={4} textAlign="center">

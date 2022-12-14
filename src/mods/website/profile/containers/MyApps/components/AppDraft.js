@@ -61,12 +61,7 @@ const AppDraft = ({ appDraft }) => {
       padding={12}
       borderRadius={8}
     >
-      <AppHeader
-        name={appDraft.name}
-        shortDesc={appDraft.shortDesc}
-        logoImgSrc={appDraft.logoImg?.medium}
-        tags={appDraft.tags}
-      />
+      <AppHeader app={appDraft} />
       <Flex justifyContent="flex-end" alignItems="center">
         <HStack spacing={8}>
           <AppDraftStatusTag appDraftStatus={appDraft.status} />

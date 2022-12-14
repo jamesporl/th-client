@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
+import { Badge, Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -12,18 +12,18 @@ const Wrapper = styled.div`
   }
 `;
 
-const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => {
-  let src = logoImgSrc;
-  if (!logoImgSrc) {
+const AppHeader = ({ app, isClickable }) => {
+  let src = app.logoImg?.medium;
+  if (!src) {
     src = '/img-sq-placeholder.png';
   }
 
   let tagsList = null;
-  if (tags?.length) {
+  if (app.tags?.length) {
     tagsList = (
       <Box mt={2}>
         <HStack spacing={2}>
-          {tags.map((t) => (
+          {app.tags.map((t) => (
             <Tag key={t._id}>{t.name}</Tag>
           ))}
         </HStack>
@@ -32,15 +32,24 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
   }
 
   let img = <img src={src} alt="logo" width="88px" style={{ borderRadius: '0.5rem' }} />;
+  let featuredBadge = null;
+  if (app.isFeatured) {
+    featuredBadge = (
+      <Badge ml="2" fontSize="12px" colorScheme="yellow" variant="solid">
+        Featured
+      </Badge>
+    );
+  }
   let title = (
     <Heading as="h4" fontSize="xl" fontWeight="700">
-      {name || 'Best App Ever'}
+      {app.name || 'Best App Ever'}
+      {featuredBadge}
     </Heading>
   );
   if (isClickable) {
-    img = <NextLink href={`/apps/${slug}`}>{img}</NextLink>;
+    img = <NextLink href={`/apps/${app.slug}`}>{img}</NextLink>;
     title = (
-      <NextLink href={`/apps/${slug}`} passHref className="title">
+      <NextLink href={`/apps/${app.slug}`} passHref className="title">
         {title}
       </NextLink>
     );
@@ -54,7 +63,7 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
       <div>
         <Flex alignItems="center">{title}</Flex>
         <Text mt={1} color="gray.600">
-          {shortDesc || '100% catchy slogan'}
+          {app.shortDesc || '100% catchy slogan'}
         </Text>
         {tagsList}
       </div>
@@ -63,21 +72,12 @@ const AppHeader = ({ logoImgSrc, shortDesc, name, tags, isClickable, slug }) => 
 };
 
 AppHeader.propTypes = {
-  name: PropTypes.string,
-  logoImgSrc: PropTypes.string,
-  shortDesc: PropTypes.string,
-  tags: PropTypes.arrayOf(PropTypes.object),
+  app: PropTypes.object.isRequired,
   isClickable: PropTypes.bool,
-  slug: PropTypes.string,
 };
 
 AppHeader.defaultProps = {
-  logoImgSrc: '',
-  shortDesc: '',
-  name: '',
-  tags: [],
   isClickable: false,
-  slug: '',
 };
 
 export default AppHeader;
