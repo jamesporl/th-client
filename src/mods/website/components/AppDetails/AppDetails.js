@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React, { useState, useCallback } from 'react';
-import { SmileTwoTone } from '@ant-design/icons';
+import { HeartOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { Box, Text, Flex, useBreakpointValue, Heading } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
@@ -64,8 +64,7 @@ const AppDetails = ({ app, isPreview }) => {
     >
       <Box>
         <Heading as="h4" fontWeight="700" fontSize="xl">
-          Are you happy to support this app? &nbsp;
-          <SmileTwoTone />
+          Are you happy to support this app?
         </Heading>
       </Box>
       <Flex alignItems="center">
@@ -74,6 +73,7 @@ const AppDetails = ({ app, isPreview }) => {
             colorScheme={isSupported ? 'blue' : 'gray'}
             variant={isSupported ? 'solid' : 'outline'}
             onClick={handleClickSupport}
+            leftIcon={<HeartOutlined />}
             size="xs"
           >
             Support

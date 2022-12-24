@@ -35,7 +35,7 @@ const HomeRightSide = () => {
 
   return (
     <Box flexGrow="1" ml={containerML} maxWidth={containerMaxWidth}>
-      <Box borderWidth="1px" padding={4} borderRadius={8} backgroundColor="gray.100">
+      <Box borderWidth="2px" padding={4} borderRadius={8} borderColor="blue.500">
         <Text fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
           This Platform
         </Text>

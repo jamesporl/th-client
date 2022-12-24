@@ -1,5 +1,6 @@
 import { extendTheme } from '@chakra-ui/react';
 import { StepsStyleConfig } from 'chakra-ui-steps';
+import modalTheme from './modalTheme';
 
 const CustomSteps = {
   ...StepsStyleConfig,
@@ -35,5 +36,6 @@ export default extendTheme({
   },
   components: {
     Steps: CustomSteps,
+    Modal: modalTheme,
   },
 });

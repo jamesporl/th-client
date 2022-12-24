@@ -8,12 +8,13 @@ import AppHeader from 'mods/website/profile/components/AppHeader';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import FormattedDate from 'mods/base/components/FormattedDate';
 import AuthButton from 'mods/website/components/AuthButton';
+import { HeartOutlined } from '@ant-design/icons';
 
 const Wrapper = styled.div`
   border: 1px solid #efefef;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
   padding: 2rem 1.5rem;
-  border-radius: 0.25rem;
+  border-radius: 1rem;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 
   &:not(:last-child) {
     margin-bottom: 1.5rem;
@@ -53,9 +54,10 @@ const App = ({ app }) => {
         <Flex alignItems="center">
           <Box width="88px" mr={4} textAlign="center">
             <AuthButton
-              colorScheme={isSupported ? 'blue' : 'gray'}
+              colorScheme="blue"
               variant={isSupported ? 'solid' : 'outline'}
               onClick={handleClickSupport}
+              leftIcon={<HeartOutlined />}
               size="xs"
             >
               Support

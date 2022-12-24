@@ -112,7 +112,7 @@ const Signup = () => {
               </Field>
               <VStack mt={8} spacing={4}>
                 <Button
-                  colorScheme="green"
+                  colorScheme="blue"
                   width="100%"
                   size="md"
                   type="submit"
