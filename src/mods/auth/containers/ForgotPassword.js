@@ -61,7 +61,7 @@ const ForgotPassword = () => {
             )}
           </Field>
           <Button
-            colorScheme="green"
+            colorScheme="blue"
             width="100%"
             size="md"
             type="submit"

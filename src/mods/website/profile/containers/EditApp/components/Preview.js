@@ -35,7 +35,7 @@ const Preview = ({ app, onSubmitToServer }) => {
     <Wrapper>
       <Flex justifyContent="flex-end" alignItems="flex-end" flexDirection="column" mb={12}>
         <Button
-          colorScheme="green"
+          colorScheme="blue"
           onClick={handleClickSubmit}
           isLoading={isSubmitting}
           size="lg"

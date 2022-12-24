@@ -179,7 +179,7 @@ const EditApp = () => {
                 <Button
                   onClick={nextStep}
                   rightIcon={<ArrowRightOutlined />}
-                  colorScheme="green"
+                  colorScheme="blue"
                   variant="outline"
                 >
                   Next
@@ -199,7 +199,7 @@ const EditApp = () => {
                 <Button
                   onClick={prevStep}
                   leftIcon={<ArrowLeftOutlined />}
-                  colorScheme="green"
+                  colorScheme="blue"
                   variant="outline"
                   mr={2}
                 >
@@ -208,7 +208,7 @@ const EditApp = () => {
                 <Button
                   onClick={nextStep}
                   rightIcon={<ArrowRightOutlined />}
-                  colorScheme="green"
+                  colorScheme="blue"
                   variant="outline"
                 >
                   Next
@@ -230,7 +230,7 @@ const EditApp = () => {
                 <Button
                   onClick={prevStep}
                   leftIcon={<ArrowLeftOutlined />}
-                  colorScheme="green"
+                  colorScheme="blue"
                   variant="outline"
                   mr={2}
                 >
@@ -239,7 +239,7 @@ const EditApp = () => {
                 <Button
                   onClick={nextStep}
                   rightIcon={<ArrowRightOutlined />}
-                  colorScheme="green"
+                  colorScheme="blue"
                   variant="outline"
                 >
                   Next

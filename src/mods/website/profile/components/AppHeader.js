@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge, Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import useStores from 'core/stores/useStores';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -13,6 +14,27 @@ const Wrapper = styled.div`
 `;
 
 const AppHeader = ({ app, isClickable }) => {
+  const { uiStore } = useStores();
+
+  const router = useRouter();
+
+  const handleOpenAppDetails = () => {
+    window.history.replaceState(null, '', `/apps/${app.slug}`);
+    uiStore.openGlobalModal(
+      'appDetails',
+      null,
+      { slug: app.slug },
+      {
+        size: 'xl',
+        autoFocus: false,
+        onClose: () => {
+          uiStore.closeGlobalModal();
+          window.history.replaceState(null, '', router.asPath);
+        },
+      },
+    );
+  };
+
   let src = app.logoImg?.medium;
   if (!src) {
     src = '/img-sq-placeholder.png';
@@ -40,6 +62,7 @@ const AppHeader = ({ app, isClickable }) => {
       </Badge>
     );
   }
+
   let title = (
     <Heading as="h4" fontSize="xl" fontWeight="700">
       {app.name || 'Best App Ever'}
@@ -47,11 +70,15 @@ const AppHeader = ({ app, isClickable }) => {
     </Heading>
   );
   if (isClickable) {
-    img = <NextLink href={`/apps/${app.slug}`}>{img}</NextLink>;
+    img = (
+      <button onClick={handleOpenAppDetails} type="button">
+        {img}
+      </button>
+    );
     title = (
-      <NextLink href={`/apps/${app.slug}`} passHref className="title">
+      <button onClick={handleOpenAppDetails} type="button" className="title">
         {title}
-      </NextLink>
+      </button>
     );
   }
 

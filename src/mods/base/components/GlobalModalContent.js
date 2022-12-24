@@ -14,9 +14,12 @@ const Wrapper = styled.div`
 
 const ModalContent = () => {
   const { uiStore } = useStores();
-  const modalComponent = modalComponents[uiStore.globalModalParams.componentKey];
+  let modalComponent = null;
+  if (uiStore.globalModalParams.componentKey) {
+    modalComponent = modalComponents[uiStore.globalModalParams.componentKey];
+  }
 
-  if (!modalComponent) {
+  if (uiStore.globalModalParams.componentKey && !modalComponent) {
     return (
       <Wrapper>
         <div className="not-found">
@@ -26,11 +29,19 @@ const ModalContent = () => {
     );
   }
 
-  const modalContent = React.createElement(modalComponent);
+  let modalContent = null;
+  if (modalComponent) {
+    modalContent = React.createElement(modalComponent);
+  }
+
+  let header = null;
+  if (uiStore.globalModalParams.title) {
+    header = <ModalHeader>{uiStore.globalModalParams.title}</ModalHeader>;
+  }
 
   return (
     <Wrapper>
-      <ModalHeader>{uiStore.globalModalParams.title}</ModalHeader>
+      {header}
       <ModalBody mb={4}>{modalContent}</ModalBody>
     </Wrapper>
   );

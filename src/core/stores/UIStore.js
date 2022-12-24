@@ -20,8 +20,8 @@ export default class UIStore {
   };
 
   @action closeGlobalModal = () => {
-    this.globalModalParams = { context: {}, props: {} };
     this.isGlobalModalOpen = false;
+    this.globalModalParams = { componentKey: '', context: {}, props: {} };
   };
 
   @action setScreenSize = (width, height) => {

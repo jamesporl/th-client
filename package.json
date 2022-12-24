@@ -13,7 +13,9 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.4.13",
+    "@chakra-ui/anatomy": "^2.1.0",
     "@chakra-ui/react": "^2.4.2",
+    "@chakra-ui/styled-system": "^2.5.0",
     "@chakra-ui/transition": "^2.0.12",
     "@ckeditor/ckeditor5-basic-styles": "^34.0.0",
     "@ckeditor/ckeditor5-build-classic": "^34.0.0",
