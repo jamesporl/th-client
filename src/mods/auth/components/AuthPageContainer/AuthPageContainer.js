@@ -11,10 +11,13 @@ const Wrapper = styled.div`
     position: relative;
     top: 0;
     left: 0;
-    background: url('/auth-bg.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background: rgb(26, 111, 191);
+    background: linear-gradient(
+      56deg,
+      rgba(26, 111, 191, 1) 34%,
+      rgba(76, 147, 214, 1) 68%,
+      rgba(49, 130, 206, 1) 100%
+    );
     width: 100vw;
     height: 100vh;
   }

@@ -141,7 +141,7 @@ const Home = () => {
     </>
   );
 
-  const platformInfo = useBreakpointValue(
+  const mobilePlatformInfo = useBreakpointValue(
     { base: <HomeRightSide />, lg: null },
     { fallback: 'lg' },
   );
@@ -175,7 +175,7 @@ const Home = () => {
         useWindow
       >
         {featuredAppsComp}
-        {platformInfo}
+        {mobilePlatformInfo}
         {appsByMonthComp}
       </InfiniteScroll>
     );

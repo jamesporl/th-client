@@ -121,9 +121,9 @@ const TagSelection = ({ onChangeTags, initialTags }) => {
   return (
     <Box>
       <Heading as="h3" size="md">
-        Tags
+        Categories
       </Heading>
-      <Text mt={2}>Select 1 to 3 tags that best describe your app.</Text>
+      <Text mt={2}>Select 1 to 3 categories that best describe your app.</Text>
       <InputGroup mt={8}>
         <Input placeholder="Search..." onChange={handleChangeSearchString} value={searchString} />
         {/* eslint-disable-next-line react/no-children-prop */}

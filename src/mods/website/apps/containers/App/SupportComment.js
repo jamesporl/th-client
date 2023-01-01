@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useMutation } from '@apollo/client';
-import { Text, Flex, Button } from '@chakra-ui/react';
+import { Text, Flex } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
+import AuthButton from 'mods/website/components/AuthButton';
+import { HeartOutlined } from '@ant-design/icons';
 import ToggleAppCommentSupportMtn from '../../gql/ToggleAppCommentSupportMtn';
 
 const SupportComment = ({
@@ -27,15 +29,16 @@ const SupportComment = ({
 
   return (
     <Flex alignItems="center">
-      <Button
+      <AuthButton
         colorScheme={isSupported ? 'blue' : 'gray'}
         variant={isSupported ? 'solid' : 'outline'}
         onClick={handleClickSupport}
         size="xs"
+        leftIcon={<HeartOutlined />}
         mr={4}
       >
         Support
-      </Button>
+      </AuthButton>
       <Text fontSize="sm" color="gray.500">{` ${supportsCount}`}</Text>
     </Flex>
   );

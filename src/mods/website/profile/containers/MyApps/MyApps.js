@@ -39,7 +39,7 @@ const MyApps = () => {
       if (drafts.length) {
         draftsList = (
           <>
-            <Text color="gray.400" fontSize="lg" fontWeight="bold" mt={16}>
+            <Text fontSize="lg" fontWeight="bold" mt={16}>
               Drafts
             </Text>
             <Text color="gray.400" fontSize="sm">
@@ -61,7 +61,7 @@ const MyApps = () => {
       if (apps.length) {
         appsList = (
           <>
-            <Text color="gray.400" fontSize="lg" fontWeight="bold" mt={16}>
+            <Text fontSize="lg" fontWeight="bold" mt={16}>
               Published
             </Text>
             <Box mt={8}>
