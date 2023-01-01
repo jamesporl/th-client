@@ -29,7 +29,6 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
         page: page + 1,
         pageSize: APPS_PAGE_SIZE,
       },
-      fetchPolicy: 'network-only',
     });
     setPage(page + 1);
     setIsLoadingMore(false);
@@ -37,7 +36,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
   }, [apps, page, month]);
 
   let formattedMonth = moment(month).format('MMMM YYYY');
-  const today = moment();
+  const today = moment.utc();
   const lastMonth = moment().startOf('month').subtract(1, 'day').startOf('month');
   if (lastMonth.isSame(moment(month))) {
     formattedMonth = 'Last Month';
@@ -62,18 +61,21 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
     loadingComp = <AppSkeleton />;
   }
 
-  return (
-    <>
-      <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
-        {formattedMonth}
-      </Text>
-      {apps.map((app) => (
-        <App key={app._id} app={app} />
-      ))}
-      {loadingComp}
-      {seeMoreBtn}
-    </>
-  );
+  if (apps.length) {
+    return (
+      <>
+        <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
+          {formattedMonth}
+        </Text>
+        {apps.map((app) => (
+          <App key={app._id} app={app} />
+        ))}
+        {loadingComp}
+        {seeMoreBtn}
+      </>
+    );
+  }
+  return null;
 };
 
 AppsByMonth.propTypes = {

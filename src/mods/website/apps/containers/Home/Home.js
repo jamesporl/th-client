@@ -1,9 +1,9 @@
 /* eslint-disable no-await-in-loop */
-import React, { useCallback, useEffect, useState } from 'react';
-import { useApolloClient } from '@apollo/client';
+import React, { useCallback, useState } from 'react';
 import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroller';
 import moment from 'moment';
+import { useQuery } from '@apollo/client';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppsQry from '../../gql/AppsQry';
 import App from './components/App';
@@ -12,121 +12,88 @@ import AppSkeleton from './components/AppSkeleton';
 import HomeRightSide from './components/HomeRightSide';
 
 const Home = () => {
-  const apolloClient = useApolloClient();
-
-  const [isLoadingFeaturedApps, setIsLoadingFeaturedApps] = useState(true);
-  const [isLoadingInitialApps, setIsLoadingInitialApps] = useState(true);
-  const [featuredApps, setFeaturedApps] = useState([]);
-  const [appsByMonth, setAppsByMonth] = useState([]);
   const [hasMoreApps, setHasMoreApps] = useState(true);
 
-  useEffect(() => {
-    const getFeaturedApps = async () => {
-      // Do not hide sponsored apps so ensure to fetch them all
-      let hasMoreFeatured = true;
-      let page = 1;
-      let loadedCount = 0;
-      while (hasMoreFeatured) {
-        const { data } = await apolloClient.query({
-          query: AppsQry,
-          variables: { otherFilters: ['isFeatured'], page, pageSize: APPS_PAGE_SIZE },
-        });
-        const { totalCount = 0, nodes = [] } = data.apps;
-        if (nodes.length) {
-          setFeaturedApps((c) => [...c, ...nodes]);
-        }
-        loadedCount += nodes.length;
-        page += 1;
-        if (loadedCount >= totalCount) {
-          hasMoreFeatured = false;
-        }
-      }
-      setIsLoadingFeaturedApps(false);
-    };
+  const { data: fAppsData } = useQuery(AppsQry, {
+    variables: {
+      otherFilters: ['isFeatured'],
+    },
+  });
 
-    const getAppsByMonth = async () => {
-      let loadedCount = 0;
-      let startOfMonth = moment().startOf('month');
-      let shouldGetMore = true;
-      while (shouldGetMore) {
-        const endOfMonth = startOfMonth.clone().endOf('month');
-        const { data } = await apolloClient.query({
-          query: AppsQry,
-          variables: {
-            publishedFromDate: startOfMonth.toISOString(),
-            publishedToDate: endOfMonth.toISOString(),
-            otherFilters: ['excludeFeatured'],
-            page: 1,
-            pageSize: APPS_PAGE_SIZE,
-          },
-          fetchPolicy: 'network-only',
-        });
-        const updateAppsByMonthState = (inputDate, inputApps, inputTotalCount) => {
-          setAppsByMonth((c) => [
-            ...c,
-            {
-              month: inputDate.format(),
-              apps: inputApps,
-              totalCount: inputTotalCount,
-            },
-          ]);
-        };
-        const { nodes = [], totalCount = 0 } = data.apps;
-        if (nodes.length) {
-          updateAppsByMonthState(startOfMonth, nodes, totalCount);
-        }
-        loadedCount += nodes.length;
-        startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
-        if (loadedCount > 5 || startOfMonth.isBefore(moment().subtract(6, 'months'))) {
-          shouldGetMore = false;
-        }
-      }
-      setIsLoadingInitialApps(false);
-    };
+  const now = moment.utc();
+  const iStartOfMonth = now.clone().startOf('month');
+  const iEndOfMonth = iStartOfMonth.clone().endOf('month');
+  const { data: appsData, refetch: refetchApps } = useQuery(AppsQry, {
+    variables: {
+      publishedFromDate: iStartOfMonth.toISOString(),
+      publishedToDate: iEndOfMonth.toISOString(),
+      page: 1,
+      pageSize: APPS_PAGE_SIZE,
+      otherFilters: ['excludeFeatured'],
+    },
+  });
 
-    getFeaturedApps();
-    getAppsByMonth();
-  }, []);
+  let iAppsByMonth = [];
+  if (appsData) {
+    iAppsByMonth = [
+      {
+        month: now.toISOString(),
+        apps: appsData.apps.nodes,
+        totalCount: appsData.apps.totalCount,
+      },
+    ];
+  }
+
+  const initialLoadedCount =
+    (fAppsData?.apps.nodes.length || 0) + (iAppsByMonth?.[0]?.apps?.length || 0);
+
+  const [appsByMonth, setAppsByMonth] = useState(iAppsByMonth);
 
   const handleLoadMoreApps = useCallback(async () => {
-    let loadedCount = 0;
-    let startOfMonth = moment(appsByMonth[appsByMonth.length - 1].month)
-      .subtract(1, 'days')
-      .startOf('month');
-    let shouldGetMore = true;
+    let startOfMonth = now.clone().startOf('month');
+    let loadedCount = initialLoadedCount;
+    if (appsByMonth.length) {
+      startOfMonth = moment(appsByMonth[appsByMonth.length - 1].month)
+        .subtract(1, 'days')
+        .startOf('month');
+      loadedCount = 0;
+    }
+    let shouldGetMore = loadedCount < 5;
     while (shouldGetMore) {
       const endOfMonth = startOfMonth.clone().endOf('month');
-      const { data } = await apolloClient.query({
-        query: AppsQry,
-        variables: {
-          publishedFromDate: startOfMonth.toISOString(),
-          publishedToDate: endOfMonth.toISOString(),
-          otherFilters: ['excludeFeatured'],
-          page: 1,
-          pageSize: APPS_PAGE_SIZE,
-        },
-        fetchPolicy: 'network-only',
+      const result = await refetchApps({
+        publishedFromDate: startOfMonth.toISOString(),
+        publishedToDate: endOfMonth.toISOString(),
+        otherFilters: ['excludeFeatured'],
+        page: 1,
+        pageSize: APPS_PAGE_SIZE,
       });
       const updateAppsByMonthState = (inputDate, inputApps, inputTotalCount) => {
-        setAppsByMonth((c) => [
-          ...c,
-          {
-            month: inputDate.format(),
-            apps: inputApps,
-            totalCount: inputTotalCount,
-          },
-        ]);
+        setAppsByMonth((prev) => {
+          const prevMonths = prev.map((m) => m.month);
+          if (!prevMonths.includes(inputDate.format())) {
+            return [
+              ...prev,
+              {
+                month: inputDate.format(),
+                apps: inputApps,
+                totalCount: inputTotalCount,
+              },
+            ];
+          }
+          return prev;
+        });
       };
-      const { nodes = [], totalCount = 0 } = data.apps;
+      const { nodes = [], totalCount = 0 } = result?.data.apps;
       if (nodes.length) {
         updateAppsByMonthState(startOfMonth, nodes, totalCount);
       }
       loadedCount += nodes.length;
       startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
-      if (loadedCount > 2) {
+      if (loadedCount > 5) {
         shouldGetMore = false;
       }
-      if (startOfMonth.isBefore(moment('2022-07-01'))) {
+      if (startOfMonth.isBefore(moment('2022-10-01'))) {
         shouldGetMore = false;
         setHasMoreApps(false);
       }
@@ -146,40 +113,39 @@ const Home = () => {
     { fallback: 'lg' },
   );
 
-  if (!isLoadingInitialApps && !isLoadingFeaturedApps) {
-    let featuredAppsComp = null;
-    if (featuredApps.length) {
-      featuredAppsComp = (
-        <>
-          <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
-            Featured
-          </Text>
-          {featuredApps.map((app) => (
-            <App key={app._id} app={app} />
-          ))}
-        </>
-      );
-    }
+  let featuredAppsComp = null;
 
-    let appsByMonthComp = null;
-    if (appsByMonth.length) {
-      appsByMonthComp = appsByMonth.map((m) => <AppsByMonth key={m} {...m} />);
-    }
-
-    appsList = (
-      <InfiniteScroll
-        initialLoad={false}
-        loadMore={handleLoadMoreApps}
-        hasMore={hasMoreApps}
-        loader={<AppSkeleton />}
-        useWindow
-      >
-        {featuredAppsComp}
-        {mobilePlatformInfo}
-        {appsByMonthComp}
-      </InfiniteScroll>
+  if (fAppsData?.apps.nodes.length) {
+    featuredAppsComp = (
+      <>
+        <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
+          Featured
+        </Text>
+        {fAppsData.apps.nodes.map((app) => (
+          <App key={app._id} app={app} />
+        ))}
+      </>
     );
   }
+
+  let appsByMonthComp = null;
+  if (appsByMonth.length) {
+    appsByMonthComp = appsByMonth.map((m) => <AppsByMonth key={m} {...m} />);
+  }
+
+  appsList = (
+    <InfiniteScroll
+      loadMore={handleLoadMoreApps}
+      hasMore={hasMoreApps}
+      loader={<AppSkeleton />}
+      initialLoad
+      useWindow
+    >
+      {featuredAppsComp}
+      {mobilePlatformInfo}
+      {appsByMonthComp}
+    </InfiniteScroll>
+  );
 
   return (
     <WebsiteLayout>
