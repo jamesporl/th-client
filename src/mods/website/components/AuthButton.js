@@ -12,13 +12,17 @@ const AuthButton = (props) => {
 
   const router = useRouter();
 
-  const handleClick = useCallback(() => {
-    if (authStore.myProfile) {
-      onClick();
-    } else {
-      router.push('/account/login');
-    }
-  }, [authStore.myProfile, onClick]);
+  const handleClick = useCallback(
+    (ev) => {
+      ev.stopPropagation();
+      if (authStore.myProfile) {
+        onClick(ev);
+      } else {
+        router.push('/account/login');
+      }
+    },
+    [authStore.myProfile, onClick],
+  );
 
   return (
     <Button {...buttonProps} onClick={handleClick}>

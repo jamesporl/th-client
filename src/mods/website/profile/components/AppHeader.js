@@ -1,7 +1,5 @@
 import React from 'react';
 import { Badge, Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import useStores from 'core/stores/useStores';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -13,28 +11,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const AppHeader = ({ app, isClickable }) => {
-  const { uiStore } = useStores();
-
-  const router = useRouter();
-
-  const handleOpenAppDetails = () => {
-    window.history.replaceState(null, '', `/apps/${app.slug}`);
-    uiStore.openGlobalModal(
-      'appDetails',
-      null,
-      { slug: app.slug },
-      {
-        size: 'xl',
-        autoFocus: false,
-        onClose: () => {
-          uiStore.closeGlobalModal();
-          window.history.replaceState(null, '', router.asPath);
-        },
-      },
-    );
-  };
-
+const AppHeader = ({ app }) => {
   let src = app.logoImg?.medium;
   if (!src) {
     src = '/img-sq-placeholder.png';
@@ -53,7 +30,6 @@ const AppHeader = ({ app, isClickable }) => {
     );
   }
 
-  let img = <img src={src} alt="logo" width="88px" style={{ borderRadius: '0.5rem' }} />;
   let featuredBadge = null;
   if (app.isFeatured) {
     featuredBadge = (
@@ -63,32 +39,18 @@ const AppHeader = ({ app, isClickable }) => {
     );
   }
 
-  let title = (
-    <Heading as="h4" fontSize="xl" fontWeight="700">
-      {app.name || 'Best App Ever'}
-      {featuredBadge}
-    </Heading>
-  );
-  if (isClickable) {
-    img = (
-      <button onClick={handleOpenAppDetails} type="button">
-        {img}
-      </button>
-    );
-    title = (
-      <button onClick={handleOpenAppDetails} type="button" className="title">
-        {title}
-      </button>
-    );
-  }
-
   return (
     <Wrapper>
-      <Box mr={4} cursor="pointer">
-        {img}
+      <Box mr={4}>
+        <img src={src} alt="logo" width="88px" style={{ borderRadius: '0.5rem' }} />
       </Box>
       <div>
-        <Flex alignItems="center">{title}</Flex>
+        <Flex alignItems="center">
+          <Heading as="h4" fontSize="xl" fontWeight="700">
+            {app.name || 'Best App Ever'}
+            {featuredBadge}
+          </Heading>
+        </Flex>
         <Text mt={1} color="gray.600">
           {app.shortDesc || '100% catchy slogan'}
         </Text>
@@ -100,11 +62,6 @@ const AppHeader = ({ app, isClickable }) => {
 
 AppHeader.propTypes = {
   app: PropTypes.object.isRequired,
-  isClickable: PropTypes.bool,
-};
-
-AppHeader.defaultProps = {
-  isClickable: false,
 };
 
 export default AppHeader;

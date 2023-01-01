@@ -91,6 +91,14 @@ const WebsiteNavbar = () => {
     </NextLink>
   );
 
+  const categoriesBtn = (
+    <NextLink href="/categories" passHref legacyBehavior>
+      <Button colorScheme="blue" size="sm" variant="link" as="a">
+        Categories
+      </Button>
+    </NextLink>
+  );
+
   let profileAvatar = null;
   let loginDesktopBtn = null;
   let loginMobileBtn = null;
@@ -144,6 +152,7 @@ const WebsiteNavbar = () => {
 
   const desktopRightNav = (
     <HStack spacing="1rem">
+      {categoriesBtn}
       {aboutUsBtn}
       {loginDesktopBtn}
       {submitAppDesktopBtn}
@@ -221,6 +230,7 @@ const WebsiteNavbar = () => {
         }}
       >
         <VStack p={4} display={{ md: 'none' }}>
+          <Box>{categoriesBtn}</Box>
           <Box>{aboutUsBtn}</Box>
           {loginMobileBtn}
           <Box>

@@ -54,7 +54,7 @@ const App = () => {
   }
 
   const breadcrumbs = (
-    <Box mb={12}>
+    <Box mb={4}>
       <Breadcrumb fontSize="sm">
         <BreadcrumbItem>
           <NextLink href="/">Home</NextLink>
