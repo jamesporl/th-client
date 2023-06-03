@@ -8,15 +8,11 @@ export default gql`
     shortDesc
     htmlDesc
     textDesc
-    logoImg {
-      _id
-      medium
-      large
-    }
+    logoImg
     videoUrl
     bannerImgs {
+      _id
       image {
-        _id
         large
         thumbnail
       }
@@ -40,10 +36,7 @@ export default gql`
       _id
       firstName
       lastName
-      image {
-        _id
-        thumbnail
-      }
+      image
     }
     slug
     publishedAt

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Heading, Flex, Box, Skeleton } from '@chakra-ui/react';
+import { Button, Heading, Flex, Box, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 import set from 'lodash/set';
@@ -267,9 +267,9 @@ const EditApp = () => {
       <Helmet title="Edit App" />
       <Wrapper>
         <div className="header">
-          <Heading as="h1" size="lg">
+          <Text fontSize="5xl" fontWeight={700} color="blue.500">
             Edit App
-          </Heading>
+          </Text>
         </div>
         <div className="content-container">{content}</div>
       </Wrapper>

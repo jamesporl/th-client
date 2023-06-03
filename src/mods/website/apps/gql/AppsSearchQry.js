@@ -8,7 +8,6 @@ export default gql`
         name
         shortDesc
         logoImg {
-          _id
           thumbnail
         }
         slug

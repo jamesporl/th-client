@@ -6,9 +6,6 @@ export default gql`
     firstName
     lastName
     email
-    image {
-      _id
-      thumbnail
-    }
+    image
   }
 `;

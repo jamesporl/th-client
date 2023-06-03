@@ -123,10 +123,12 @@ const Login = () => {
                 <NextLink href="/account/forgot-password">Forgot password?</NextLink>
               </Flex>
               <div style={{ marginTop: '1.5rem', fontStyle: 'italic', color: '#0D2175' }}>
-                Don&apos;t have an account? &nbsp;
-                <NextLink href="/account/signup" as="/account/signup">
-                  Sign up here.
-                </NextLink>
+                <small>
+                  Don&apos;t have an account? &nbsp;
+                  <NextLink href="/account/signup" as="/account/signup">
+                    Sign up here.
+                  </NextLink>
+                </small>
               </div>
             </Form>
           )}
