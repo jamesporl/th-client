@@ -1,12 +1,35 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { Box, Flex, Text, Grid, GridItem, Heading, Input, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+  useToast,
+  Button,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverFooter,
+  ButtonGroup,
+  useDisclosure,
+} from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
-import UpdateAppDraftBannerImgMtn from '../../../gql/UpdateAppDraftBannerImgMtn';
+import { DeleteOutlined } from '@ant-design/icons';
+import DeleteAppDraftLogoImgMtn from 'mods/website/profile/gql/DeleteAppDraftLogoImgMtn';
 import UpdateAppDraftLogoImgMtn from '../../../gql/UpdateAppDraftLogoImgMtn';
+import dataUrltoFile from '../utils/dataUrlToFile';
 import UploadImage from './UploadImage';
+import BannerImgsUpload from './BannerImgsUpload';
 
 const Wrapper = styled.div`
   .img-thumbnail-card {
@@ -33,12 +56,6 @@ const Wrapper = styled.div`
   }
 `;
 
-export async function dataUrltoFile(dataUrl, filename, type) {
-  const res = await fetch(dataUrl);
-  const blob = await res.blob();
-  return new File([blob], filename, { type });
-}
-
 const Assets = ({
   app,
   appId,
@@ -53,31 +70,19 @@ const Assets = ({
   const [videoUrl, setVideoUrl] = useState(initialVideoUrl);
   const [videoUrlError, setVideoUrlError] = useState('');
   const [logoImgSrc, setLogoImgSrc] = useState('');
-  const [selectedBannerImgIdx, setSelectedBannerImgIdx] = useState(0);
-  const [bannerImgSrcs, setBannerImgSrcs] = useState(['', '', '', '', '']);
 
-  const [updateAppDraftBannerImg] = useMutation(UpdateAppDraftBannerImgMtn);
+  const {
+    onOpen: onOpenRemoveLogoPopover,
+    onClose: onCloseRemoveLogoPopover,
+    isOpen: isRemoveLogoPopoverOpen,
+  } = useDisclosure();
+
   const [updateAppDraftLogoImg] = useMutation(UpdateAppDraftLogoImgMtn);
-
-  let selectedBannerImgSrc = null;
-  if (bannerImgSrcs?.length && selectedBannerImgIdx < bannerImgSrcs.length) {
-    selectedBannerImgSrc = bannerImgSrcs[selectedBannerImgIdx];
-  }
+  const [deleteAppDraftLogoImg] = useMutation(DeleteAppDraftLogoImgMtn);
 
   useEffect(() => {
     if (app?.logoImg) {
-      setLogoImgSrc(app.logoImg.medium);
-    }
-    if (app?.bannerImgs?.length) {
-      setBannerImgSrcs(
-        [0, 1, 2, 3, 4].map((idx) => {
-          const img = app.bannerImgs.find((i) => i.order === idx);
-          if (img) {
-            return img.image.large;
-          }
-          return '';
-        }),
-      );
+      setLogoImgSrc(app.logoImg);
     }
   }, [appId]);
 
@@ -149,82 +154,55 @@ const Assets = ({
     });
   };
 
-  const handleSubmitBanner = async (src, filename, type, bannerImgIdx) => {
-    setBannerImgSrcs((prevImgSrcs) =>
-      prevImgSrcs.map((imgSrc, idx) => {
-        if (idx === bannerImgIdx) {
-          return src;
-        }
-        return imgSrc;
-      }),
-    );
-    const file = await dataUrltoFile(src, filename, type);
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
+  const handleRemoveLogo = async () => {
+    try {
+      const input = { appId };
+      await deleteAppDraftLogoImg({ variables: { input } });
+      setLogoImgSrc('');
+    } catch (error) {
       toast({
         position: 'top',
         status: 'error',
         variant: 'subtle',
-        description: 'Image must be smaller than 5MB',
+        description: 'Failed to remove the logo',
       });
-      return;
-    }
-    const input = { appId, order: selectedBannerImgIdx, file };
-    try {
-      await updateAppDraftBannerImg({ variables: { input } });
-      refetch();
-    } catch (error) {
-      toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
   };
 
-  const handleChangeBanner = useCallback(
-    async (ev) => {
-      const [file] = ev.target.files;
-      const src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-      });
-      uiStore.openGlobalModal('cropImage', 'Edit image', {
-        src,
-        onSubmit: (newSrc) =>
-          handleSubmitBanner(newSrc, file.name, file.type, selectedBannerImgIdx),
-        type: file.type,
-      });
-    },
-    [selectedBannerImgIdx],
-  );
-
-  const handleClickBannerImgThumbnailCard = (idx) => {
-    setSelectedBannerImgIdx(idx);
-  };
-
-  const bannerImgThumbnails = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => {
-    const imgSrc = bannerImgSrcs[idx];
-    let imgContent = (
-      <img src="/img-rect-thumbnail-placeholder.png" alt="app-banner" width="80px" />
-    );
-    if (imgSrc) {
-      imgContent = <img src={imgSrc} alt="app-banner" />;
-    }
-    const className =
-      idx === selectedBannerImgIdx ? 'img-thumbnail-card active' : 'img-thumbnail-card';
-
-    return (
-      <GridItem key={idx}>
-        <div
-          className={className}
-          onClick={() => handleClickBannerImgThumbnailCard(idx)}
-          onKeyDown={() => handleClickBannerImgThumbnailCard(idx)}
-          tabIndex={0}
-          role="button"
+  let deleteLogoBtn = null;
+  if (logoImgSrc) {
+    deleteLogoBtn = (
+      <Flex justifyContent="center" alignItems="center" mb={8}>
+        <Popover
+          onOpen={onOpenRemoveLogoPopover}
+          onClose={onCloseRemoveLogoPopover}
+          isOpen={isRemoveLogoPopoverOpen}
         >
-          {imgContent}
-        </div>
-      </GridItem>
+          <PopoverTrigger>
+            <Button colorScheme="red" variant="outline" leftIcon={<DeleteOutlined />} size="xs">
+              Remove Logo
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverHeader fontWeight="semibold">Please confirm</PopoverHeader>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody>Are you sure you want to remove this logo?</PopoverBody>
+            <PopoverFooter display="flex" justifyContent="flex-end">
+              <ButtonGroup size="sm">
+                <Button variant="outline" onClick={onCloseRemoveLogoPopover}>
+                  Cancel
+                </Button>
+                <Button colorScheme="red" onClick={handleRemoveLogo}>
+                  Continue
+                </Button>
+              </ButtonGroup>
+            </PopoverFooter>
+          </PopoverContent>
+        </Popover>
+      </Flex>
     );
-  });
+  }
 
   return (
     <Wrapper>
@@ -246,6 +224,7 @@ const Assets = ({
                 width="180px"
               />
             </Flex>
+            {deleteLogoBtn}
           </Box>
         </GridItem>
         <GridItem colSpan={2}>
@@ -273,26 +252,14 @@ const Assets = ({
               <Heading as="h4" size="sm">
                 Banner Images
               </Heading>
+              <Text mt={4} color="gray.500">
+                Click on the + to upload an image. You can upload up to 10 images and drag-and-drop
+                them to reorder them. An image should ideally be 1980px or less by 1080px.
+              </Text>
             </Box>
-            <Box padding={4}>
-              <Flex justifyContent="center">
-                <Box>
-                  <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-                    {bannerImgThumbnails}
-                  </Grid>
-                </Box>
-              </Flex>
-              <Flex justifyContent="center" alignItems="center" mt={8} mb={8}>
-                <UploadImage
-                  uploadText="Upload (1980px or less x 1080px)"
-                  onChange={handleChangeBanner}
-                  imgSrc={selectedBannerImgSrc}
-                  imgId={`banner_${selectedBannerImgIdx}`}
-                  height="270px"
-                  width="480px"
-                />
-              </Flex>
-            </Box>
+            <Flex alignItems="center" m={8}>
+              <BannerImgsUpload app={app} refetch={refetch} />
+            </Flex>
           </Box>
         </GridItem>
       </Grid>

@@ -63,6 +63,9 @@ const AdminSidebar = ({ isCollapsed }) => {
               <MenuItem>
                 <NextLink href="/site-admin/apps">Apps</NextLink>
               </MenuItem>
+              <MenuItem>
+                <NextLink href="/site-admin/app-tags">Tags</NextLink>
+              </MenuItem>
             </SubMenu>
             <MenuItem icon={<TeamOutlined />}>
               <NextLink href="/site-admin/accounts">Accounts</NextLink>

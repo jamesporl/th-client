@@ -9,19 +9,15 @@ export default gql`
     shortDesc
     jsonDesc
     htmlDesc
-    logoImg {
-      _id
-      thumbnail
-      medium
-    }
+    logoImg
     tags {
       _id
       name
     }
     videoUrl
     bannerImgs {
+      _id
       image {
-        _id
         large
         thumbnail
       }
@@ -31,10 +27,7 @@ export default gql`
       _id
       firstName
       lastName
-      image {
-        _id
-        thumbnail
-      }
+      image
     }
     appStoreUrl
     playStoreUrl

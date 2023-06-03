@@ -88,9 +88,9 @@ const MyApps = () => {
     <WebsiteLayout>
       <Helmet title="My Apps" />
       <Wrapper>
-        <Heading as="h1" size="lg">
+        <Text fontSize="5xl" fontWeight={700} color="blue.500">
           My Apps
-        </Heading>
+        </Text>
         {draftsAndAppsList}
       </Wrapper>
     </WebsiteLayout>

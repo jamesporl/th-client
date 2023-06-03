@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 `;
 
 const AppHeader = ({ app }) => {
-  let src = app.logoImg?.medium;
+  let src = app.logoImg;
   if (!src) {
     src = '/img-sq-placeholder.png';
   }

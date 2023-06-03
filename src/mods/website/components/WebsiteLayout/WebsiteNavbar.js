@@ -43,7 +43,6 @@ const Wrapper = styled.div`
 
     .nav-container {
       width: 100%;
-      max-width: 1100px;
     }
   }
 `;
@@ -195,15 +194,20 @@ const WebsiteNavbar = () => {
                 )}
               </a>
             </NextLink>
-          </Flex>
-          <Flex alignItems="center" flexGrow="1">
-            <InputGroup>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<SearchOutlined style={{ color: '#ccc' }} />}
-              />
-              <Input placeholder="Search TechHustlers" size="md" onFocus={handleClickSearch} />
-            </InputGroup>
+            <Box ml={8}>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<SearchOutlined style={{ color: '#ccc' }} />}
+                />
+                <Input
+                  placeholder="Search TechHustlers"
+                  size="md"
+                  onFocus={handleClickSearch}
+                  w={400}
+                />
+              </InputGroup>
+            </Box>
           </Flex>
           <Flex
             alignItems="center"

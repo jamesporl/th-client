@@ -7,17 +7,7 @@ export default gql`
     lastName
     email
     shortDesc
-    userId
-    roleId
-    roles {
-      key
-      label
-    }
-    image {
-      _id
-      large
-      medium
-      thumbnail
-    }
+    image
+    isAdmin
   }
 `;
