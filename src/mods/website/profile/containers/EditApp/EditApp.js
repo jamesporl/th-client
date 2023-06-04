@@ -4,10 +4,11 @@ import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 import set from 'lodash/set';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import styled from 'styled-components';
 import { DEFAULT_EDITOR_VALUE } from 'mods/website/components/Editor/_utils';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import getPageTitle from 'core/utils/getPageTitle';
 import Editor from '../../../components/Editor/Editor';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppDraftQry from '../../gql/AppDraftQry';
@@ -264,7 +265,9 @@ const EditApp = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title="Edit App" />
+      <Head>
+        <title>{getPageTitle('Edit App')}</title>
+      </Head>
       <Wrapper>
         <div className="header">
           <Text fontSize="5xl" fontWeight={700} color="blue.500">

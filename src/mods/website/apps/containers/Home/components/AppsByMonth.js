@@ -64,7 +64,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
   if (apps.length) {
     return (
       <>
-        <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
+        <Text mt={6} mb={6} fontSize="xl" fontWeight="500">
           {formattedMonth}
         </Text>
         {apps.map((app) => (

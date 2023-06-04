@@ -22,6 +22,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import UploadImage from './UploadImage';
 import AddAppDraftBannerImgMtn from '../../../gql/AddAppDraftBannerImgMtn';
+import UpdateAppDraftBannerImgsOrderMtn from '../../../gql/UpdateAppDraftBannerImgsOrderMtn';
 import dataUrltoFile from '../utils/dataUrlToFile';
 
 const Wrapper = styled.div`
@@ -59,6 +60,7 @@ const BannerImgsUpload = ({ app, refetch }) => {
   const [imgIdWithOpenDeletePopover, setImgIdWithOpenDeletePopover] = useState('');
 
   const [addAppDraftBannerImg] = useMutation(AddAppDraftBannerImgMtn);
+  const [updateAppDraftBannerImgsOrder] = useMutation(UpdateAppDraftBannerImgsOrderMtn);
 
   const handleOpenDeletePopover = (imgId) => setImgIdWithOpenDeletePopover(imgId);
 
@@ -138,6 +140,16 @@ const BannerImgsUpload = ({ app, refetch }) => {
         return { ...img, order };
       });
       setBannerImgs(newBannerImgs);
+
+      const orderedNewBannerImgIds = orderBy(newBannerImgs, [(img) => img.order], ['asc']).map(
+        (img) => img._id,
+      );
+
+      updateAppDraftBannerImgsOrder({
+        variables: {
+          input: { appId: app.appId, bannerImgIds: orderedNewBannerImgIds },
+        },
+      });
     },
     [bannerImgs],
   );

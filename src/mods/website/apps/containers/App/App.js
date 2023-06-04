@@ -2,10 +2,11 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 import sortBy from 'lodash/sortBy';
+import Head from 'next/head';
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
+import getPageTitle from 'core/utils/getPageTitle';
 import AppDetails from 'mods/website/components/AppDetails';
 import AppQry from '../../gql/AppQry';
 
@@ -16,7 +17,10 @@ const App = () => {
 
   const baseUrl = `${process.env.NEXT_PUBLIC_TH_CLIENT_BASE_URL}`;
 
-  const { data } = useQuery(AppQry, { variables: { slug }, skip: !slug });
+  const { data } = useQuery(AppQry, {
+    variables: { slug },
+    skip: !slug,
+  });
 
   const app = data?.app;
 
@@ -66,13 +70,22 @@ const App = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title={title}>
-        <meta name="og:url" content={`${baseUrl}/apps/${slug}`} />
-        <meta name="og:type" content="product" />
-        <meta name="og:title" content={`${title} - ${app?.shortDesc} - TechHustlers PH`} />
-        <meta name="og:description" content={`${app?.textDesc?.slice(0, 120)}...`} />
+      <Head>
+        <title>{getPageTitle(title)}</title>
+        <meta name="og:url" key="og:url" content={`${baseUrl}/apps/${slug}`} />
+        <meta name="og:type" key="og:type" content="product" />
+        <meta
+          name="og:title"
+          key="og:title"
+          content={`${title} - ${app?.shortDesc} - TechHustlers PH`}
+        />
+        <meta
+          name="og:description"
+          key="og:description"
+          content={`${app?.textDesc?.slice(0, 120)}...`}
+        />
         {ogImageMeta}
-      </Helmet>
+      </Head>
       <div>
         {breadcrumbs}
         {appDetails}

@@ -185,7 +185,7 @@ const WebsiteNavbar = () => {
         className="header"
       >
         <Flex alignItems="center" justifyContent="space-between" className="nav-container">
-          <Flex alignItems="center" mr={8}>
+          <Flex alignItems="center" mr={8} flexGrow={1}>
             <NextLink href="/" as="/" passHref legacyBehavior>
               <a>
                 {useBreakpointValue(
@@ -194,7 +194,7 @@ const WebsiteNavbar = () => {
                 )}
               </a>
             </NextLink>
-            <Box ml={8}>
+            <Box ml={8} flexGrow={1}>
               <InputGroup>
                 <InputLeftElement
                   pointerEvents="none"
@@ -204,7 +204,8 @@ const WebsiteNavbar = () => {
                   placeholder="Search TechHustlers"
                   size="md"
                   onFocus={handleClickSearch}
-                  w={400}
+                  w="100%"
+                  maxW={400}
                 />
               </InputGroup>
             </Box>

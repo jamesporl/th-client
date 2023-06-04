@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import { DeleteOutlined } from '@ant-design/icons';
-import DeleteAppDraftLogoImgMtn from 'mods/website/profile/gql/DeleteAppDraftLogoImgMtn';
+import DeleteAppDraftLogoImgMtn from '../../../gql/DeleteAppDraftLogoImgMtn';
 import UpdateAppDraftLogoImgMtn from '../../../gql/UpdateAppDraftLogoImgMtn';
 import dataUrltoFile from '../utils/dataUrlToFile';
 import UploadImage from './UploadImage';

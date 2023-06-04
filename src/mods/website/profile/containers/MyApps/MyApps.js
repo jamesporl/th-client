@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Heading, Skeleton, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery } from '@apollo/client';
-import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import Head from 'next/head';
+import getPageTitle from 'core/utils/getPageTitle';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import MyAppDraftsQry from '../../gql/MyAppDraftsQry';
 import MyAppsQry from '../../gql/MyAppsQry';
@@ -42,10 +43,11 @@ const MyApps = () => {
             <Text fontSize="lg" fontWeight="bold" mt={16}>
               Drafts
             </Text>
-            <Text color="gray.400" fontSize="sm">
+            <Alert status="info" mt={4}>
+              <AlertIcon />
               Submitted apps are pending the approval of a TechHustlers PH admin. Expect an e-mail
               from us very soon!
-            </Text>
+            </Alert>
             <Box mt={8}>
               {drafts.map((d) => (
                 <div className="app-item">
@@ -86,7 +88,9 @@ const MyApps = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title="My Apps" />
+      <Head>
+        <title>{getPageTitle('My Apps')}</title>
+      </Head>
       <Wrapper>
         <Text fontSize="5xl" fontWeight={700} color="blue.500">
           My Apps

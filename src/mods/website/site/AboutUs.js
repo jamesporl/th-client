@@ -15,9 +15,10 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import styled from 'styled-components';
 import { MailOutlined, MessageOutlined, ProfileOutlined, RocketOutlined } from '@ant-design/icons';
+import getPageTitle from 'core/utils/getPageTitle';
 import WebsiteNavbar from '../components/WebsiteLayout/WebsiteNavbar';
 
 const Wrapper = styled.div`
@@ -73,9 +74,10 @@ const AboutUs = () => {
   return (
     <Wrapper>
       <WebsiteNavbar />
-      <Helmet title="About Us">
-        <meta name="og:url" content={`${baseUrl}/site/about-us`} />
-      </Helmet>
+      <Head>
+        <title>{getPageTitle('About Us')}</title>
+        <meta name="og:url" key="og:url" content={`${baseUrl}/site/about-us`} />
+      </Head>
       <div className="about-hero-container">
         <div className="about-hero-bg" />
         <div className="about-hero">

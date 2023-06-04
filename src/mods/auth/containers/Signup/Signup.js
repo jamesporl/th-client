@@ -13,9 +13,10 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import NextLink from 'next/link';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import styled from 'styled-components';
 import * as yup from 'yup';
+import getPageTitle from 'core/utils/getPageTitle';
 import SignupMtn from '../../gql/SignupMtn';
 import PasswordFormControl from '../../components/PasswordFormControl';
 import AuthPageContainer from '../../components/AuthPageContainer';
@@ -59,7 +60,9 @@ const Signup = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Sign up" />
+      <Head>
+        <title>{getPageTitle('Sign up')}</title>
+      </Head>
       <Wrapper>
         <Formik
           validationSchema={SignupSchema}

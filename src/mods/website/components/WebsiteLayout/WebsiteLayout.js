@@ -3,9 +3,10 @@ import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import useStores from 'core/stores/useStores';
 import GlobalModalContent from 'mods/base/components/GlobalModalContent';
+import getPageTitle from 'core/utils/getPageTitle';
 import WebsiteNavbar from './WebsiteNavbar';
 
 const Wrapper = styled.div`
@@ -18,7 +19,7 @@ const Wrapper = styled.div`
     .child-container {
       width: 100%;
       max-width: 1100px;
-      margin-top: 8rem;
+      margin-top: 6.5rem;
       margin-bottom: 3rem;
     }
   }
@@ -32,16 +33,20 @@ const WebsiteLayout = ({ children }) => {
   return (
     <>
       <Wrapper>
-        <Helmet>
-          <meta name="og:type" content="website" />
-          <meta name="og:title" content="TechHustlers PH - Local Tech Products in One Place" />
-          <meta name="og:url" content={`${baseUrl}`} />
-          <meta name="og:image" content={`${baseUrl}/techhustlers-logo-banner.png`} />
+        <Head>
+          <meta name="og:type" key="og:type" content="website" />
+          <meta name="og:title" key="og:title" content={getPageTitle()} />
+          <meta name="og:url" key="og:url" content={`${baseUrl}`} />
+          <meta
+            name="og:image"
+            key="og:image"
+            content={`${baseUrl}/techhustlers-logo-banner.png`}
+          />
           <meta
             name="og:description"
             content="TechHustlers PH is a platform to showcase tech products built by and for Filipinos."
           />
-        </Helmet>
+        </Head>
         <WebsiteNavbar />
         <div className="container">
           <div className="child-container">{children}</div>

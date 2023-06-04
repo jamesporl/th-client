@@ -13,10 +13,11 @@ import {
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import NextLink from 'next/link';
-import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import Head from 'next/head';
 import useStores from 'core/stores/useStores';
 import LoginMtn from 'mods/auth/gql/LoginMtn';
+import getPageTitle from 'core/utils/getPageTitle';
 import PasswordFormControl from '../../components/PasswordFormControl';
 import GoogleLoginButton from '../../components/GoogleLoginButton';
 import AuthPageContainer from '../../components/AuthPageContainer';
@@ -72,7 +73,9 @@ const Login = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Login" />
+      <Head>
+        <title>{getPageTitle('Login')}</title>
+      </Head>
       <Wrapper>
         <Formik
           validationSchema={LoginSchema}
