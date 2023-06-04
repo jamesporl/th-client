@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import {
   Box,
   Card,
@@ -20,10 +19,12 @@ import {
 } from '@chakra-ui/react';
 import debounce from 'lodash/debounce';
 import NextLink from 'next/link';
-import WebsiteLayout from 'mods/website/components/WebsiteLayout';
+import Head from 'next/head';
 import { useQuery } from '@apollo/client';
-import AppTagsQry from 'mods/website/profile/gql/AppTagsQry';
 import { SearchOutlined } from '@ant-design/icons';
+import getPageTitle from 'core/utils/getPageTitle';
+import WebsiteLayout from 'mods/website/components/WebsiteLayout';
+import AppTagsQry from 'mods/website/profile/gql/AppTagsQry';
 
 const Categories = () => {
   const [searchString, setSearchString] = useState('');
@@ -85,10 +86,11 @@ const Categories = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title="Categories">
-        <meta name="og:url" content={`${baseUrl}/categories`} />
-        <meta name="og:title" content="Categories - TechHustlers PH" />
-      </Helmet>
+      <Head>
+        <title>{getPageTitle('Categories')}</title>
+        <meta name="og:url" key="og:url" content={`${baseUrl}/categories`} />
+        <meta name="og:title" key="og:title" content={getPageTitle('Categories')} />
+      </Head>
       <div>
         <Box mb={4}>
           <Breadcrumb fontSize="sm">

@@ -7,9 +7,7 @@ export default gql`
         _id
         name
         shortDesc
-        logoImg {
-          thumbnail
-        }
+        logoImg
         slug
       }
       totalCount

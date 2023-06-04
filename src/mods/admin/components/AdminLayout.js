@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import GlobalModalContent from 'mods/base/components/GlobalModalContent';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
 import SearchDrawer from './SearchDrawer';
@@ -33,7 +33,11 @@ const AdminLayout = ({ children, title }) => {
 
   let titleComp = null;
   if (title) {
-    titleComp = <Helmet title={title} />;
+    titleComp = (
+      <Head>
+        <title>{title}</title>
+      </Head>
+    );
   }
 
   return (

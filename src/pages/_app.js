@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { useApollo } from 'core/apollo/createApolloClient';
 import useStores from 'core/stores/useStores';
 import MyProfileQry from 'mods/auth/gql/MyProfileQry';
 import chakraCustomTheme from 'utils/styles/chakraCustomTheme';
+import getPageTitle from 'core/utils/getPageTitle';
 
 /* eslint-disable react/jsx-props-no-spreading,react/prop-types */
 function App({ Component, pageProps }) {
@@ -93,16 +94,59 @@ function App({ Component, pageProps }) {
     getAuthData();
   }, []);
 
+  const favicons = [
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      href: '/favicons/apple-touch-icon.png?v=6',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicons/favicon-32x32.png?v=6',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      href: '/favicons/favicon-16x16.png?v=6',
+    },
+    {
+      rel: 'manifest',
+      href: '/favicons/site.webmanifest',
+    },
+  ];
+
+  const meta = [
+    {
+      name: 'google-site-verification',
+      content: '7nKci5fUuvO3y_QAL_qoCAb1MPxstt6GrpreLBOuThI',
+    },
+  ];
+
   return (
-    <ApolloProvider client={apolloClient}>
-      <ChakraProvider theme={chakraCustomTheme}>
-        <Helmet
-          titleTemplate="%s - TechHustlers PH"
-          defaultTitle="TechHustlers PH - Local Tech Products in One Place"
+    <>
+      <Head>
+        <title>{getPageTitle()}</title>
+        {meta.map((tag, index) => (
+          <meta key={index} {...tag} /> // eslint-disable-line react/no-array-index-key
+        ))}
+        {favicons.map((link, index) => (
+          <link key={index} {...link} /> // eslint-disable-line react/no-array-index-key
+        ))}
+        <meta
+          name="viewport"
+          key="viewport"
+          content="user-scalable=0, initial-scale=1 minimum-scale=1, width=device-width, height=device-height"
         />
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </ApolloProvider>
+      </Head>
+      <ApolloProvider client={apolloClient}>
+        <ChakraProvider theme={chakraCustomTheme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </ApolloProvider>
+    </>
   );
 }
 

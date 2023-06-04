@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import {
   Box,
   Breadcrumb,
@@ -19,6 +18,8 @@ import { useQuery } from '@apollo/client';
 import AppTagQry from 'mods/website/profile/gql/AppTagQry';
 import InfiniteScroll from 'react-infinite-scroller';
 import { SortAscendingOutlined } from '@ant-design/icons';
+import Head from 'next/head';
+import getPageTitle from 'core/utils/getPageTitle';
 import HomeRightSide from '../Home/components/HomeRightSide';
 import AppSkeleton from '../Home/components/AppSkeleton';
 import AppsQry from '../../gql/AppsQry';
@@ -143,10 +144,11 @@ const Category = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title={title}>
-        <meta name="og:url" content={`${baseUrl}/categories/${slug}`} />
-        <meta name="og:title" content={`${title} - TechHustlers PH`} />
-      </Helmet>
+      <Head>
+        <title>{getPageTitle(title)}</title>
+        <meta name="og:url" key="og:url" content={`${baseUrl}/categories/${slug}`} />
+        <meta name="og:title" key="og:title" content={getPageTitle(title)} />
+      </Head>
       <Box width="100%">
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">

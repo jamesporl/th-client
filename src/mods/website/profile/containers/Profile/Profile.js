@@ -2,11 +2,12 @@ import React from 'react';
 import { useApolloClient } from '@apollo/client';
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import MyProfileQry from 'mods/auth/gql/MyProfileQry';
+import getPageTitle from 'core/utils/getPageTitle';
 import ResetPasswordForm from './ResetPasswordForm';
 // import UpdateEmailForm from './UpdateEmailForm';
 import PersonalInfoForm from './PresonalInfoForm';
@@ -37,7 +38,9 @@ const Profile = () => {
 
   return (
     <WebsiteLayout>
-      <Helmet title="My Profile" />
+      <Head>
+        <title>{getPageTitle('My Profile')}</title>
+      </Head>
       <Wrapper>
         <Heading as="h1" size="lg">
           My Profile

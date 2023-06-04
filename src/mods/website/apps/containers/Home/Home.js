@@ -1,9 +1,19 @@
 /* eslint-disable no-await-in-loop */
 import React, { useCallback, useState } from 'react';
-import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  HStack,
+  Heading,
+  Icon,
+  Select,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import InfiniteScroll from 'react-infinite-scroller';
 import moment from 'moment';
 import { useQuery } from '@apollo/client';
+import { SortAscendingOutlined } from '@ant-design/icons';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppsQry from '../../gql/AppsQry';
 import App from './components/App';
@@ -13,6 +23,7 @@ import HomeRightSide from './components/HomeRightSide';
 
 const Home = () => {
   const [hasMoreApps, setHasMoreApps] = useState(true);
+  const [isLoadingApps, setIsLoadingApps] = useState(false);
 
   const { data: fAppsData } = useQuery(AppsQry, {
     variables: {
@@ -20,7 +31,7 @@ const Home = () => {
     },
   });
 
-  const now = moment.utc();
+  const now = moment();
   const iStartOfMonth = now.clone().startOf('month');
   const iEndOfMonth = iStartOfMonth.clone().endOf('month');
   const { data: appsData, refetch: refetchApps } = useQuery(AppsQry, {
@@ -37,7 +48,7 @@ const Home = () => {
   if (appsData) {
     iAppsByMonth = [
       {
-        month: now.toISOString(),
+        month: iStartOfMonth.toISOString(),
         apps: appsData.apps.nodes,
         totalCount: appsData.apps.totalCount,
       },
@@ -50,55 +61,59 @@ const Home = () => {
   const [appsByMonth, setAppsByMonth] = useState(iAppsByMonth);
 
   const handleLoadMoreApps = useCallback(async () => {
-    let startOfMonth = now.clone().startOf('month');
-    let loadedCount = initialLoadedCount;
-    if (appsByMonth.length) {
-      startOfMonth = moment(appsByMonth[appsByMonth.length - 1].month)
-        .subtract(1, 'days')
-        .startOf('month');
-      loadedCount = 0;
-    }
-    let shouldGetMore = loadedCount < 5;
-    while (shouldGetMore) {
-      const endOfMonth = startOfMonth.clone().endOf('month');
-      const result = await refetchApps({
-        publishedFromDate: startOfMonth.toISOString(),
-        publishedToDate: endOfMonth.toISOString(),
-        otherFilters: ['excludeFeatured'],
-        page: 1,
-        pageSize: APPS_PAGE_SIZE,
-      });
-      const updateAppsByMonthState = (inputDate, inputApps, inputTotalCount) => {
-        setAppsByMonth((prev) => {
-          const prevMonths = prev.map((m) => m.month);
-          if (!prevMonths.includes(inputDate.format())) {
-            return [
-              ...prev,
-              {
-                month: inputDate.format(),
-                apps: inputApps,
-                totalCount: inputTotalCount,
-              },
-            ];
-          }
-          return prev;
+    setIsLoadingApps(true);
+    if (!isLoadingApps) {
+      let startOfMonth = now.clone().startOf('month');
+      let loadedCount = initialLoadedCount;
+      if (appsByMonth.length) {
+        startOfMonth = moment(appsByMonth[appsByMonth.length - 1].month)
+          .subtract(1, 'days')
+          .startOf('month');
+        loadedCount = 0;
+      }
+      let shouldGetMore = loadedCount < 5;
+      while (shouldGetMore) {
+        const endOfMonth = startOfMonth.clone().endOf('month');
+        const result = await refetchApps({
+          publishedFromDate: startOfMonth.toISOString(),
+          publishedToDate: endOfMonth.toISOString(),
+          otherFilters: ['excludeFeatured'],
+          page: 1,
+          pageSize: APPS_PAGE_SIZE,
         });
-      };
-      const { nodes = [], totalCount = 0 } = result?.data.apps;
-      if (nodes.length) {
-        updateAppsByMonthState(startOfMonth, nodes, totalCount);
+        const updateAppsByMonthState = (inputDate, inputApps, inputTotalCount) => {
+          setAppsByMonth((prev) => {
+            const prevMonths = prev.map((m) => m.month);
+            if (!prevMonths.includes(inputDate.format())) {
+              return [
+                ...prev,
+                {
+                  month: inputDate.format(),
+                  apps: inputApps,
+                  totalCount: inputTotalCount,
+                },
+              ];
+            }
+            return prev;
+          });
+        };
+        const { nodes = [], totalCount = 0 } = result?.data.apps;
+        if (nodes.length) {
+          updateAppsByMonthState(startOfMonth, nodes, totalCount);
+        }
+        loadedCount += nodes.length;
+        startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
+        if (loadedCount > 5) {
+          shouldGetMore = false;
+        }
+        if (startOfMonth.isBefore(moment('2023-01-01'))) {
+          shouldGetMore = false;
+          setHasMoreApps(false);
+        }
       }
-      loadedCount += nodes.length;
-      startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
-      if (loadedCount > 5) {
-        shouldGetMore = false;
-      }
-      if (startOfMonth.isBefore(moment('2022-10-01'))) {
-        shouldGetMore = false;
-        setHasMoreApps(false);
-      }
+      setIsLoadingApps(false);
     }
-  }, [appsByMonth]);
+  }, [appsByMonth, isLoadingApps]);
 
   let appsList = (
     <>
@@ -118,7 +133,7 @@ const Home = () => {
   if (fAppsData?.apps.nodes.length) {
     featuredAppsComp = (
       <>
-        <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
+        <Text mt={6} mb={6} fontSize="xl" fontWeight="500">
           Featured
         </Text>
         {fAppsData.apps.nodes.map((app) => (
@@ -152,12 +167,28 @@ const Home = () => {
       <Box width="100%">
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
-            <Heading as="h4" size="lg" fontWeight="700" fontSize="2xl">
-              Discover the next tech unicorn here... &#127477;&#127469; &#129412;
+            <Heading
+              as="h4"
+              size="lg"
+              fontWeight="700"
+              fontSize="3xl"
+              color="blackAlpha.900"
+              textAlign="center"
+            >
+              Discover the next tech unicorn here &#127477;&#127469; &#129412;
             </Heading>
-            <Box mt={8} width="100%">
-              {appsList}
-            </Box>
+            <Flex justifyContent="center" mt={6} onChange={() => undefined}>
+              <HStack spacing={4}>
+                <Text>
+                  <Icon as={SortAscendingOutlined} /> Browse by
+                </Text>
+                <Select width="200px" color="gray.500" value="mostRecent">
+                  <option value="mostRecent">Most Recent</option>
+                  <option value="random">Random</option>
+                </Select>
+              </HStack>
+            </Flex>
+            <Box width="100%">{appsList}</Box>
           </Box>
           {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
         </Flex>

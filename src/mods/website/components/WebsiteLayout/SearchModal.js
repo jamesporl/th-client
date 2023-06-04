@@ -99,7 +99,7 @@ const SearchModal = ({ isOpen, onClose }) => {
             <NextLink href={`/apps/${app.slug}`} key={app._id} passHref legacyBehavior>
               <Link onClick={handleClose}>
                 <Flex className="app">
-                  <img src={app.logoImg.thumbnail} alt="logo" style={{ borderRadius: '0.5rem' }} />
+                  <img src={app.logoImg} alt="logo" style={{ borderRadius: '0.5rem' }} />
                   <Flex flexDir="column" ml={4}>
                     <Text fontSize="xl" fontWeight="bold">
                       {app.name}
@@ -118,7 +118,7 @@ const SearchModal = ({ isOpen, onClose }) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="xl" returnFocusOnClose={false}>
+    <Modal isOpen={isOpen} onClose={handleClose} size="lg" returnFocusOnClose={false}>
       <ModalOverlay />
       <ModalContent>
         <Wrapper>

@@ -12,9 +12,9 @@ import useOpenAppModal from 'mods/website/hooks/useOpenAppModal';
 
 const Wrapper = styled.div`
   border: 1px solid #efefef;
-  padding: 2rem 1.5rem;
-  border-radius: 1rem;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
   cursor: pointer;
 
   &:not(:last-child) {

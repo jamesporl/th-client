@@ -15,8 +15,9 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
+import Head from 'next/head';
 import NextLink from 'next/link';
-import { Helmet } from 'react-helmet';
+import getPageTitle from 'core/utils/getPageTitle';
 import AuthPageContainer from '../components/AuthPageContainer';
 import SendPasswordResetLinkMtn from '../gql/SendPasswordResetLinkMtn';
 
@@ -101,7 +102,9 @@ const ForgotPassword = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Forgot Password" />
+      <Head>
+        <title>{getPageTitle('Forgot Password')}</title>
+      </Head>
       {content}
     </AuthPageContainer>
   );

@@ -27,9 +27,6 @@ function createApolloClient(ctx) {
       });
     }
     if (networkError && networkError.statusCode === 404) {
-      if (process.browser) {
-        // window.location.href = '/';
-      }
       operation.setContext({ headers: {} });
       return forward(operation);
     }
@@ -37,10 +34,10 @@ function createApolloClient(ctx) {
 
   const authLink = setContext(() => {
     let authToken = '';
-    if (process.browser) {
+    if (typeof window !== 'undefined') {
       authToken = localStorage.getItem('authToken');
     } else {
-      authToken = ctx.ctx?.req.cookies?.authToken;
+      authToken = ctx.req.cookies?.authToken;
     }
 
     if (authToken) {

@@ -5,7 +5,8 @@ import { Formik, Form, Field } from 'formik';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
+import getPageTitle from 'core/utils/getPageTitle';
 import AuthPageContainer from '../components/AuthPageContainer';
 import PasswordFormControl from '../components/PasswordFormControl';
 import ResetPasswordByTokenMtn from '../gql/ResetPasswordByTokenMtn';
@@ -97,7 +98,9 @@ const ResetPassword = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Reset Password" />
+      <Head>
+        <title>{getPageTitle('Reset Password')}</title>
+      </Head>
       {content}
     </AuthPageContainer>
   );

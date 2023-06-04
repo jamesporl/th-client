@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import useStores from 'core/stores/useStores';
 import AuthPageContainer from 'mods/auth/components/AuthPageContainer';
 import SendVerificationCodeMtn from 'mods/auth/gql/SendVerificationCodeMtn';
 import VerifyAccountByCodeMtn from 'mods/auth/gql/VerifyAccountByCodeMtn';
+import getPageTitle from 'core/utils/getPageTitle';
 
 const EmailVerification = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,7 +94,9 @@ const EmailVerification = () => {
 
   return (
     <AuthPageContainer>
-      <Helmet title="Email Verification" />
+      <Head>
+        <title>{getPageTitle('Email Verification')}</title>
+      </Head>
       {content}
     </AuthPageContainer>
   );
