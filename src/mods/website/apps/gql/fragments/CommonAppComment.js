@@ -29,10 +29,7 @@ export default gql`
           _id
           firstName
           lastName
-          image {
-            _id
-            thumbnail
-          }
+          image
         }
         htmlContent
         createdAt

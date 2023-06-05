@@ -5,7 +5,6 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import styled from 'styled-components';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
-import FormattedDate from 'mods/base/components/FormattedDate';
 import AuthButton from 'mods/website/components/AuthButton';
 import { HeartOutlined } from '@ant-design/icons';
 import useOpenAppModal from 'mods/website/hooks/useOpenAppModal';
@@ -76,11 +75,6 @@ const App = ({ app }) => {
             </Text>
           </Box>
         </Flex>
-        <Box>
-          <Text color="gray.700" fontSize="sm">
-            <FormattedDate date={app.publishedAt} format="shortDate" />
-          </Text>
-        </Box>
       </Flex>
     </Wrapper>
   );
