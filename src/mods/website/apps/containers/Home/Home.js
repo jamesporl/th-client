@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   Box,
   Flex,
@@ -10,8 +10,7 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import InfiniteScroll from 'react-infinite-scroller';
-import moment from 'moment';
+import momentTz from 'moment-timezone';
 import { useQuery } from '@apollo/client';
 import { SortAscendingOutlined } from '@ant-design/icons';
 import WebsiteLayout from '../../../components/WebsiteLayout';
@@ -22,8 +21,7 @@ import AppSkeleton from './components/AppSkeleton';
 import HomeRightSide from './components/HomeRightSide';
 
 const Home = () => {
-  const [hasMoreApps, setHasMoreApps] = useState(true);
-  const [isLoadingApps, setIsLoadingApps] = useState(false);
+  const observerTarget = useRef(null);
 
   const { data: fAppsData } = useQuery(AppsQry, {
     variables: {
@@ -31,7 +29,7 @@ const Home = () => {
     },
   });
 
-  const now = moment();
+  const now = momentTz.tz('Asia/Manila');
   const iStartOfMonth = now.clone().startOf('month');
   const iEndOfMonth = iStartOfMonth.clone().endOf('month');
   const { data: appsData, refetch: refetchApps } = useQuery(AppsQry, {
@@ -55,73 +53,125 @@ const Home = () => {
     ];
   }
 
-  const initialLoadedCount =
-    (fAppsData?.apps.nodes.length || 0) + (iAppsByMonth?.[0]?.apps?.length || 0);
-
   const [appsByMonth, setAppsByMonth] = useState(iAppsByMonth);
+  const [randomApps, setRandomApps] = useState([]);
+  const [randomAppsPage, setRandomAppsPage] = useState(1);
+  const [hasMoreApps, setHasMoreApps] = useState(true);
+  const [isLoadingApps, setIsLoadingApps] = useState(false);
+  const [viewMode, setViewMode] = useState('mostRecent');
 
-  const handleLoadMoreApps = useCallback(async () => {
-    setIsLoadingApps(true);
-    if (!isLoadingApps) {
-      let startOfMonth = now.clone().startOf('month');
-      let loadedCount = initialLoadedCount;
-      if (appsByMonth.length) {
-        startOfMonth = moment(appsByMonth[appsByMonth.length - 1].month)
-          .subtract(1, 'days')
-          .startOf('month');
-        loadedCount = 0;
-      }
-      let shouldGetMore = loadedCount < 5;
-      while (shouldGetMore) {
-        const endOfMonth = startOfMonth.clone().endOf('month');
-        const result = await refetchApps({
-          publishedFromDate: startOfMonth.toISOString(),
-          publishedToDate: endOfMonth.toISOString(),
-          otherFilters: ['excludeFeatured'],
-          page: 1,
-          pageSize: APPS_PAGE_SIZE,
-        });
-        const updateAppsByMonthState = (inputDate, inputApps, inputTotalCount) => {
-          setAppsByMonth((prev) => {
-            const prevMonths = prev.map((m) => m.month);
-            if (!prevMonths.includes(inputDate.format())) {
-              return [
-                ...prev,
-                {
-                  month: inputDate.format(),
-                  apps: inputApps,
-                  totalCount: inputTotalCount,
-                },
-              ];
-            }
-            return prev;
-          });
-        };
-        const { nodes = [], totalCount = 0 } = result?.data.apps;
-        if (nodes.length) {
-          updateAppsByMonthState(startOfMonth, nodes, totalCount);
-        }
-        loadedCount += nodes.length;
-        startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
-        if (loadedCount > 5) {
-          shouldGetMore = false;
-        }
-        if (startOfMonth.isBefore(moment('2023-01-01'))) {
-          shouldGetMore = false;
-          setHasMoreApps(false);
-        }
-      }
-      setIsLoadingApps(false);
+  const fetchMoreAppsByMonth = async (currentAppsByMonth) => {
+    let loadedCount = 0;
+    let startOfMonth = now.clone().startOf('month');
+    if (currentAppsByMonth.length) {
+      startOfMonth = momentTz(currentAppsByMonth[currentAppsByMonth.length - 1].month)
+        .subtract(1, 'days')
+        .startOf('month');
     }
-  }, [appsByMonth, isLoadingApps]);
+    let shouldGetMore = loadedCount < 5;
+    let newAppsByMonth = [...currentAppsByMonth];
+    while (shouldGetMore) {
+      const endOfMonth = startOfMonth.clone().endOf('month');
+      const result = await refetchApps({
+        publishedFromDate: startOfMonth.toISOString(),
+        publishedToDate: endOfMonth.toISOString(),
+        otherFilters: ['excludeFeatured'],
+        page: 1,
+        pageSize: APPS_PAGE_SIZE,
+      });
+      const { nodes = [], totalCount = 0 } = result?.data.apps;
+      if (nodes.length) {
+        const prevMonths = newAppsByMonth.map((m) => m.month);
+        if (!prevMonths.includes(startOfMonth.format())) {
+          newAppsByMonth = [
+            ...newAppsByMonth,
+            {
+              month: startOfMonth.format(),
+              apps: nodes,
+              totalCount,
+            },
+          ];
+        }
+      }
+      loadedCount += nodes.length;
+      startOfMonth = startOfMonth.clone().subtract(1, 'days').startOf('month');
+      if (loadedCount > 5) {
+        shouldGetMore = false;
+        setAppsByMonth(newAppsByMonth);
+      }
+      if (startOfMonth.isBefore(momentTz('2023-01-01'))) {
+        shouldGetMore = false;
+        setHasMoreApps(false);
+      }
+    }
+  };
 
-  let appsList = (
-    <>
-      <AppSkeleton />
-      <AppSkeleton />
-      <AppSkeleton />
-    </>
-  );
+  const fetchMoreRandomApps = async (currentRandomApps, currentRandomAppsPage) => {
+    const result = await refetchApps({
+      publishedFromDate: undefined,
+      publishedToDate: undefined,
+      otherFilters: ['excludeFeatured'],
+      page: currentRandomAppsPage,
+      pageSize: APPS_PAGE_SIZE,
+    });
+    const { nodes = [] } = result?.data.apps;
+    if (nodes.length) {
+      setRandomApps([...currentRandomApps, ...nodes]);
+    } else {
+      setHasMoreApps(false);
+    }
+    setRandomAppsPage(currentRandomAppsPage + 1);
+  };
+
+  const handleChangeViewMode = (ev) => {
+    const newViewMode = ev.target.value;
+    setViewMode(newViewMode);
+    setHasMoreApps(true);
+    setIsLoadingApps(true);
+    if (newViewMode === 'random') {
+      setAppsByMonth([]);
+      fetchMoreRandomApps([], 1);
+    } else {
+      setRandomApps([]);
+      setRandomAppsPage(1);
+      fetchMoreAppsByMonth([]);
+    }
+    setIsLoadingApps(false);
+  };
+
+  const loadMoreApps = useCallback(() => {
+    setIsLoadingApps(true);
+    if (viewMode === 'mostRecent') {
+      fetchMoreAppsByMonth(appsByMonth);
+    } else if (viewMode === 'random') {
+      fetchMoreRandomApps(randomApps, randomAppsPage);
+    }
+    setIsLoadingApps(false);
+  }, [viewMode, randomAppsPage, randomApps, appsByMonth]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log('rendered');
+        }
+        if (entries[0].isIntersecting && hasMoreApps && !isLoadingApps) {
+          loadMoreApps();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [observerTarget, loadMoreApps]);
 
   const mobilePlatformInfo = useBreakpointValue(
     { base: <HomeRightSide />, lg: null },
@@ -143,24 +193,32 @@ const Home = () => {
     );
   }
 
-  let appsByMonthComp = null;
-  if (appsByMonth.length) {
-    appsByMonthComp = appsByMonth.map((m) => <AppsByMonth key={m} {...m} />);
+  let appItems = null;
+  if (viewMode === 'mostRecent') {
+    appItems = appsByMonth.map((m) => <AppsByMonth key={m.month} {...m} />);
+  } else if (viewMode === 'random') {
+    appItems = (
+      <>
+        <Text mt={6} mb={6} fontSize="xl" fontWeight="500">
+          All Apps
+        </Text>
+        {randomApps.map((app) => (
+          <App key={app._id} app={app} />
+        ))}
+      </>
+    );
   }
 
-  appsList = (
-    <InfiniteScroll
-      loadMore={handleLoadMoreApps}
-      hasMore={hasMoreApps}
-      loader={<AppSkeleton />}
-      initialLoad
-      useWindow
-    >
-      {featuredAppsComp}
-      {mobilePlatformInfo}
-      {appsByMonthComp}
-    </InfiniteScroll>
-  );
+  let appsloadingComp = null;
+  if (isLoadingApps) {
+    appsloadingComp = (
+      <>
+        <AppSkeleton />
+        <AppSkeleton />
+        <AppSkeleton />
+      </>
+    );
+  }
 
   return (
     <WebsiteLayout>
@@ -177,18 +235,29 @@ const Home = () => {
             >
               Discover the next tech unicorn here &#127477;&#127469; &#129412;
             </Heading>
-            <Flex justifyContent="center" mt={6} onChange={() => undefined}>
-              <HStack spacing={4}>
-                <Text>
-                  <Icon as={SortAscendingOutlined} /> Browse by
-                </Text>
-                <Select width="200px" color="gray.500" value="mostRecent">
-                  <option value="mostRecent">Most Recent</option>
-                  <option value="random">Random</option>
-                </Select>
-              </HStack>
-            </Flex>
-            <Box width="100%">{appsList}</Box>
+            <Box width="100%">
+              {featuredAppsComp}
+              {mobilePlatformInfo}
+              <Flex justifyContent="center" mt={8}>
+                <HStack spacing={4}>
+                  <Text>
+                    <Icon as={SortAscendingOutlined} /> Browse by
+                  </Text>
+                  <Select
+                    width="200px"
+                    color="gray.500"
+                    value={viewMode}
+                    onChange={handleChangeViewMode}
+                  >
+                    <option value="mostRecent">Most Recent</option>
+                    <option value="random">Random</option>
+                  </Select>
+                </HStack>
+              </Flex>
+              {appItems}
+              {appsloadingComp}
+              <div ref={observerTarget} />
+            </Box>
           </Box>
           {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
         </Flex>

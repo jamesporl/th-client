@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import momentTz from 'moment-timezone';
 import { initializeApollo } from 'core/apollo/createApolloClient';
 import Home from 'mods/website/apps/containers/Home/Home';
 import AppsQry from 'mods/website/apps/gql/AppsQry';
@@ -9,7 +9,7 @@ const HomePage = (initialGqlState) => <Home data={initialGqlState} />;
 
 export async function getServerSideProps(ctx) {
   const apolloClient = initializeApollo(null, ctx);
-  const startOfMonth = moment.utc().startOf('month');
+  const startOfMonth = momentTz().tz('Asia/Manila').startOf('month');
   const endOfMonth = startOfMonth.clone().endOf('month');
 
   await apolloClient.query({

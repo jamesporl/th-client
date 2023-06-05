@@ -68,7 +68,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
           {formattedMonth}
         </Text>
         {apps.map((app) => (
-          <App key={app._id} app={app} />
+          <App key={`${month}-${app._id}`} app={app} />
         ))}
         {loadingComp}
         {seeMoreBtn}
@@ -80,7 +80,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
 
 AppsByMonth.propTypes = {
   month: PropTypes.string.isRequired,
-  apps: PropTypes.string.isRequired,
+  apps: PropTypes.array.isRequired,
   totalCount: PropTypes.number.isRequired,
 };
 
