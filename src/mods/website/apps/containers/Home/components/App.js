@@ -1,13 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useMutation } from '@apollo/client';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Link, Text, Tooltip } from '@chakra-ui/react';
 import styled from 'styled-components';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
 import AuthButton from 'mods/website/components/AuthButton';
-import { HeartOutlined } from '@ant-design/icons';
+import { GlobalOutlined, HeartOutlined } from '@ant-design/icons';
 import useOpenAppModal from 'mods/website/hooks/useOpenAppModal';
+import useStores from 'core/stores/useStores';
 
 const Wrapper = styled.div`
   border: 1px solid #efefef;
@@ -22,15 +24,20 @@ const Wrapper = styled.div`
 `;
 
 const App = ({ app }) => {
-  const [isSupported, setIsSupported] = useState(app.isSupported);
-  const [supportsCount, setSupportsCount] = useState(app.supportsCount);
+  const { uiStore } = useStores();
 
   const handleOpenAppModal = useOpenAppModal(app.slug);
 
   const [toggleAppSupport] = useMutation(ToggleAppSupportMtn);
 
+  useEffect(() => {
+    uiStore.addApp(app);
+  }, [app]);
+
+  const storedApp = useMemo(() => uiStore.apps.find((a) => a._id === app._id), [app, uiStore.apps]);
+
   let supportText = 'support';
-  if (supportsCount !== 1) {
+  if (storedApp?.supportsCount !== 1) {
     supportText = 'supports';
   }
   let commentText = 'comment';
@@ -41,17 +48,29 @@ const App = ({ app }) => {
   const handleClickSupport = useCallback(
     (ev) => {
       ev.stopPropagation();
-      setIsSupported(!isSupported);
-      if (isSupported) {
-        setSupportsCount((c) => c - 1);
-      } else {
-        setSupportsCount((c) => c + 1);
+      let newSupportsCount = storedApp.supportsCount - 1;
+      if (!storedApp.isSupported) {
+        newSupportsCount = storedApp.supportsCount + 1;
       }
+      uiStore.updateApp(app._id, !storedApp.isSupported, newSupportsCount);
       const input = { appId: app._id };
       toggleAppSupport({ variables: { input } });
     },
-    [isSupported],
+    [app, storedApp],
   );
+
+  let websiteLink = null;
+  if (app.websiteUrl) {
+    websiteLink = (
+      <Flex>
+        <Tooltip label="Go to website">
+          <Link href={app.websiteUrl} target="_blank" onClick={(ev) => ev.stopPropagation()}>
+            <Button variant="link" leftIcon={<GlobalOutlined />} />
+          </Link>
+        </Tooltip>
+      </Flex>
+    );
+  }
 
   return (
     <Wrapper onClick={handleOpenAppModal}>
@@ -61,7 +80,7 @@ const App = ({ app }) => {
           <Box width="88px" mr={4} textAlign="center">
             <AuthButton
               colorScheme="blue"
-              variant={isSupported ? 'solid' : 'outline'}
+              variant={storedApp?.isSupported ? 'solid' : 'outline'}
               onClick={handleClickSupport}
               leftIcon={<HeartOutlined />}
               size="xs"
@@ -71,10 +90,13 @@ const App = ({ app }) => {
           </Box>
           <Box>
             <Text color="gray.700" fontSize="sm">
-              {`${supportsCount} ${supportText} and ${app.commentsCount} ${commentText}`}
+              {`${storedApp?.supportsCount || 0} ${supportText} and ${
+                app.commentsCount
+              } ${commentText}`}
             </Text>
           </Box>
         </Flex>
+        {websiteLink}
       </Flex>
     </Wrapper>
   );
@@ -83,4 +105,4 @@ App.propTypes = {
   app: PropTypes.object.isRequired,
 };
 
-export default App;
+export default observer(App);
