@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   Box,
   Breadcrumb,
@@ -16,24 +16,27 @@ import { useRouter } from 'next/router';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import { useQuery } from '@apollo/client';
 import AppTagQry from 'mods/website/profile/gql/AppTagQry';
-import InfiniteScroll from 'react-infinite-scroller';
 import { SortAscendingOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import getPageTitle from 'core/utils/getPageTitle';
+import Image from 'next/image';
 import HomeRightSide from '../Home/components/HomeRightSide';
 import AppSkeleton from '../Home/components/AppSkeleton';
 import AppsQry from '../../gql/AppsQry';
 import App from '../Home/components/App';
 
-export const CAT_PAGE_APPS_PAGE_SIZE = 3;
+export const CAT_PAGE_APPS_PAGE_SIZE = 12;
 
 const Category = () => {
-  const [sortBy, setSortBy] = useState('publishedDate');
+  const observerTarget = useRef(null);
+
   const baseUrl = `${process.env.NEXT_PUBLIC_TH_CLIENT_BASE_URL}`;
 
   const router = useRouter();
 
   const { slug } = router.query;
+
+  const [sortBy, setSortBy] = useState('publishedDate');
 
   const { data: appTagData } = useQuery(AppTagQry, { variables: { slug }, skip: !slug });
   const { data: fAppsData } = useQuery(AppsQry, {
@@ -42,6 +45,7 @@ const Category = () => {
       otherFilters: ['isFeatured'],
     },
   });
+
   const { data: appsData, refetch: refetchApps } = useQuery(AppsQry, {
     variables: {
       tagSlug: slug,
@@ -54,55 +58,102 @@ const Category = () => {
   });
 
   const [apps, setApps] = useState(appsData?.apps.nodes || []);
-  const [shouldDoInitialLoad] = useState(!appsData);
+  const [page, setPage] = useState(appsData?.apps.nodes ? 1 : 2);
+  const [hasMoreApps, setHasMoreApps] = useState(true);
+  const [isLoadingApps, setIsLoadingApps] = useState(false);
 
-  let initialHasMoreApps = true;
-  if (appsData) {
-    initialHasMoreApps = appsData.apps.nodes.length < appsData.apps.totalCount;
-  }
-  const [page, setPage] = useState(1);
-  const [hasMoreApps, setHasMoreApps] = useState(initialHasMoreApps);
-
-  const handleChangeSortBy = async (ev) => {
-    setSortBy(ev.target.value);
-    setApps([]);
-    setPage(1);
-    const result = await refetchApps({
-      page: 1,
-      sortBy: ev.target.value,
-    });
-    setApps(result.data.apps.nodes);
-    setHasMoreApps(result.data.apps.nodes.length < result.data.apps.totalCount);
+  const fetchMoreApps = async (currentApps, currentPage, currentSortBy) => {
+    if (currentApps.length && currentPage === 1) {
+      return;
+    }
+    const result = await refetchApps({ page: currentPage, sortBy: currentSortBy });
+    const { nodes = [] } = result?.data.apps;
+    if (nodes.length) {
+      setApps([...currentApps, ...nodes]);
+    } else {
+      setHasMoreApps(false);
+    }
+    setPage(currentPage + 1);
   };
 
   const loadMoreApps = useCallback(async () => {
-    const result = await refetchApps({
-      page: page + 1,
-      sortBy,
-    });
-    setApps((prevApps) => [...prevApps, ...result.data.apps.nodes]);
-    setHasMoreApps(apps.length + result.data.apps.nodes.length < result.data.apps.totalCount);
-    setPage(page + 1);
-  }, [page, sortBy, apps]);
+    setIsLoadingApps(true);
+    await fetchMoreApps(apps, page, sortBy);
+    setIsLoadingApps(false);
+  }, [sortBy, page, apps]);
 
   let title = '...';
   if (appTagData?.appTag) {
     title = appTagData.appTag.name;
   }
 
-  let appsList = (
-    <>
-      <AppSkeleton />
-      <AppSkeleton />
-      <AppSkeleton />
-    </>
+  let appsloadingComp = null;
+  if (isLoadingApps) {
+    appsloadingComp = (
+      <>
+        <AppSkeleton />
+        <AppSkeleton />
+        <AppSkeleton />
+      </>
+    );
+  }
+
+  let appItems = (
+    <Box mt={6}>
+      {apps.map((app) => (
+        <App key={app._id} app={app} />
+      ))}
+    </Box>
   );
+
+  if (!apps.length && !isLoadingApps && !hasMoreApps) {
+    appItems = (
+      <>
+        <Box textAlign="center" mt={16}>
+          <Text fontWeight={700} fontSize="lg" color="blackAlpha.500">
+            It would be nice to have some apps in this category.
+          </Text>
+        </Box>
+        <Flex justifyContent="center" width="100%">
+          <Image src="/no-apps.png" width={300} height={300} />
+        </Flex>
+      </>
+    );
+  }
+
+  const handleChangeSortBy = (ev) => {
+    setSortBy(ev.target.value);
+    setApps([]);
+    setPage(1);
+    fetchMoreApps([], 1, ev.target.value);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMoreApps && !isLoadingApps) {
+          loadMoreApps();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [observerTarget, loadMoreApps, isLoadingApps, hasMoreApps]);
 
   let featuredAppsComp = null;
   if (fAppsData && fAppsData.apps.nodes.length) {
     featuredAppsComp = (
       <>
-        <Text mt={16} mb={8} fontSize="xl" fontWeight="500">
+        <Text mt={10} mb={6} fontSize="xl" fontWeight="500">
           Featured
         </Text>
         {fAppsData.apps.nodes.map((app) => (
@@ -112,35 +163,17 @@ const Category = () => {
     );
   }
 
-  const sortSelector = (
-    <Flex justifyContent="flex-end" mt={16} onChange={handleChangeSortBy}>
-      <HStack spacing={4}>
-        <Text color="gray.500">
-          <Icon as={SortAscendingOutlined} /> Sort By
-        </Text>
-        <Select width="200px" color="gray.500" value={sortBy}>
-          <option value="publishedDate">Date Published</option>
-          <option value="name">Name</option>
-        </Select>
-      </HStack>
-    </Flex>
+  const mobilePlatformInfo = useBreakpointValue(
+    {
+      base: (
+        <Box mt={6}>
+          <HomeRightSide />
+        </Box>
+      ),
+      lg: null,
+    },
+    { fallback: 'lg' },
   );
-
-  if (apps.length) {
-    appsList = (
-      <InfiniteScroll
-        loadMore={loadMoreApps}
-        hasMore={hasMoreApps}
-        loader={<AppSkeleton />}
-        initialLoad={shouldDoInitialLoad}
-        useWindow
-      >
-        {apps.map((app) => (
-          <App key={app._id} app={app} />
-        ))}
-      </InfiniteScroll>
-    );
-  }
 
   return (
     <WebsiteLayout>
@@ -165,12 +198,33 @@ const Category = () => {
                 </BreadcrumbItem>
               </Breadcrumb>
             </Box>
-            <Heading as="h1" size="lg">
+            <Heading as="h4" size="lg" fontWeight="700" fontSize="3xl" color="blackAlpha.900">
               {title}
             </Heading>
-            {featuredAppsComp}
-            {sortSelector}
-            <Box mt={16}>{appsList}</Box>
+            <Box width="100%">
+              {featuredAppsComp}
+              {mobilePlatformInfo}
+              <Flex justifyContent="center" mt={8}>
+                <HStack spacing={4}>
+                  <Text>
+                    <Icon as={SortAscendingOutlined} /> Browse by
+                  </Text>
+                  <Select
+                    width="200px"
+                    color="gray.500"
+                    value={sortBy}
+                    onChange={handleChangeSortBy}
+                  >
+                    <option value="publishedDate">Most Recent</option>
+                    <option value="name">Alphabetical</option>
+                    <option value="random">Random</option>
+                  </Select>
+                </HStack>
+              </Flex>
+              {appItems}
+              {appsloadingComp}
+              <div ref={observerTarget} />
+            </Box>
           </Box>
           {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
         </Flex>

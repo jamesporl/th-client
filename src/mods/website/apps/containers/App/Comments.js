@@ -8,9 +8,7 @@ import AddCommentToAppMtn from '../../gql/AddCommentToAppMtn';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 
-const Wrapper = styled.div`
-  margin-top: 1rem;
-`;
+const Wrapper = styled.div``;
 
 const Comments = ({ app }) => {
   const [getAppComments, { data: appCommentsData, refetch }] = useLazyQuery(AppCommentsQry);

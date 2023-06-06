@@ -123,28 +123,28 @@ const Home = () => {
     setRandomAppsPage(currentRandomAppsPage + 1);
   };
 
-  const handleChangeViewMode = (ev) => {
+  const handleChangeViewMode = async (ev) => {
     const newViewMode = ev.target.value;
     setViewMode(newViewMode);
     setHasMoreApps(true);
     setIsLoadingApps(true);
     if (newViewMode === 'random') {
       setAppsByMonth([]);
-      fetchMoreRandomApps([], 1);
+      await fetchMoreRandomApps([], 1);
     } else {
       setRandomApps([]);
       setRandomAppsPage(1);
-      fetchMoreAppsByMonth([]);
+      await fetchMoreAppsByMonth([]);
     }
     setIsLoadingApps(false);
   };
 
-  const loadMoreApps = useCallback(() => {
+  const loadMoreApps = useCallback(async () => {
     setIsLoadingApps(true);
     if (viewMode === 'mostRecent') {
-      fetchMoreAppsByMonth(appsByMonth);
+      await fetchMoreAppsByMonth(appsByMonth);
     } else if (viewMode === 'random') {
-      fetchMoreRandomApps(randomApps, randomAppsPage);
+      await fetchMoreRandomApps(randomApps, randomAppsPage);
     }
     setIsLoadingApps(false);
   }, [viewMode, randomAppsPage, randomApps, appsByMonth]);
@@ -168,7 +168,7 @@ const Home = () => {
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [observerTarget, loadMoreApps]);
+  }, [observerTarget, loadMoreApps, isLoadingApps, hasMoreApps]);
 
   const mobilePlatformInfo = useBreakpointValue(
     { base: <HomeRightSide />, lg: null },
@@ -180,7 +180,7 @@ const Home = () => {
   if (fAppsData?.apps.nodes.length) {
     featuredAppsComp = (
       <>
-        <Text mt={6} mb={6} fontSize="xl" fontWeight="500">
+        <Text mt={10} mb={6} fontSize="xl" fontWeight="500">
           Featured
         </Text>
         {fAppsData.apps.nodes.map((app) => (

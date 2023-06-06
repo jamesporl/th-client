@@ -9,6 +9,7 @@ export default gql`
     $publishedFromDate: DateTime
     $publishedToDate: DateTime
     $otherFilters: [AppsOtherFilter!]
+    $sortBy: AppsSortBy
   ) {
     apps(
       page: $page
@@ -17,6 +18,7 @@ export default gql`
       publishedFromDate: $publishedFromDate
       publishedToDate: $publishedToDate
       otherFilters: $otherFilters
+      sortBy: $sortBy
     ) {
       nodes {
         ...CommonListApp

@@ -66,7 +66,7 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
   }
 
   let creatorTag = null;
-  if (comment.createdBy._id === authStore.myProfile?._id) {
+  if (app.ownedBy._id === comment.createdBy._id) {
     creatorTag = (
       <Tag size="sm" variant="outline" colorScheme="yellow">
         Creator
@@ -93,11 +93,7 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
   return (
     <Flex mt={4} w="100%">
       <Flex mr={comment.isParent ? 4 : 8} mt={2}>
-        <Avatar
-          name={comment.createdBy?.firstName}
-          src={comment.createdBy?.image?.thumbnail}
-          size="sm"
-        />
+        <Avatar name={comment.createdBy?.firstName} src={comment.createdBy?.image} size="sm" />
       </Flex>
       <Flex flexGrow={1} flexDir="column">
         <HStack spacing={2}>
