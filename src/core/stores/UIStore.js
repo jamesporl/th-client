@@ -14,6 +14,8 @@ export default class UIStore {
 
   @observable screenwidth = 1200;
 
+  @observable apps = [];
+
   @action openGlobalModal = (componentKey, title, context = {}, props = {}) => {
     this.globalModalParams = { componentKey, title, context, props };
     this.isGlobalModalOpen = true;
@@ -27,5 +29,21 @@ export default class UIStore {
   @action setScreenSize = (width, height) => {
     this.screenwidth = width;
     this.screenheight = height;
+  };
+
+  @action addApp = (app) => {
+    const appExists = this.apps.find((a) => a._id === app._id);
+    if (!appExists) {
+      this.apps = [...this.apps, app];
+    }
+  };
+
+  @action updateApp = (appId, isSupported, supportsCount) => {
+    this.apps = this.apps.map((a) => {
+      if (a._id === appId) {
+        return { ...a, isSupported, supportsCount };
+      }
+      return a;
+    });
   };
 }

@@ -10,8 +10,8 @@ export default gql`
       _id
       name
     }
+    websiteUrl
     slug
-    publishedAt
     supportsCount
     commentsCount
     isSupported

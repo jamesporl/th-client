@@ -1,14 +1,16 @@
 /* eslint-disable react/no-danger */
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { HeartOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import { Box, Text, Flex, useBreakpointValue, Heading } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { observer } from 'mobx-react';
 import AppBannerCarousel from 'mods/website/components/AppBannerCarousel';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import Comments from 'mods/website/apps/containers/App/Comments';
 import ToggleAppSupportMtn from 'mods/website/apps/gql/ToggleAppSupportMtn';
+import useStores from 'core/stores/useStores';
 import AppRightCol from './AppRightCol';
 import AuthButton from '../AuthButton';
 import EditorContentDisplayWrapper from '../EditorContentDisplayWrapper';
@@ -22,26 +24,36 @@ const Wrapper = styled.div`
 `;
 
 const AppDetails = ({ app, isPreview }) => {
+  const { uiStore } = useStores();
   const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' }, { fallback: 'lg' });
   const rightColDisplayRev = useBreakpointValue({ base: 'flex', lg: 'none' }, { fallback: 'lg' });
 
-  const [supportsCount, setSupportsCount] = useState(isPreview ? 10 : app.supportsCount);
-  const [isSupported, setIsSupported] = useState(isPreview ? true : app.isSupported);
+  // const [supportsCount, setSupportsCount] = useState(isPreview ? 10 : app.supportsCount);
+  // const [isSupported, setIsSupported] = useState(isPreview ? true : app.isSupported);
+
+  useEffect(() => {
+    if (!isPreview) {
+      uiStore.addApp(app);
+    }
+  }, [app]);
+
+  const storedApp = useMemo(() => uiStore.apps.find((a) => a._id === app._id), [app, uiStore.apps]);
 
   const [toggleAppSupport] = useMutation(ToggleAppSupportMtn);
 
-  const handleClickSupport = useCallback(() => {
-    if (!isPreview) {
-      setIsSupported(!isSupported);
-      if (isSupported) {
-        setSupportsCount((c) => c - 1);
-      } else {
-        setSupportsCount((c) => c + 1);
+  const handleClickSupport = useCallback(
+    (ev) => {
+      ev.stopPropagation();
+      let newSupportsCount = storedApp.supportsCount - 1;
+      if (!storedApp.isSupported) {
+        newSupportsCount = storedApp.supportsCount + 1;
       }
+      uiStore.updateApp(app._id, !storedApp.isSupported, newSupportsCount);
       const input = { appId: app._id };
       toggleAppSupport({ variables: { input } });
-    }
-  }, [isSupported, isPreview]);
+    },
+    [app, storedApp],
+  );
 
   let commentsSection = null;
   if (!isPreview) {
@@ -50,6 +62,13 @@ const AppDetails = ({ app, isPreview }) => {
         <Comments app={app} />
       </Box>
     );
+  }
+
+  let fIsSupported = true;
+  let fSupportsCount = 10;
+  if (!isPreview && storedApp) {
+    fIsSupported = storedApp.isSupported;
+    fSupportsCount = storedApp.supportsCount;
   }
 
   const supportsComp = (
@@ -70,8 +89,8 @@ const AppDetails = ({ app, isPreview }) => {
       <Flex alignItems="center">
         <Box mr={6}>
           <AuthButton
-            colorScheme={isSupported ? 'blue' : 'gray'}
-            variant={isSupported ? 'solid' : 'outline'}
+            colorScheme="blue"
+            variant={fIsSupported ? 'solid' : 'outline'}
             onClick={handleClickSupport}
             leftIcon={<HeartOutlined />}
             size="xs"
@@ -81,7 +100,7 @@ const AppDetails = ({ app, isPreview }) => {
         </Box>
         <Box>
           <Text fontSize="2xl" fontWeight="bold">
-            {supportsCount}
+            {fSupportsCount}
           </Text>
         </Box>
       </Flex>
@@ -128,4 +147,4 @@ AppDetails.defaultProps = {
   isPreview: false,
 };
 
-export default AppDetails;
+export default observer(AppDetails);
