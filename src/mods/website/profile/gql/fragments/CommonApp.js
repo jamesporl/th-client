@@ -31,6 +31,7 @@ export default gql`
     tags {
       _id
       name
+      slug
     }
     ownedBy {
       _id

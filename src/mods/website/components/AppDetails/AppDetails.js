@@ -58,7 +58,7 @@ const AppDetails = ({ app, isPreview }) => {
   let commentsSection = null;
   if (!isPreview) {
     commentsSection = (
-      <Box mt={16}>
+      <Box mt={12}>
         <Comments app={app} />
       </Box>
     );
@@ -75,7 +75,7 @@ const AppDetails = ({ app, isPreview }) => {
     <Flex
       justifyContent="space-between"
       alignItems="center"
-      mt={8}
+      mt={6}
       border="2px"
       borderColor="gray.200"
       borderRadius={4}
@@ -110,11 +110,11 @@ const AppDetails = ({ app, isPreview }) => {
   return (
     <Wrapper>
       <AppHeader app={app} />
-      <Box width="100%" mt={12}>
+      <Box width="100%" mt={6}>
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
             <AppBannerCarousel bannerImgs={app.bannerImgs || []} videoUrl={app.videoUrl} />
-            <Box mt={12}>
+            <Box mt={6}>
               <EditorContentDisplayWrapper>
                 <div
                   dangerouslySetInnerHTML={{
@@ -124,7 +124,7 @@ const AppDetails = ({ app, isPreview }) => {
               </EditorContentDisplayWrapper>
             </Box>
             {supportsComp}
-            <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={8}>
+            <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={6}>
               <AppRightCol app={app} />
             </Flex>
             {commentsSection}

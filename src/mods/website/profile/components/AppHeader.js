@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Box, Flex, Text, Tag, HStack, Heading } from '@chakra-ui/react';
+import { Badge, Box, Flex, Text, HStack, Heading, Link, Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -23,7 +23,14 @@ const AppHeader = ({ app }) => {
       <Box mt={2}>
         <HStack spacing={2}>
           {app.tags.map((t) => (
-            <Tag key={t._id}>{t.name}</Tag>
+            <Link
+              key={t._id}
+              href={`/categories/${t.slug}`}
+              target="_blank"
+              onClick={(ev) => ev.stopPropagation()}
+            >
+              <Button size="xs">{t.name}</Button>
+            </Link>
           ))}
         </HStack>
       </Box>

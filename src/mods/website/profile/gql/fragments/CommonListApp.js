@@ -9,6 +9,7 @@ export default gql`
     tags {
       _id
       name
+      slug
     }
     websiteUrl
     slug
