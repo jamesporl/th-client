@@ -42,13 +42,13 @@ const Profile = () => {
         <title>{getPageTitle('My Profile')}</title>
       </Head>
       <Wrapper>
-        <Heading as="h1" size="lg">
+        <Heading as="h1" fontSize="5xl" fontWeight={700} color="blue.500">
           My Profile
         </Heading>
         <Flex mt={8} alignItems="center" flexDir="column">
           <div className="profile-box">
             <div>
-              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
+              <Heading fontWeight="700" fontSize="2xl" letterSpacing="1px">
                 Photo
               </Heading>
               <Box w="100%" mt={8}>
@@ -58,7 +58,7 @@ const Profile = () => {
           </div>
           <div className="profile-box">
             <div>
-              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
+              <Heading fontWeight="700" fontSize="2xl" letterSpacing="1px">
                 Personal Information
               </Heading>
               <Box w="100%" mt={8}>
@@ -71,7 +71,7 @@ const Profile = () => {
           </div>
           <div className="profile-box">
             <div>
-              <Heading fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
+              <Heading fontWeight="700" fontSize="2xl" letterSpacing="1px">
                 Reset Password
               </Heading>
               <ResetPasswordForm />

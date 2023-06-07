@@ -34,7 +34,7 @@ const EditApp = () => {
     initialStep: 0,
   });
 
-  const localStorageDraftKey = useMemo(() => `appDraft_${appId}`, [router.query?.appId]);
+  const sessionStorageDraftKey = useMemo(() => `appDraft_${appId}`, [router.query?.appId]);
 
   const [initialValues, setInitialValues] = useState({
     name: '',
@@ -65,26 +65,28 @@ const EditApp = () => {
   useEffect(() => {
     const { appDraft: app } = data || {};
     if (app) {
-      const lValues = JSON.parse(localStorage.getItem(localStorageDraftKey) || '{}');
+      const lValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey) || '{}');
       let initialValues0 = { ...app };
       if (lValues?._id === app._id) {
         initialValues0 = { ...app, ...lValues };
       }
       setInitialValues(initialValues0);
-      localStorage.setItem(localStorageDraftKey, JSON.stringify(initialValues0));
+      sessionStorage.setItem(sessionStorageDraftKey, JSON.stringify(initialValues0));
     }
   }, [data]);
 
   useEffect(() => {
     if (activeStep === 2) {
-      const savedValues = JSON.parse(localStorage.getItem(localStorageDraftKey));
+      const savedValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey));
       setInitialDesc(savedValues.jsonDesc || DEFAULT_EDITOR_VALUE);
       setDesc(savedValues.jsonDesc || DEFAULT_EDITOR_VALUE);
+    } else {
+      setInitialDesc(null);
     }
   }, [activeStep]);
 
   const handleSubmitToServer = async () => {
-    const savedValues = JSON.parse(localStorage.getItem(localStorageDraftKey));
+    const savedValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey));
     const {
       name,
       shortDesc,
@@ -124,31 +126,31 @@ const EditApp = () => {
   }, [descIsTouched, desc]);
 
   const handleValuesChange = (changedValues) => {
-    const savedValues = JSON.parse(localStorage.getItem(localStorageDraftKey));
+    const savedValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey));
     const newValues = { ...savedValues };
     Object.keys(changedValues).forEach((k) => set(newValues, k, changedValues[k]));
-    localStorage.setItem(localStorageDraftKey, JSON.stringify(newValues));
+    sessionStorage.setItem(sessionStorageDraftKey, JSON.stringify(newValues));
   };
 
   const handleChangeDesc = (value) => {
     setDescIsTouched(true);
-    const lValues = JSON.parse(localStorage.getItem(localStorageDraftKey) || '{}');
+    const lValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey) || '{}');
     const updatedValues = { ...lValues, jsonDesc: value || [] };
-    localStorage.setItem(localStorageDraftKey, JSON.stringify(updatedValues));
+    sessionStorage.setItem(sessionStorageDraftKey, JSON.stringify(updatedValues));
     setDesc(value);
   };
 
   const handleChangeVideoUrl = (value) => {
-    const lValues = JSON.parse(localStorage.getItem(localStorageDraftKey) || '{}');
+    const lValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey) || '{}');
     const updatedValues = { ...lValues, videoUrl: value };
-    localStorage.setItem(localStorageDraftKey, JSON.stringify(updatedValues));
+    sessionStorage.setItem(sessionStorageDraftKey, JSON.stringify(updatedValues));
     setInitialValues((prevInitialValues) => ({ ...prevInitialValues, videoUrl: value }));
   };
 
   const handleChangeTags = (tags) => {
-    const lValues = JSON.parse(localStorage.getItem(localStorageDraftKey) || '{}');
+    const lValues = JSON.parse(sessionStorage.getItem(sessionStorageDraftKey) || '{}');
     const updatedValues = { ...lValues, tags };
-    localStorage.setItem(localStorageDraftKey, JSON.stringify(updatedValues));
+    sessionStorage.setItem(sessionStorageDraftKey, JSON.stringify(updatedValues));
     setInitialValues((prevInitialValues) => ({ ...prevInitialValues, tags }));
     handleSubmitToServer();
   };

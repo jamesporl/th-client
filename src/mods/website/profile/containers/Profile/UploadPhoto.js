@@ -4,8 +4,9 @@ import { Avatar, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useStores from 'core/stores/useStores';
-import { dataUrltoFile } from '../EditApp/components/Assets';
+import { LoadingOutlined } from '@ant-design/icons';
 import UpdateProfilePhotoMtn from '../../gql/UpdateProfilePhotoMtn';
+import dataUrltoFile from '../EditApp/utils/dataUrlToFile';
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,7 +35,8 @@ const Wrapper = styled.div`
 `;
 
 const UploadPhoto = ({ myProfile, onRefetch }) => {
-  const [imgSrc, setImgSrc] = useState('');
+  const [imgSrc, setImgSrc] = useState(myProfile?.image || '');
+  const [isLoading, setIsLoading] = useState(true);
 
   const { uiStore } = useStores();
 
@@ -43,7 +45,10 @@ const UploadPhoto = ({ myProfile, onRefetch }) => {
   const [updateProfilePhoto] = useMutation(UpdateProfilePhotoMtn);
 
   useEffect(() => {
-    setImgSrc(myProfile?.image?.medium);
+    if (myProfile) {
+      setImgSrc(myProfile?.image);
+      setIsLoading(false);
+    }
   }, [myProfile]);
 
   const handleSubmitPhoto = async (src, filename, type) => {
@@ -58,11 +63,14 @@ const UploadPhoto = ({ myProfile, onRefetch }) => {
       });
       return;
     }
-    setImgSrc(src);
+    setIsLoading(true);
     const input = { file };
     try {
       await updateProfilePhoto({ variables: { input } });
-      onRefetch();
+      setTimeout(() => {
+        onRefetch();
+        setIsLoading(false);
+      }, 3000);
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
@@ -83,12 +91,29 @@ const UploadPhoto = ({ myProfile, onRefetch }) => {
     });
   };
 
+  const loadingIcon = <LoadingOutlined spin />;
+  let avatar = <Avatar size="xl" icon={loadingIcon} style={{ backgroundColor: '#bee3f8' }} />;
+  if (!isLoading) {
+    if (!myProfile.image) {
+      avatar = (
+        <Avatar size="xl" name={myProfile?.firstName} style={{ backgroundColor: '#bee3f8' }} />
+      );
+    } else {
+      avatar = <Avatar size="xl" src={imgSrc} />;
+    }
+  }
+
   return (
     <Wrapper>
-      <Avatar size="xl" name={myProfile?.firstName} src={imgSrc} />
+      {avatar}
       <label htmlFor="profilePhoto" className="upload">
         <div className="upload-photo-btn">Upload new photo</div>
-        <input id="profilePhoto" type="file" onChange={handleChangePhoto} />
+        <input
+          id="profilePhoto"
+          type="file"
+          onChange={handleChangePhoto}
+          accept="image/png, image/jpeg"
+        />
       </label>
     </Wrapper>
   );

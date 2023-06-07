@@ -41,9 +41,8 @@ const AppDetails = ({ app, isPreview }) => {
 
   const [toggleAppSupport] = useMutation(ToggleAppSupportMtn);
 
-  const handleClickSupport = useCallback(
-    (ev) => {
-      ev.stopPropagation();
+  const handleClickSupport = useCallback(() => {
+    if (storedApp) {
       let newSupportsCount = storedApp.supportsCount - 1;
       if (!storedApp.isSupported) {
         newSupportsCount = storedApp.supportsCount + 1;
@@ -51,9 +50,8 @@ const AppDetails = ({ app, isPreview }) => {
       uiStore.updateApp(app._id, !storedApp.isSupported, newSupportsCount);
       const input = { appId: app._id };
       toggleAppSupport({ variables: { input } });
-    },
-    [app, storedApp],
-  );
+    }
+  }, [app, storedApp]);
 
   let commentsSection = null;
   if (!isPreview) {
