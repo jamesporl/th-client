@@ -124,7 +124,7 @@ const WebsiteNavbar = () => {
           <Avatar
             name={authStore.myProfile?.firstName}
             size="sm"
-            src={authStore.myProfile?.image?.thumbnail}
+            src={authStore.myProfile?.image}
           />
         </MenuButton>
         {menu}

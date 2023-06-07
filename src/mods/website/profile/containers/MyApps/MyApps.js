@@ -1,10 +1,11 @@
 import React from 'react';
-import { Alert, AlertIcon, Box, Skeleton, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Head from 'next/head';
 import getPageTitle from 'core/utils/getPageTitle';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
+import Image from 'next/image';
 import MyAppDraftsQry from '../../gql/MyAppDraftsQry';
 import MyAppsQry from '../../gql/MyAppsQry';
 import AppDraft from './components/AppDraft';
@@ -17,10 +18,18 @@ const Wrapper = styled.div`
 `;
 
 const MyApps = () => {
-  const { data: draftsData, loading: loadingDrafts } = useQuery(MyAppDraftsQry, {
+  const {
+    data: draftsData,
+    loading: loadingDrafts,
+    refetch: refetchAppDrafts,
+  } = useQuery(MyAppDraftsQry, {
     fetchPolicy: 'network-only',
   });
-  const { data: appsData, loading: loadingApps } = useQuery(MyAppsQry, {
+  const {
+    data: appsData,
+    loading: loadingApps,
+    refetch: refetchApps,
+  } = useQuery(MyAppsQry, {
     fetchPolicy: 'network-only',
   });
 
@@ -31,23 +40,37 @@ const MyApps = () => {
   if (!loadingDrafts && !loadingApps) {
     if (!drafts.length && !apps.length) {
       draftsAndAppsList = (
-        <Text color="gray.500" fontSize="lg" mt={16}>
-          Looks like you do not have apps yet. Submit one!
-        </Text>
+        <>
+          <Flex justifyContent="center">
+            <Text color="gray.500" fontSize="lg" mt={16}>
+              Looks like you do not have apps yet. Submit one!
+            </Text>
+          </Flex>
+          <Flex justifyContent="center">
+            <Image src="/no-apps.png" width={200} height={200} />
+          </Flex>
+        </>
       );
     } else {
       let draftsList = null;
       if (drafts.length) {
-        draftsList = (
-          <>
-            <Text fontSize="lg" fontWeight="bold" mt={16}>
-              Drafts
-            </Text>
+        const hasSubmittedDraft = drafts.find((d) => d.status.key === 'submitted');
+        let draftsInfo = null;
+        if (hasSubmittedDraft) {
+          draftsInfo = (
             <Alert status="info" mt={4}>
               <AlertIcon />
               Submitted apps are pending the approval of a TechHustlers PH admin. Expect an e-mail
               from us very soon!
             </Alert>
+          );
+        }
+        draftsList = (
+          <>
+            <Text fontSize="xl" fontWeight="bold" mt={16}>
+              Drafts
+            </Text>
+            {draftsInfo}
             <Box mt={8}>
               {drafts.map((d) => (
                 <div className="app-item">
@@ -63,13 +86,13 @@ const MyApps = () => {
       if (apps.length) {
         appsList = (
           <>
-            <Text fontSize="lg" fontWeight="bold" mt={16}>
+            <Text fontSize="xl" fontWeight="bold" mt={16}>
               Published
             </Text>
             <Box mt={8}>
               {apps.map((a) => (
-                <div className="app-item">
-                  <App app={a} key={a._id} />
+                <div className="app-item" key={a._id}>
+                  <App app={a} refetchApps={refetchApps} refetchAppDrafts={refetchAppDrafts} />
                 </div>
               ))}
             </Box>

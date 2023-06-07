@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useMutation } from '@apollo/client';
 import useStores from 'core/stores/useStores';
 import {
+  Box,
   Button,
   ButtonGroup,
   IconButton,
@@ -16,10 +17,12 @@ import {
   PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
+  Skeleton,
   useToast,
 } from '@chakra-ui/react';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import DeleteAppDraftBannerImgMtn from 'mods/website/profile/gql/DeleteAppDraftBannerImgMtn';
 import UploadImage from './UploadImage';
 import AddAppDraftBannerImgMtn from '../../../gql/AddAppDraftBannerImgMtn';
 import UpdateAppDraftBannerImgsOrderMtn from '../../../gql/UpdateAppDraftBannerImgsOrderMtn';
@@ -49,6 +52,13 @@ const Wrapper = styled.div`
       align-items: center;
     }
   }
+
+  .loading-banner-img {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.25rem;
+  }
 `;
 
 const BannerImgsUpload = ({ app, refetch }) => {
@@ -58,8 +68,10 @@ const BannerImgsUpload = ({ app, refetch }) => {
 
   const [bannerImgs, setBannerImgs] = useState(app.bannerImgs || []);
   const [imgIdWithOpenDeletePopover, setImgIdWithOpenDeletePopover] = useState('');
+  const [isLoadingBannerImg, setIsLoadingBannerImg] = useState(false);
 
   const [addAppDraftBannerImg] = useMutation(AddAppDraftBannerImgMtn);
+  const [deleteAppDraftBannerImg] = useMutation(DeleteAppDraftBannerImgMtn);
   const [updateAppDraftBannerImgsOrder] = useMutation(UpdateAppDraftBannerImgsOrderMtn);
 
   const handleOpenDeletePopover = (imgId) => setImgIdWithOpenDeletePopover(imgId);
@@ -67,6 +79,7 @@ const BannerImgsUpload = ({ app, refetch }) => {
   const handleCloseDeletePopover = () => setImgIdWithOpenDeletePopover('');
 
   const handleSubmitBannerImg = async (src, filename, type) => {
+    setIsLoadingBannerImg(true);
     const file = await dataUrltoFile(src, filename, type);
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
@@ -81,18 +94,21 @@ const BannerImgsUpload = ({ app, refetch }) => {
     const input = { appId: app.appId, file };
     try {
       const result = await addAppDraftBannerImg({ variables: { input } });
-      setBannerImgs((imgs) => [
-        ...imgs,
-        {
-          _id: result.data.addAppDraftBannerImg._id,
-          image: {
-            large: src,
-            thumbnail: src,
-          },
-          order: imgs.length,
-        },
-      ]);
       refetch();
+      setTimeout(() => {
+        setIsLoadingBannerImg(false);
+        setBannerImgs((imgs) => [
+          ...imgs,
+          {
+            _id: result.data.addAppDraftBannerImg._id,
+            image: {
+              large: src,
+              thumbnail: src,
+            },
+            order: imgs.length,
+          },
+        ]);
+      }, 3000);
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
@@ -110,6 +126,18 @@ const BannerImgsUpload = ({ app, refetch }) => {
       onSubmit: (newSrc) => handleSubmitBannerImg(newSrc, file.name, file.type),
       type: file.type,
     });
+  };
+
+  const handleClickDeleteBannerImg = async (imgId) => {
+    try {
+      const input = { appId: app.appId, bannerImgId: imgId };
+      await deleteAppDraftBannerImg({ variables: { input } });
+      refetch();
+      setBannerImgs((imgs) => imgs.filter((img) => img._id !== imgId));
+    } catch (error) {
+      toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
+    }
+    handleCloseDeletePopover();
   };
 
   const handleDragEnd = useCallback(
@@ -153,6 +181,17 @@ const BannerImgsUpload = ({ app, refetch }) => {
     },
     [bannerImgs],
   );
+
+  let loadingBannerImgComp = null;
+  if (isLoadingBannerImg) {
+    loadingBannerImgComp = (
+      <div className="loading-banner-img">
+        <Skeleton width="88px">
+          <Box width="88px" height="88px" />
+        </Skeleton>
+      </div>
+    );
+  }
 
   let bannerImgsList = null;
 
@@ -202,7 +241,10 @@ const BannerImgsUpload = ({ app, refetch }) => {
                                   <Button variant="outline" onClick={handleCloseDeletePopover}>
                                     Cancel
                                   </Button>
-                                  <Button colorScheme="red" onClick={() => undefined}>
+                                  <Button
+                                    colorScheme="red"
+                                    onClick={() => handleClickDeleteBannerImg(bImg._id)}
+                                  >
                                     Continue
                                   </Button>
                                 </ButtonGroup>
@@ -231,6 +273,7 @@ const BannerImgsUpload = ({ app, refetch }) => {
         uploadText="Upload (1980px or less by 1080px)"
       />
       {bannerImgsList}
+      {loadingBannerImgComp}
     </Wrapper>
   );
 };

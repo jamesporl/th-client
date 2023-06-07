@@ -35,13 +35,13 @@ const Preview = ({ app, onSubmitToServer }) => {
     <Wrapper>
       <Flex justifyContent="flex-end" alignItems="flex-end" flexDirection="column" mb={12}>
         <Button
-          colorScheme="blue"
+          colorScheme="green"
           onClick={handleClickSubmit}
           isLoading={isSubmitting}
           size="lg"
           width="280px"
         >
-          Submit
+          SUBMIT
         </Button>
         <Box width="280px" textAlign="center" mt={2}>
           <Text color="gray.400" fontSize="sm">
