@@ -74,7 +74,12 @@ const MyApps = () => {
             <Box mt={8}>
               {drafts.map((d) => (
                 <div className="app-item">
-                  <AppDraft appDraft={d} key={d._id} className="app-item" />
+                  <AppDraft
+                    appDraft={d}
+                    key={d._id}
+                    refetchAppDrafts={refetchAppDrafts}
+                    className="app-item"
+                  />
                 </div>
               ))}
             </Box>
@@ -87,7 +92,7 @@ const MyApps = () => {
         appsList = (
           <>
             <Text fontSize="xl" fontWeight="bold" mt={16}>
-              Published
+              Published / Unpublished
             </Text>
             <Box mt={8}>
               {apps.map((a) => (

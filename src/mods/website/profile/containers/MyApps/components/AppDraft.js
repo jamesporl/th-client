@@ -17,10 +17,13 @@ import PropTypes from 'prop-types';
 import AppHeader from 'mods/website/profile/components/AppHeader';
 import AppDraftStatusTag from 'mods/website/profile/components/AppDraftStatusTag';
 import UndoSubmitAppDraftMtn from 'mods/website/profile/gql/UndoSubmitAppDraftMtn';
+import useStores from 'core/stores/useStores';
 
-const AppDraft = ({ appDraft }) => {
+const AppDraft = ({ appDraft, refetchAppDrafts }) => {
   const router = useRouter();
   const toast = useToast();
+
+  const { uiStore } = useStores();
 
   const [undoSubmitAppDraft] = useMutation(UndoSubmitAppDraftMtn);
 
@@ -34,6 +37,13 @@ const AppDraft = ({ appDraft }) => {
     } catch (error) {
       toast({ position: 'top', status: 'error', variant: 'subtle', description: error.message });
     }
+  };
+
+  const handleClickDelete = () => {
+    uiStore.openGlobalModal('confirmDeleteAppDraft', 'Please confirm', {
+      appDraft,
+      refetchAppDrafts,
+    });
   };
 
   const menuItems = [];
@@ -51,7 +61,11 @@ const AppDraft = ({ appDraft }) => {
     );
   }
   menuItems.push(<MenuDivider />);
-  menuItems.push(<MenuItem icon={<DeleteOutlined />}>Delete</MenuItem>);
+  menuItems.push(
+    <MenuItem icon={<DeleteOutlined />} color="red" onClick={handleClickDelete}>
+      Delete
+    </MenuItem>,
+  );
 
   return (
     <Flex
@@ -79,6 +93,7 @@ const AppDraft = ({ appDraft }) => {
 
 AppDraft.propTypes = {
   appDraft: PropTypes.object.isRequired,
+  refetchAppDrafts: PropTypes.func.isRequired,
 };
 
 export default AppDraft;
