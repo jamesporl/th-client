@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { MessageOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MessageOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -22,7 +22,13 @@ import moment from 'moment';
 import useStores from 'core/stores/useStores';
 import SupportComment from './SupportComment';
 
-const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
+const CommentContent = ({
+  app,
+  comment,
+  onClickReply,
+  onClickPinComment,
+  onClickDeleteComment,
+}) => {
   const { authStore } = useStores();
 
   const otherMenuItems = [];
@@ -34,6 +40,14 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
     otherMenuItems.push(
       <MenuItem icon={<PushpinOutlined />} onClick={onClickPinComment}>
         {togglePinText}
+      </MenuItem>,
+    );
+  }
+
+  if (comment.createdBy._id === authStore.myProfile?._id) {
+    otherMenuItems.push(
+      <MenuItem icon={<DeleteOutlined />} onClick={onClickDeleteComment} color="red">
+        Delete
       </MenuItem>,
     );
   }
@@ -85,13 +99,13 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
         size="xs"
       >
         <MessageOutlined style={{ fontSize: 16 }} />
-        <Text ml={2}>Reply</Text>
+        <Text ml={1}>Reply</Text>
       </Button>
     );
   }
 
   return (
-    <Flex mt={4} w="100%">
+    <Flex mt={2} w="100%">
       <Flex mr={comment.isParent ? 4 : 8} mt={2}>
         <Avatar name={comment.createdBy?.firstName} src={comment.createdBy?.image} size="sm" />
       </Flex>
@@ -113,7 +127,7 @@ const CommentContent = ({ app, comment, onClickReply, onClickPinComment }) => {
             __html: comment.htmlContent,
           }}
         />
-        <HStack spacing={8} mt={2}>
+        <HStack spacing={4} mt={2}>
           <SupportComment
             commentId={comment._id}
             isSupported={comment.isSupported}
@@ -131,11 +145,13 @@ CommentContent.propTypes = {
   app: PropTypes.object.isRequired,
   comment: PropTypes.object.isRequired,
   onClickReply: PropTypes.func,
+  onClickDeleteComment: PropTypes.func,
   onClickPinComment: PropTypes.func,
 };
 
 CommentContent.defaultProps = {
   onClickReply: () => undefined,
+  onClickDeleteComment: () => undefined,
   onClickPinComment: () => undefined,
 };
 

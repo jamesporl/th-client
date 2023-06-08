@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { createEditor } from 'slate';
+import React, { useImperativeHandle, useMemo } from 'react';
+import { createEditor, Transforms, Editor } from 'slate';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Slate, Editable, withReact } from 'slate-react';
@@ -31,7 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const THEditor = (props) => {
-  const { initialValue, onChange, minHeight, placeholder } = props;
+  const { initialValue, onChange, minHeight, placeholder, editorRef } = props;
 
   const editor = useMemo(() => withCustomPlugins(withHistory(withReact(createEditor()))), []);
 
@@ -46,6 +46,21 @@ const THEditor = (props) => {
       }
     }
   };
+
+  useImperativeHandle(
+    editorRef,
+    () => ({
+      resetEditor: () => {
+        Transforms.delete(editor, {
+          at: {
+            anchor: Editor.start(editor, []),
+            focus: Editor.end(editor, []),
+          },
+        });
+      },
+    }),
+    [editor],
+  );
 
   return (
     <Wrapper minHeight={minHeight}>
@@ -70,6 +85,7 @@ THEditor.propTypes = {
   initialValue: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  editorRef: PropTypes.func.isRequired,
 };
 
 THEditor.defaultProps = {
