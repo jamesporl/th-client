@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Heading, Flex, Box, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
@@ -29,6 +29,9 @@ const Wrapper = styled.div`
 
 const EditApp = () => {
   const router = useRouter();
+
+  const editorRef = useRef(null);
+
   const { appId } = router.query;
   const { activeStep, setStep, nextStep, prevStep } = useSteps({
     initialStep: 0,
@@ -163,6 +166,7 @@ const EditApp = () => {
         onChange={handleChangeDesc}
         initialValue={initialDesc}
         placeholder="A good app description will take you far"
+        ref={editorRef}
       />
     );
   }
