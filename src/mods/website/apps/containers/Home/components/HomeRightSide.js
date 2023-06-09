@@ -52,10 +52,10 @@ const HomeRightSide = () => {
         <Text fontWeight="700" color="green.500" fontSize="lg" mt={12}>
           Be discovered.
         </Text>
-        <Text fontWeight="700" color="red.300" fontSize="lg" mt={4}>
+        <Text fontWeight="700" color="green.500" fontSize="lg" mt={2}>
           Receive feedback.
         </Text>
-        <Text fontWeight="700" color="yellow.500" fontSize="lg" mt={4}>
+        <Text fontWeight="700" color="green.500" fontSize="lg" mt={2}>
           Get inspired.
         </Text>
         <Text fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px" mt={12}>
