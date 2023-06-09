@@ -37,8 +37,7 @@ const Wrapper = styled.div`
   .about-hero {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(0, -50%);
     z-index: 2;
   }
 
@@ -71,6 +70,15 @@ const AboutUs = () => {
     { base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
     { fallback: 'md' },
   );
+  const mainLine1FontSize = useBreakpointValue({ base: '7xl', xl: '8xl' }, { fallback: 'md' });
+  const mainLine2FontSize = useBreakpointValue({ base: '6xl', xl: '7xl' }, { fallback: 'md' });
+  const aboutHeroPl = useBreakpointValue(
+    { base: '0.5rem', md: '1rem', lg: '2rem', xl: '2rem' },
+    { fallback: 'md' },
+  );
+  const aboutHeroTextAlign = useBreakpointValue({ base: 'center', md: 'left' }, { fallback: 'md' });
+  const ctaJc = useBreakpointValue({ base: 'center', md: 'flex-start' }, { fallback: 'md' });
+
   return (
     <Wrapper>
       <WebsiteNavbar />
@@ -80,25 +88,24 @@ const AboutUs = () => {
       </Head>
       <div className="about-hero-container">
         <div className="about-hero-bg" />
-        <div className="about-hero">
-          <Flex justifyContent="center" alignItems="center" flexDir="column">
+        <Box className="about-hero" pl={aboutHeroPl} textAlign={aboutHeroTextAlign}>
+          <Flex flexDir="column">
             <Text
-              fontSize="7xl"
+              fontSize={mainLine1FontSize}
               fontWeight="extrabold"
               mt={8}
-              color="yellow.400"
+              color="blackAlpha.900"
               as="span"
-              align="center"
             >
               Local Tech Products
             </Text>
-            <Text fontSize="5xl" fontWeight="extrabold" color="yellow.400" align="center">
+            <Text fontSize={mainLine2FontSize} fontWeight="extrabold" color="blackAlpha.900">
               in one place
             </Text>
-            <Text fontSize="2xl" color="white" mt={8} align="center">
+            <Text fontSize="2xl" color="blackAlpha.800" mt={8}>
               See new apps and upcoming startups in the growing tech scene of the Philippines
             </Text>
-            <HStack spacing={4} mt={8}>
+            <HStack spacing={4} mt={8} justifyContent={ctaJc}>
               <NextLink href="/account/login" passHref legacyBehavior>
                 <Button size="lg" colorScheme="blue">
                   Join our Community
@@ -111,9 +118,9 @@ const AboutUs = () => {
               </NextLink>
             </HStack>
           </Flex>
-        </div>
+        </Box>
       </div>
-      <div className="features-container">
+      <Box backgroundColor="green.500">
         <div className="content-container">
           <div className="child-container">
             <Box textAlign="center" pt={16} pb={16} color="white">
@@ -170,7 +177,7 @@ const AboutUs = () => {
             </Box>
           </div>
         </div>
-      </div>
+      </Box>
       <div className="content-container">
         <div className="child-container">
           <Box mt={32}>
