@@ -1,17 +1,9 @@
 /* eslint-disable no-await-in-loop */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import {
-  Box,
-  Flex,
-  HStack,
-  Heading,
-  Icon,
-  Select,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/react';
+import { Box, Flex, HStack, Heading, Icon, Select, Text } from '@chakra-ui/react';
 import momentTz from 'moment-timezone';
 import { useQuery } from '@apollo/client';
+import styled from 'styled-components';
 import { SortAscendingOutlined } from '@ant-design/icons';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppsQry from '../../gql/AppsQry';
@@ -19,6 +11,28 @@ import App from './components/App';
 import AppsByMonth, { APPS_PAGE_SIZE } from './components/AppsByMonth';
 import AppSkeleton from './components/AppSkeleton';
 import HomeRightSide from './components/HomeRightSide';
+
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+
+  .this-platform-md {
+    display: flex;
+    width: 100%;
+
+    @media only screen and (min-width: 992px) {
+      display: none;
+    }
+  }
+
+  .this-platform-lg {
+    display: none;
+
+    @media only screen and (min-width: 992px) {
+      display: flex;
+    }
+  }
+`;
 
 const Home = () => {
   const observerTarget = useRef(null);
@@ -170,11 +184,6 @@ const Home = () => {
     };
   }, [observerTarget, loadMoreApps, isLoadingApps, hasMoreApps]);
 
-  const mobilePlatformInfo = useBreakpointValue(
-    { base: <HomeRightSide />, lg: null },
-    { fallback: 'lg' },
-  );
-
   let featuredAppsComp = null;
 
   if (fAppsData?.apps.nodes.length) {
@@ -219,7 +228,7 @@ const Home = () => {
 
   return (
     <WebsiteLayout>
-      <Box width="100%">
+      <Wrapper>
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
             <Heading
@@ -234,7 +243,9 @@ const Home = () => {
             </Heading>
             <Box width="100%">
               {featuredAppsComp}
-              {mobilePlatformInfo}
+              <div className="this-platform-md">
+                <HomeRightSide />
+              </div>
               <Flex justifyContent="center" mt={8}>
                 <HStack spacing={4}>
                   <Text>
@@ -256,9 +267,11 @@ const Home = () => {
               <div ref={observerTarget} />
             </Box>
           </Box>
-          {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
+          <div className="this-platform-lg">
+            <HomeRightSide />
+          </div>
         </Flex>
-      </Box>
+      </Wrapper>
     </WebsiteLayout>
   );
 };
