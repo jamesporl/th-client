@@ -1,10 +1,18 @@
 import React from 'react';
 import NextLink from 'next/link';
 import { observer } from 'mobx-react';
-import { Box, Flex, Button, Text, useBreakpointValue } from '@chakra-ui/react';
+import styled from 'styled-components';
+import { Box, Flex, Button, Text } from '@chakra-ui/react';
 import useStores from 'core/stores/useStores';
 import useClickSubmitAnApp from 'mods/website/hooks/useClickSubmitAnApp';
 import Image from 'next/image';
+
+const Wrapper = styled.div`
+  @media only screen and (min-width: 992px) {
+    margin-left: 4rem;
+    width: 350px;
+  }
+`;
 
 const HomeRightSide = () => {
   const { authStore } = useStores();
@@ -31,11 +39,8 @@ const HomeRightSide = () => {
     );
   }
 
-  const containerMaxWidth = useBreakpointValue({ base: 'none', lg: '350px' }, { fallback: 'lg' });
-  const containerML = useBreakpointValue({ base: 'none', lg: '4rem' }, { fallback: 'lg' });
-
   return (
-    <Box flexGrow="1" ml={containerML} maxWidth={containerMaxWidth}>
+    <Wrapper>
       <Box padding={4} borderRadius={8} backgroundColor="gray.100">
         <Text fontWeight="700" color="blue.600" fontSize="2xl" letterSpacing="1px">
           This Platform
@@ -77,7 +82,7 @@ const HomeRightSide = () => {
           </Button>
         </Box>
       </Box>
-    </Box>
+    </Wrapper>
   );
 };
 

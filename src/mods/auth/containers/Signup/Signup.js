@@ -128,7 +128,7 @@ const Signup = () => {
               <div className="terms">
                 <small>
                   By continuing, you agree to our
-                  <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+                  <a href="/site/terms-and-conditions" target="_blank" rel="noopener noreferrer">
                     Terms and Conditions.
                   </a>
                 </small>
