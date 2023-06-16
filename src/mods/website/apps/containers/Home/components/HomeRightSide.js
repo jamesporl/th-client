@@ -46,7 +46,7 @@ const HomeRightSide = () => {
           This Platform
         </Text>
         <Flex justifyContent="center" mt={6}>
-          <Image src="/community.png" width={200} height={200} />
+          <Image src="/community.png" width={200} height={200} alt="community" />
         </Flex>
         <Text mt={6} color="gray.600" fontSize="sm">
           TechHustlers PH is a community that aims to promote tech products built for Filipinos.

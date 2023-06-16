@@ -12,7 +12,6 @@ import {
   AccordionPanel,
   AccordionItem,
   Accordion,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import Head from 'next/head';
@@ -39,6 +38,41 @@ const Wrapper = styled.div`
     top: 50%;
     transform: translate(0, -50%);
     z-index: 2;
+    text-align: center;
+    padding: 0 0.5rem;
+
+    @media only screen and (min-width: 768px) {
+      text-align: left;
+      padding: 0 1rem;
+    }
+
+    @media only screen and (min-width: 992px) {
+      padding: 0 2rem;
+    }
+
+    .main-line-1 {
+      font-size: 4.5rem;
+
+      @media only screen and (min-width: 992px) {
+        font-size: 6rem;
+      }
+    }
+
+    .main-line-2 {
+      font-size: 3.5rem;
+
+      @media only screen and (min-width: 992px) {
+        font-size: 4.5rem;
+      }
+    }
+
+    .cta {
+      justify-content: center;
+
+      @media only screen and (min-width: 768px) {
+        justify-content: flex-start;
+      }
+    }
   }
 
   .features-container {
@@ -62,22 +96,18 @@ const Wrapper = styled.div`
     margin: revert;
     padding: revert;
   }
+
+  .features-grid {
+    grid-template-columns: repeat(1, 1fr);
+
+    @media only screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 `;
 
 const AboutUs = () => {
   const baseUrl = `${process.env.NEXT_PUBLIC_TH_CLIENT_BASE_URL}`;
-  const featsContainerCols = useBreakpointValue(
-    { base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' },
-    { fallback: 'md' },
-  );
-  const mainLine1FontSize = useBreakpointValue({ base: '7xl', xl: '8xl' }, { fallback: 'md' });
-  const mainLine2FontSize = useBreakpointValue({ base: '6xl', xl: '7xl' }, { fallback: 'md' });
-  const aboutHeroPl = useBreakpointValue(
-    { base: '0.5rem', md: '1rem', lg: '2rem', xl: '2rem' },
-    { fallback: 'md' },
-  );
-  const aboutHeroTextAlign = useBreakpointValue({ base: 'center', md: 'left' }, { fallback: 'md' });
-  const ctaJc = useBreakpointValue({ base: 'center', md: 'flex-start' }, { fallback: 'md' });
 
   return (
     <Wrapper>
@@ -88,10 +118,10 @@ const AboutUs = () => {
       </Head>
       <div className="about-hero-container">
         <div className="about-hero-bg" />
-        <Box className="about-hero" pl={aboutHeroPl} textAlign={aboutHeroTextAlign}>
+        <Box className="about-hero">
           <Flex flexDir="column">
             <Text
-              fontSize={mainLine1FontSize}
+              className="main-line-1"
               fontWeight="extrabold"
               mt={8}
               color="blackAlpha.900"
@@ -99,13 +129,13 @@ const AboutUs = () => {
             >
               Local Tech Products
             </Text>
-            <Text fontSize={mainLine2FontSize} fontWeight="extrabold" color="blackAlpha.900">
+            <Text className="main-line-2" fontWeight="extrabold" color="blackAlpha.900">
               in one place
             </Text>
             <Text fontSize="2xl" color="blackAlpha.800" mt={8}>
               See new apps and upcoming startups in the growing tech scene of the Philippines
             </Text>
-            <HStack spacing={4} mt={8} justifyContent={ctaJc}>
+            <HStack spacing={4} mt={8} className="cta">
               <NextLink href="/account/login" passHref legacyBehavior>
                 <Button size="lg" colorScheme="blue">
                   Join our Community
@@ -124,7 +154,7 @@ const AboutUs = () => {
         <div className="content-container">
           <div className="child-container">
             <Box textAlign="center" pt={16} pb={16} color="white">
-              <Grid templateColumns={featsContainerCols} gap={6}>
+              <Grid className="features-grid" gap={6}>
                 <GridItem w="100%" textAlign="center">
                   <Flex justifyContent="center" alignItems="center">
                     <Flex textAlign="center" maxWidth="350px" flexDir="column">

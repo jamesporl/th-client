@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { HeartOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
-import { Box, Text, Flex, useBreakpointValue, Heading } from '@chakra-ui/react';
+import { Box, Text, Flex, Heading } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { observer } from 'mobx-react';
@@ -21,15 +21,26 @@ const Wrapper = styled.div`
     border: 1px solid #f0f0f0;
     padding: 1rem;
   }
+
+  .right-col-mobile {
+    display: flex;
+
+    @media only screen and (min-width: 992px) {
+      display: none;
+    }
+  }
+
+  .right-col-desktop {
+    display: none;
+
+    @media only screen and (min-width: 992px) {
+      display: block;
+    }
+  }
 `;
 
 const AppDetails = ({ app, isPreview }) => {
   const { uiStore } = useStores();
-  const rightColDisplay = useBreakpointValue({ base: 'none', lg: 'block' }, { fallback: 'lg' });
-  const rightColDisplayRev = useBreakpointValue({ base: 'flex', lg: 'none' }, { fallback: 'lg' });
-
-  // const [supportsCount, setSupportsCount] = useState(isPreview ? 10 : app.supportsCount);
-  // const [isSupported, setIsSupported] = useState(isPreview ? true : app.isSupported);
 
   useEffect(() => {
     if (!isPreview) {
@@ -122,12 +133,12 @@ const AppDetails = ({ app, isPreview }) => {
               </EditorContentDisplayWrapper>
             </Box>
             {supportsComp}
-            <Flex justifyContent="center" style={{ display: rightColDisplayRev }} mt={6}>
+            <Flex justifyContent="center" className="right-col-mobile" mt={6}>
               <AppRightCol app={app} />
             </Flex>
             {commentsSection}
           </Box>
-          <Box flexGrow="1" ml="4rem" style={{ display: rightColDisplay }} width="350px">
+          <Box flexGrow="1" ml="4rem" className="right-col-desktop" width="350px">
             <AppRightCol app={app} />
           </Box>
         </Flex>

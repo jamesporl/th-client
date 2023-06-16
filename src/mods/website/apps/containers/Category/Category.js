@@ -9,7 +9,6 @@ import {
   Icon,
   Select,
   Text,
-  useBreakpointValue,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -18,6 +17,7 @@ import { useQuery } from '@apollo/client';
 import AppTagQry from 'mods/website/profile/gql/AppTagQry';
 import { SortAscendingOutlined } from '@ant-design/icons';
 import Head from 'next/head';
+import styled from 'styled-components';
 import getPageTitle from 'core/utils/getPageTitle';
 import Image from 'next/image';
 import HomeRightSide from '../Home/components/HomeRightSide';
@@ -26,6 +26,36 @@ import AppsQry from '../../gql/AppsQry';
 import App from '../Home/components/App';
 
 export const CAT_PAGE_APPS_PAGE_SIZE = 12;
+
+const Wrapper = styled.div`
+  width: 100%;
+
+  .this-platform-mobile {
+    display: flex;
+    width: 100%;
+
+    @media only screen and (min-width: 992px) {
+      display: none;
+    }
+  }
+
+  .this-platform-desktop {
+    display: none;
+
+    @media only screen and (min-width: 992px) {
+      display: flex;
+    }
+  }
+
+  .vertical-item {
+    &.group {
+      margin-top: 2rem;
+    }
+    &.app {
+      margin-top: 1.5rem;
+    }
+  }
+`;
 
 const Category = () => {
   const observerTarget = useRef(null);
@@ -91,19 +121,27 @@ const Category = () => {
   if (isLoadingApps) {
     appsloadingComp = (
       <>
-        <AppSkeleton />
-        <AppSkeleton />
-        <AppSkeleton />
+        <div className="vertical-item-app">
+          <AppSkeleton />
+        </div>
+        <div className="vertical-item-app">
+          <AppSkeleton />
+        </div>
+        <div className="vertical-item-app">
+          <AppSkeleton />
+        </div>
       </>
     );
   }
 
   let appItems = (
-    <Box mt={6}>
+    <>
       {apps.map((app) => (
-        <App key={app._id} app={app} />
+        <div className="vertical-item app" key={app._id}>
+          <App app={app} />
+        </div>
       ))}
-    </Box>
+    </>
   );
 
   if (!apps.length && !isLoadingApps && !hasMoreApps) {
@@ -115,7 +153,7 @@ const Category = () => {
           </Text>
         </Box>
         <Flex justifyContent="center" width="100%">
-          <Image src="/no-apps.png" width={300} height={300} />
+          <Image src="/no-apps.png" width={300} height={300} alt="no-apps" />
         </Flex>
       </>
     );
@@ -152,28 +190,18 @@ const Category = () => {
   let featuredAppsComp = null;
   if (fAppsData && fAppsData.apps.nodes.length) {
     featuredAppsComp = (
-      <>
-        <Text mt={10} mb={6} fontSize="xl" fontWeight="500">
+      <div className="vertical-item group">
+        <Text fontSize="xl" fontWeight="500">
           Featured
         </Text>
         {fAppsData.apps.nodes.map((app) => (
-          <App key={app._id} app={app} />
+          <div className="vertical-item app" key={app._id}>
+            <App app={app} />
+          </div>
         ))}
-      </>
+      </div>
     );
   }
-
-  const mobilePlatformInfo = useBreakpointValue(
-    {
-      base: (
-        <Box mt={6}>
-          <HomeRightSide />
-        </Box>
-      ),
-      lg: null,
-    },
-    { fallback: 'lg' },
-  );
 
   return (
     <WebsiteLayout>
@@ -182,7 +210,7 @@ const Category = () => {
         <meta name="og:url" key="og:url" content={`${baseUrl}/categories/${slug}`} />
         <meta name="og:title" key="og:title" content={getPageTitle(title)} />
       </Head>
-      <Box width="100%">
+      <Wrapper>
         <Flex width="100%" justifyContent="space-between">
           <Box width="100%">
             <Box mb={4}>
@@ -203,8 +231,10 @@ const Category = () => {
             </Heading>
             <Box width="100%">
               {featuredAppsComp}
-              {mobilePlatformInfo}
-              <Flex justifyContent="center" mt={8}>
+              <div className="vertical-item group this-platform-mobile">
+                <HomeRightSide />
+              </div>
+              <Flex justifyContent="center" className="vertical-item group">
                 <HStack spacing={4}>
                   <Text>
                     <Icon as={SortAscendingOutlined} /> Browse by
@@ -226,9 +256,11 @@ const Category = () => {
               <div ref={observerTarget} />
             </Box>
           </Box>
-          {useBreakpointValue({ base: null, lg: <HomeRightSide /> }, { fallback: 'lg' })}
+          <div className="this-platform-desktop">
+            <HomeRightSide />
+          </div>
         </Flex>
-      </Box>
+      </Wrapper>
     </WebsiteLayout>
   );
 };

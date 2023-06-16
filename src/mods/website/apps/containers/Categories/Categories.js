@@ -13,18 +13,38 @@ import {
   Input,
   InputRightElement,
   Icon,
-  useBreakpointValue,
   Breadcrumb,
   BreadcrumbItem,
 } from '@chakra-ui/react';
 import debounce from 'lodash/debounce';
 import NextLink from 'next/link';
 import Head from 'next/head';
+import styled from 'styled-components';
 import { useQuery } from '@apollo/client';
 import { SearchOutlined } from '@ant-design/icons';
 import getPageTitle from 'core/utils/getPageTitle';
 import WebsiteLayout from 'mods/website/components/WebsiteLayout';
 import AppTagsQry from 'mods/website/profile/gql/AppTagsQry';
+
+const Wrapper = styled.div`
+  .categories-grid {
+    grid-template-columns: repeat(1, 1fr);
+
+    @media only screen and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media only screen and (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .tag-item-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
 
 const Categories = () => {
   const [searchString, setSearchString] = useState('');
@@ -68,7 +88,9 @@ const Categories = () => {
               />
               <Stack>
                 <CardBody>
-                  <Heading size="md">{t.name}</Heading>
+                  <Heading size="md" className="tag-item-name" c>
+                    {t.name}
+                  </Heading>
                   <Text py="2">{`${t.appsCount} ${appsText}`}</Text>
                 </CardBody>
               </Stack>
@@ -79,11 +101,6 @@ const Categories = () => {
     });
   }
 
-  const gridTemplateCols = useBreakpointValue(
-    { base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
-    { fallback: 'md' },
-  );
-
   return (
     <WebsiteLayout>
       <Head>
@@ -91,7 +108,7 @@ const Categories = () => {
         <meta name="og:url" key="og:url" content={`${baseUrl}/categories`} />
         <meta name="og:title" key="og:title" content={getPageTitle('Categories')} />
       </Head>
-      <div>
+      <Wrapper>
         <Box mb={4}>
           <Breadcrumb fontSize="sm">
             <BreadcrumbItem>
@@ -115,10 +132,10 @@ const Categories = () => {
           <InputRightElement children={<Icon as={SearchOutlined} />} />
         </InputGroup>
         <Box mt={16} />
-        <Grid templateColumns={gridTemplateCols} gap={4}>
+        <Grid className="categories-grid" gap={4}>
           {tagItems}
         </Grid>
-      </div>
+      </Wrapper>
     </WebsiteLayout>
   );
 };

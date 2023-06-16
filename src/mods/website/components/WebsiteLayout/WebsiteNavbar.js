@@ -16,7 +16,6 @@ import {
   MenuDivider,
   MenuButton,
   useDisclosure,
-  useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
 import {
@@ -43,6 +42,38 @@ const Wrapper = styled.div`
 
     .nav-container {
       width: 100%;
+    }
+  }
+
+  .logo-image-desktop {
+    display: none;
+
+    @media only screen and (min-width: 768px) {
+      display: block;
+    }
+  }
+
+  .logo-image-mobile {
+    display: block;
+
+    @media only screen and (min-width: 768px) {
+      display: none;
+    }
+  }
+
+  .right-nav-desktop {
+    display: none;
+
+    @media only screen and (min-width: 992px) {
+      display: block;
+    }
+  }
+
+  .right-nav-mobile {
+    display: block;
+
+    @media only screen and (min-width: 992px) {
+      display: none;
     }
   }
 `;
@@ -150,7 +181,7 @@ const WebsiteNavbar = () => {
   }
 
   const desktopRightNav = (
-    <HStack spacing="1rem">
+    <HStack spacing="1rem" className="right-nav-desktop">
       {categoriesBtn}
       {aboutUsBtn}
       {loginDesktopBtn}
@@ -160,7 +191,7 @@ const WebsiteNavbar = () => {
   );
 
   const mobileRightNavBtn = (
-    <HStack spacing="0.5rem">
+    <HStack spacing="0.5rem" className="right-nav-mobile">
       <IconButton
         onClick={onToggleMobileNav}
         icon={<MenuOutlined />}
@@ -186,14 +217,16 @@ const WebsiteNavbar = () => {
       >
         <Flex alignItems="center" justifyContent="space-between" className="nav-container">
           <Flex alignItems="center" mr={8} flexGrow={1}>
-            <NextLink href="/" as="/" passHref legacyBehavior>
-              <a>
-                {useBreakpointValue(
-                  { base: mobileLogoImg, md: desktopLogoImg },
-                  { fallback: 'md' },
-                )}
-              </a>
-            </NextLink>
+            <div className="logo-image-desktop">
+              <NextLink href="/" as="/" passHref legacyBehavior>
+                <a>{desktopLogoImg}</a>
+              </NextLink>
+            </div>
+            <div className="logo-image-mobile">
+              <NextLink href="/" as="/" passHref legacyBehavior>
+                <a>{mobileLogoImg}</a>
+              </NextLink>
+            </div>
             <Box ml={8} flexGrow={1}>
               <InputGroup>
                 <InputLeftElement
@@ -210,15 +243,9 @@ const WebsiteNavbar = () => {
               </InputGroup>
             </Box>
           </Flex>
-          <Flex
-            alignItems="center"
-            justifyContent="flex-end"
-            ml={useBreakpointValue({ base: 2, md: 8 }, { fallback: 'md' })}
-          >
-            {useBreakpointValue(
-              { base: mobileRightNavBtn, md: desktopRightNav },
-              { fallback: 'md' },
-            )}
+          <Flex alignItems="center" justifyContent="flex-end" className="right-nav">
+            {desktopRightNav}
+            {mobileRightNavBtn}
           </Flex>
         </Flex>
       </Flex>
@@ -234,7 +261,7 @@ const WebsiteNavbar = () => {
           zIndex: 10,
         }}
       >
-        <VStack p={4} display={{ md: 'none' }}>
+        <VStack p={4} display={{ lg: 'none' }}>
           <Box>{categoriesBtn}</Box>
           <Box>{aboutUsBtn}</Box>
           {loginMobileBtn}
