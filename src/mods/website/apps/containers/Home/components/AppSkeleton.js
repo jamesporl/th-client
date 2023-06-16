@@ -6,10 +6,6 @@ const Wrapper = styled.div`
   border: 1px solid #efefef;
   padding: 2rem 1.5rem;
   border-radius: 0.25rem;
-
-  &:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
 `;
 
 const AppSkeleton = () => (

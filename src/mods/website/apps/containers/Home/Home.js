@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
 
-  .this-platform-md {
+  .this-platform-mobile {
     display: flex;
     width: 100%;
 
@@ -25,11 +25,20 @@ const Wrapper = styled.div`
     }
   }
 
-  .this-platform-lg {
+  .this-platform-desktop {
     display: none;
 
     @media only screen and (min-width: 992px) {
       display: flex;
+    }
+  }
+
+  .vertical-item {
+    &.group {
+      margin-top: 2rem;
+    }
+    &.app {
+      margin-top: 1.5rem;
     }
   }
 `;
@@ -188,14 +197,16 @@ const Home = () => {
 
   if (fAppsData?.apps.nodes.length) {
     featuredAppsComp = (
-      <>
-        <Text mt={10} mb={6} fontSize="xl" fontWeight="500">
+      <div className="vertical-item group">
+        <Text fontSize="xl" fontWeight="500">
           Featured
         </Text>
         {fAppsData.apps.nodes.map((app) => (
-          <App key={app._id} app={app} />
+          <div key={app._id} className="vertical-item app">
+            <App app={app} />
+          </div>
         ))}
-      </>
+      </div>
     );
   }
 
@@ -204,14 +215,16 @@ const Home = () => {
     appItems = appsByMonth.map((m) => <AppsByMonth key={m.month} {...m} />);
   } else if (viewMode === 'random') {
     appItems = (
-      <>
-        <Text mt={6} mb={6} fontSize="xl" fontWeight="500">
+      <div className="vertical-item group">
+        <Text fontSize="xl" fontWeight="500">
           All Apps
         </Text>
         {randomApps.map((app) => (
-          <App key={app._id} app={app} />
+          <div className="vertical-item app" key={app._id}>
+            <App app={app} />
+          </div>
         ))}
-      </>
+      </div>
     );
   }
 
@@ -219,9 +232,15 @@ const Home = () => {
   if (isLoadingApps) {
     appsloadingComp = (
       <>
-        <AppSkeleton />
-        <AppSkeleton />
-        <AppSkeleton />
+        <div className="vertical-item app">
+          <AppSkeleton />
+        </div>
+        <div className="vertical-item app">
+          <AppSkeleton />
+        </div>
+        <div className="vertical-item app">
+          <AppSkeleton />
+        </div>
       </>
     );
   }
@@ -243,10 +262,10 @@ const Home = () => {
             </Heading>
             <Box width="100%">
               {featuredAppsComp}
-              <div className="this-platform-md">
+              <div className="vertical-item group this-platform-mobile">
                 <HomeRightSide />
               </div>
-              <Flex justifyContent="center" mt={8}>
+              <Flex justifyContent="center" className="vertical-item group">
                 <HStack spacing={4}>
                   <Text>
                     <Icon as={SortAscendingOutlined} /> Browse by
@@ -267,7 +286,7 @@ const Home = () => {
               <div ref={observerTarget} />
             </Box>
           </Box>
-          <div className="this-platform-lg">
+          <div className="this-platform-desktop">
             <HomeRightSide />
           </div>
         </Flex>
