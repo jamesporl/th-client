@@ -33,10 +33,14 @@ const Wrapper = styled.div`
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-    width: 400px;
+    width: 90%;
     padding: 3rem 2rem;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background: #fff;
+
+    @media only screen and (min-width: 420px) {
+      width: 400px;
+    }
   }
 
   .auth-btn {

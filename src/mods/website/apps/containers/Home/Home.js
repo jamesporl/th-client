@@ -88,6 +88,7 @@ const Home = () => {
     let startOfMonth = now.clone().startOf('month');
     if (currentAppsByMonth.length) {
       startOfMonth = momentTz(currentAppsByMonth[currentAppsByMonth.length - 1].month)
+        .tz('Asia/Manila')
         .subtract(1, 'days')
         .startOf('month');
     }
@@ -123,6 +124,7 @@ const Home = () => {
         setAppsByMonth(newAppsByMonth);
       }
       if (startOfMonth.isBefore(momentTz('2023-01-01'))) {
+        setAppsByMonth(newAppsByMonth);
         shouldGetMore = false;
         setHasMoreApps(false);
       }
