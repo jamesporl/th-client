@@ -121,13 +121,13 @@ const Category = () => {
   if (isLoadingApps) {
     appsloadingComp = (
       <>
-        <div className="vertical-item-app">
+        <div className="vertical-item app">
           <AppSkeleton />
         </div>
-        <div className="vertical-item-app">
+        <div className="vertical-item app">
           <AppSkeleton />
         </div>
-        <div className="vertical-item-app">
+        <div className="vertical-item app">
           <AppSkeleton />
         </div>
       </>

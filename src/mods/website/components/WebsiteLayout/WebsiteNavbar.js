@@ -76,6 +76,31 @@ const Wrapper = styled.div`
       display: none;
     }
   }
+
+  .search-container-desktop {
+    display: none;
+
+    @media only screen and (min-width: 480px) {
+      margin-left: 2rem;
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+
+  .search-container-mobile {
+    display: flex;
+    margin-left: 1rem;
+    width: 180px;
+
+    @media only screen and (min-width: 480px) {
+      display: none;
+    }
+  }
 `;
 
 const WebsiteNavbar = () => {
@@ -215,8 +240,8 @@ const WebsiteNavbar = () => {
         pr={4}
         className="header"
       >
-        <Flex alignItems="center" justifyContent="space-between" className="nav-container">
-          <Flex alignItems="center" mr={8} flexGrow={1}>
+        <Flex alignItems="center" className="nav-container" justifyContent="space-between">
+          <Flex alignItems="center" flexGrow={1}>
             <div className="logo-image-desktop">
               <NextLink href="/" as="/" passHref legacyBehavior>
                 <a>{desktopLogoImg}</a>
@@ -227,7 +252,7 @@ const WebsiteNavbar = () => {
                 <a>{mobileLogoImg}</a>
               </NextLink>
             </div>
-            <Box ml={8} flexGrow={1}>
+            <div className="search-container-desktop">
               <InputGroup>
                 <InputLeftElement
                   pointerEvents="none"
@@ -235,13 +260,20 @@ const WebsiteNavbar = () => {
                 />
                 <Input
                   placeholder="Search TechHustlers"
-                  size="md"
                   onFocus={handleClickSearch}
-                  w="100%"
-                  maxW={400}
+                  className="search-input"
                 />
               </InputGroup>
-            </Box>
+            </div>
+            <div className="search-container-mobile">
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<SearchOutlined style={{ color: '#ccc' }} />}
+                />
+                <Input placeholder="Search" onFocus={handleClickSearch} className="search-input" />
+              </InputGroup>
+            </div>
           </Flex>
           <Flex alignItems="center" justifyContent="flex-end" className="right-nav">
             {desktopRightNav}
