@@ -35,7 +35,6 @@ const SupportComment = ({
         onClick={handleClickSupport}
         size="xs"
         leftIcon={isSupported ? <HeartFilled /> : <HeartOutlined />}
-        mr={2}
       >
         {supportsCount}
       </AuthButton>

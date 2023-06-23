@@ -27,6 +27,10 @@ const Wrapper = styled.div`
       margin: revert;
       padding: revert;
     }
+
+    span[data-slate-placeholder='true'] {
+      top: 0;
+    }
   }
 `;
 
@@ -62,9 +66,14 @@ const THEditor = (props) => {
     [editor],
   );
 
+  let fInitialValue = DEFAULT_EDITOR_VALUE;
+  if (Array.isArray(initialValue)) {
+    fInitialValue = initialValue;
+  }
+
   return (
     <Wrapper minHeight={minHeight}>
-      <Slate editor={editor} value={initialValue} onChange={onChange}>
+      <Slate editor={editor} value={fInitialValue} onChange={onChange}>
         <Toolbar />
         <div className="editor">
           <Editable

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Heading, Flex, Box, Skeleton, Text } from '@chakra-ui/react';
+import { Button, Heading, Flex, Box, Text, Alert, AlertIcon, Link } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
+import NextLink from 'next/link';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 import set from 'lodash/set';
 import { useRouter } from 'next/router';
@@ -9,6 +10,7 @@ import styled from 'styled-components';
 import { DEFAULT_EDITOR_VALUE } from 'mods/website/components/Editor/_utils';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import getPageTitle from 'core/utils/getPageTitle';
+import Spinner from 'mods/base/components/Spinner';
 import Editor from '../../../components/Editor/Editor';
 import WebsiteLayout from '../../../components/WebsiteLayout';
 import AppDraftQry from '../../gql/AppDraftQry';
@@ -116,8 +118,12 @@ const EditApp = () => {
       tagIds,
       socialUrls,
     };
-    await updateAppDraft({ variables: { input } });
-    refetch();
+    try {
+      await updateAppDraft({ variables: { input } });
+      refetch();
+    } catch (e) {
+      // do nothing for now
+    }
   };
 
   useEffect(() => {
@@ -158,7 +164,7 @@ const EditApp = () => {
     handleSubmitToServer();
   };
 
-  let content = <Skeleton />;
+  let content = <Spinner text="Loading..." />;
   let editorComp = null;
   if (initialDesc) {
     editorComp = (
@@ -170,12 +176,28 @@ const EditApp = () => {
       />
     );
   }
-  if (!loading) {
+  if (!loading && (data || error)) {
     if (error) {
       content = (
         <Heading as="h4" size="sm" color="tomato">
           {error.message}
         </Heading>
+      );
+    } else if (data.appDraft.status.key !== 'inProgress') {
+      content = (
+        <Flex mt={8}>
+          <Alert status="warning" mt={4}>
+            <AlertIcon />
+            This app is in &nbsp;
+            <strong>{data.appDraft.status.label}</strong>
+            &nbsp;status and cannot be edited at the moment. Please check the status of your
+            submissions in &#x1F449;&nbsp;
+            <NextLink href="/my/apps">
+              <Link style={{ textDecoration: 'underline' }}>this page</Link>
+            </NextLink>
+            .
+          </Alert>
+        </Flex>
       );
     } else {
       content = (
