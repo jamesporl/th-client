@@ -15,8 +15,10 @@ const Wrapper = styled.div`
 
 const THSpinner = ({ text }) => (
   <Wrapper>
-    <Spinner size="xl" />
-    <Text mt={8}>{text}</Text>
+    <Spinner size="xl" color="blackAlpha.300" />
+    <Text mt={8} color="blackAlpha.600">
+      {text}
+    </Text>
   </Wrapper>
 );
 

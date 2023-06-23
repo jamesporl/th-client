@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Box, Flex, Text, HStack, Heading, Link, Button } from '@chakra-ui/react';
+import { Badge, Box, Flex, Text, Heading, Link, Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 

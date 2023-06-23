@@ -91,16 +91,18 @@ const CommentContent = ({
   let replyBtn = null;
   if (comment.isParent) {
     replyBtn = (
-      <Button
-        colorScheme="blue"
-        variant="link"
-        onClick={onClickReply}
-        style={{ textDecoration: 'none' }}
-        size="xs"
-      >
-        <MessageOutlined style={{ fontSize: 16 }} />
-        <Text ml={1}>Reply</Text>
-      </Button>
+      <div>
+        <Button
+          colorScheme="blue"
+          variant="link"
+          onClick={onClickReply}
+          style={{ textDecoration: 'none', marginLeft: 0 }}
+          size="xs"
+        >
+          <MessageOutlined style={{ fontSize: 16 }} />
+          <Text ml={1}>Reply</Text>
+        </Button>
+      </div>
     );
   }
 
@@ -128,11 +130,13 @@ const CommentContent = ({
           }}
         />
         <HStack spacing={4} mt={2}>
-          <SupportComment
-            commentId={comment._id}
-            isSupported={comment.isSupported}
-            supportsCount={comment.supportsCount}
-          />
+          <div>
+            <SupportComment
+              commentId={comment._id}
+              isSupported={comment.isSupported}
+              supportsCount={comment.supportsCount}
+            />
+          </div>
           {replyBtn}
           {otherMenu}
         </HStack>
