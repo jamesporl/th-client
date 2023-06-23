@@ -7,7 +7,7 @@ import App from './App';
 import AppsQry from '../../../gql/AppsQry';
 import AppSkeleton from './AppSkeleton';
 
-export const APPS_PAGE_SIZE = 6;
+export const APPS_PAGE_SIZE = 12;
 
 const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
   // month here is a date (not moment) that is the start of a month in UTC
@@ -29,6 +29,7 @@ const AppsByMonth = ({ month, apps: initialApps, totalCount }) => {
         otherFilters: ['excludeFeatured'],
         page: page + 1,
         pageSize: APPS_PAGE_SIZE,
+        sortBy: 'publishedDate',
       },
     });
     setPage(page + 1);

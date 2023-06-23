@@ -62,6 +62,7 @@ const Home = () => {
       page: 1,
       pageSize: APPS_PAGE_SIZE,
       otherFilters: ['excludeFeatured'],
+      sortBy: 'publishedDate',
     },
   });
 
@@ -102,6 +103,7 @@ const Home = () => {
         otherFilters: ['excludeFeatured'],
         page: 1,
         pageSize: APPS_PAGE_SIZE,
+        sortBy: 'publishedDate',
       });
       const { nodes = [], totalCount = 0 } = result?.data.apps;
       if (nodes.length) {
@@ -138,6 +140,7 @@ const Home = () => {
       otherFilters: ['excludeFeatured'],
       page: currentRandomAppsPage,
       pageSize: APPS_PAGE_SIZE,
+      sortBy: 'random',
     });
     const { nodes = [] } = result?.data.apps;
     if (nodes.length) {

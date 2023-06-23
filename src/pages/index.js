@@ -26,6 +26,7 @@ export async function getServerSideProps(ctx) {
       page: 1,
       pageSize: APPS_PAGE_SIZE,
       otherFilters: ['excludeFeatured'],
+      sortBy: 'publishedDate',
     },
   });
 
